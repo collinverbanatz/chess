@@ -1,5 +1,7 @@
 package chess;
 
+import java.util.Objects;
+
 /**
  * Represents moving a chess piece on a chessboard
  * <p>
@@ -7,23 +9,27 @@ package chess;
  * signature of the existing methods.
  */
 public class ChessMove {
+    private final ChessPosition starPosition;
+    private final ChessPosition endPosition;
 
     public ChessMove(ChessPosition startPosition, ChessPosition endPosition,
                      ChessPiece.PieceType promotionPiece) {
+        this.starPosition = startPosition;
+        this.endPosition = endPosition;
     }
 
     /**
      * @return ChessPosition of starting location
      */
     public ChessPosition getStartPosition() {
-        throw new RuntimeException("Not implemented");
+        return starPosition;
     }
 
     /**
      * @return ChessPosition of ending location
      */
     public ChessPosition getEndPosition() {
-        throw new RuntimeException("Not implemented");
+        return endPosition;
     }
 
     /**
@@ -34,5 +40,28 @@ public class ChessMove {
      */
     public ChessPiece.PieceType getPromotionPiece() {
         throw new RuntimeException("Not implemented");
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ChessMove chessMove = (ChessMove) o;
+        return Objects.equals(starPosition, chessMove.starPosition) && Objects.equals(endPosition, chessMove.endPosition);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(starPosition, endPosition);
+    }
+
+    @Override
+    public String toString() {
+        return "ChessMove{" +
+                "starPosition=" + starPosition +
+                ", endPosition=" + endPosition +
+                '}';
     }
 }
