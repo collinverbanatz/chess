@@ -64,19 +64,35 @@ public class ChessPiece {
 
     private void pawnMovesCalculator(ChessBoard board, ChessPosition myPosition, Collection<ChessMove> moves){
         int direction;
+        int promotionRow;
+
         if (pieceColor == ChessGame.TeamColor.WHITE){
             direction = 1;
+            promotionRow = 8;
         }
         else{
             direction = -1;
+            promotionRow = 1;
         }
 
         ChessPosition oneStepForward = new ChessPosition(myPosition.getRow() + direction, myPosition.getColumn());
-        moves.add(new ChessMove(myPosition, oneStepForward, null));
-
-        if(pieceColor == ChessGame.TeamColor.WHITE && myPosition.getRow() == 7){
-            moves.add(new ChessMove(myPosition, ))
+        if (oneStepForward.getRow() == promotionRow){
+            for (ChessPiece.PieceType promotion : ChessPiece.PieceType.values()){
+                if (PieceType.PAWN  != promotion && PieceType.KING != promotion){
+                    moves.add(new ChessMove(myPosition, oneStepForward, promotion));
+                }
+            }
         }
+        else{
+            moves.add(new ChessMove(myPosition, oneStepForward, null));
+        }
+
+        if(pieceColor == ChessGame.TeamColor.WHITE && myPosition.getRow() == 2 || pieceColor == ChessGame.TeamColor.BLACK && myPosition.getRow() == 7){
+            ChessPosition twoStepForward = new ChessPosition(myPosition.getRow() + direction * 2, myPosition.getColumn());
+            moves.add(new ChessMove(myPosition, twoStepForward, null));
+        }
+
+
     }
 
 }
