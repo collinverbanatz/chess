@@ -60,6 +60,13 @@ public class ChessPiece {
         if (type == PieceType.BISHOP){
             bishopMovesCalculator(board, myPosition, moves);
         }
+        if (type == PieceType.KNIGHT){
+            knightMovesCalculator(board, myPosition, moves);
+        }
+        if (type == PieceType.ROOK){
+            rookMovesCalculator(board, myPosition, moves);
+        }
+
 
 
         return moves;
@@ -128,7 +135,42 @@ public class ChessPiece {
         }
 
     }
-    private void bishopMovesCalculator(ChessBoard board, ChessPosition myPosition, Collection<ChessMove> moves){
+    private void rookMovesCalculator(ChessBoard board, ChessPosition myPosition, Collection<ChessMove> moves) {
+        int [][] directions = {{1,0},{0,1},{-1,0},{0,-1}};
+        for (int[] direction : directions){
+            int row = myPosition.getRow();
+            int col = myPosition.getColumn();
 
+            while (true) {
+                row += direction[0];
+                col += direction[1];
+
+                if (row < 1 || row >= 8 || col < 1 || col >= 8) {
+                    break;
+                }
+
+                ChessPosition newPosition = new ChessPosition(row,col);
+                ChessPiece pieceAtNewPosition = board.getPiece(newPosition);
+
+                if (pieceAtNewPosition == null){
+                    moves.add(new ChessMove(myPosition, newPosition, null));
+                }
+                else if (pieceAtNewPosition.getTeamColor() != pieceColor){
+                    moves.add(new ChessMove(myPosition, newPosition, null));
+                    break;
+                }
+                else{
+                    break;
+                }
+            }
+        }
+    }
+
+    private void knightMovesCalculator(ChessBoard board, ChessPosition myPosition, Collection<ChessMove> moves) {
 
     }
+
+    private void bishopMovesCalculator(ChessBoard board, ChessPosition myPosition, Collection<ChessMove> moves) {
+
+    }
+}
