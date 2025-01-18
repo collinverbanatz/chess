@@ -1,5 +1,8 @@
 package chess;
 
+import chess.movesCalulator.PawnMovesCalculator;
+import chess.movesCalulator.PieceMovesCalculator;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -52,24 +55,35 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        Collection<ChessMove> moves = new ArrayList<>();
-
-        if (type == PieceType.PAWN){
-            pawnMovesCalculator(board, myPosition, moves);
+        PieceMovesCalculator calculator;
+        switch (type){
+            case PAWN :
+                calculator = new PawnMovesCalculator();
+                break;
+            default:
+                throw new RuntimeException();
         }
-        if (type == PieceType.BISHOP){
-            bishopMovesCalculator(board, myPosition, moves);
-        }
-        if (type == PieceType.KNIGHT){
-            knightMovesCalculator(board, myPosition, moves);
-        }
-        if (type == PieceType.ROOK){
-            rookMovesCalculator(board, myPosition, moves);
-        }
+        return calculator.pieceMoves(board, myPosition);
 
 
-
-        return moves;
+//        Collection<ChessMove> moves = new ArrayList<>();
+//
+//        if (type == PieceType.PAWN){
+//            pawnMovesCalculator(board, myPosition, moves);
+//        }
+//        if (type == PieceType.BISHOP){
+//            bishopMovesCalculator(board, myPosition, moves);
+//        }
+//        if (type == PieceType.KNIGHT){
+//            knightMovesCalculator(board, myPosition, moves);
+//        }
+//        if (type == PieceType.ROOK){
+//            rookMovesCalculator(board, myPosition, moves);
+//        }
+//
+//
+//
+//        return moves;
     }
 
     private void pawnMovesCalculator(ChessBoard board, ChessPosition myPosition, Collection<ChessMove> moves){
