@@ -2,6 +2,7 @@ package chess;
 
 import chess.movesCalulator.PawnMovesCalculator;
 import chess.movesCalulator.PieceMovesCalculator;
+import chess.movesCalulator.RookMovesCalculator;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -59,6 +60,9 @@ public class ChessPiece {
         switch (type){
             case PAWN :
                 calculator = new PawnMovesCalculator();
+                break;
+            case ROOK :
+                calculator = new RookMovesCalculator();
                 break;
             default:
                 throw new RuntimeException();
