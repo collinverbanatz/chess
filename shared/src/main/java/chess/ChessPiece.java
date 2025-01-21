@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * Represents a single chess piece
+ * Represents a single chess pieces
  * <p>
  * Note: You can add to this class, but you may not alter
  * signature of the existing methods.
