@@ -80,7 +80,7 @@ public class ChessPiece {
         return calculator.pieceMoves(board, myPosition);
 
 
-//        Collection<ChessMove> moves = new ArrayList<>();
+//        Collection<ChessMove> moves = new ArrayList<>(); test
 //
 //        if (type == PieceType.PAWN){
 //            pawnMovesCalculator(board, myPosition, moves);
