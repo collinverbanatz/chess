@@ -1,8 +1,6 @@
 package chess;
 
-import chess.movesCalulator.PawnMovesCalculator;
-import chess.movesCalulator.PieceMovesCalculator;
-import chess.movesCalulator.RookMovesCalculator;
+import chess.movesCalulator.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -63,6 +61,15 @@ public class ChessPiece {
                 break;
             case ROOK :
                 calculator = new RookMovesCalculator();
+                break;
+            case BISHOP :
+                calculator = new BishopMovesCalculator();
+                break;
+            case KNIGHT :
+                calculator = new KnightMovesCalculator();
+                break;
+            case KING :
+                calculator = new KingMovesCalculator();
                 break;
             default:
                 throw new RuntimeException();
