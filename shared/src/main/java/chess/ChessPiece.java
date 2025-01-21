@@ -71,6 +71,9 @@ public class ChessPiece {
             case KING :
                 calculator = new KingMovesCalculator();
                 break;
+            case QUEEN :
+                calculator = new QueenMovesCalculator();
+                break;
             default:
                 throw new RuntimeException();
         }
