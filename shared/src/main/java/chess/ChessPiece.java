@@ -4,6 +4,7 @@ import chess.movesCalulator.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * Represents a single chess pieces
@@ -14,6 +15,20 @@ import java.util.Collection;
 public class ChessPiece {
     private final ChessGame.TeamColor pieceColor;
     private final PieceType type;
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ChessPiece that = (ChessPiece) o;
+        return pieceColor == that.pieceColor && type == that.type;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pieceColor, type);
+    }
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.pieceColor = pieceColor;
@@ -78,127 +93,6 @@ public class ChessPiece {
                 throw new RuntimeException();
         }
         return calculator.pieceMoves(board, myPosition);
-
-
-//        Collection<ChessMove> moves = new ArrayList<>(); test
-//
-//        if (type == PieceType.PAWN){
-//            pawnMovesCalculator(board, myPosition, moves);
-//        }
-//        if (type == PieceType.BISHOP){
-//            bishopMovesCalculator(board, myPosition, moves);
-//        }
-//        if (type == PieceType.KNIGHT){
-//            knightMovesCalculator(board, myPosition, moves);
-//        }
-//        if (type == PieceType.ROOK){
-//            rookMovesCalculator(board, myPosition, moves);
-//        }
-//
-//
-//
-//        return moves;
-    }
-
-    private void pawnMovesCalculator(ChessBoard board, ChessPosition myPosition, Collection<ChessMove> moves){
-        int direction;
-        int promotionRow;
-
-        if (pieceColor == ChessGame.TeamColor.WHITE){
-            direction = 1;
-            promotionRow = 8;
-        }
-        else{
-            direction = -1;
-            promotionRow = 1;
-        }
-
-//        makes pawn move one step forward
-        ChessPosition oneStepForward = new ChessPosition(myPosition.getRow() + direction, myPosition.getColumn());
-        ChessPiece team = board.getPiece(oneStepForward);
-        if (team == null) {
-            if (myPosition.getRow() >= 1 && myPosition.getRow() <= 8 && myPosition.getColumn() >= 1 && myPosition.getColumn() <= 8){
-                if (oneStepForward.getRow() == promotionRow) {
-                    for (ChessPiece.PieceType promotion : ChessPiece.PieceType.values()) {
-                        if (PieceType.PAWN != promotion && PieceType.KING != promotion) {
-                            moves.add(new ChessMove(myPosition, oneStepForward, promotion));
-                        }
-                    }
-                }
-                 else {
-                        moves.add(new ChessMove(myPosition, oneStepForward, null));
-                    }
-            }
-        }
-
-//        makes pawn move 2 steps forward if it's at starting position
-        if (team == null){
-            if (myPosition.getRow() >= 1 && myPosition.getRow() <= 8 && myPosition.getColumn() >= 1 && myPosition.getColumn() <= 8){
-
-                if(pieceColor == ChessGame.TeamColor.WHITE && myPosition.getRow() == 2 || pieceColor == ChessGame.TeamColor.BLACK && myPosition.getRow() == 7) {
-                    ChessPosition twoStepForward = new ChessPosition(myPosition.getRow() + direction * 2, myPosition.getColumn());
-                    moves.add(new ChessMove(myPosition, twoStepForward, null));
-                }
-            }
-        }
-//        capture a piece if adjacent
-        int[] captureColumns = {-1,1};
-        for (int adjacent : captureColumns){
-            ChessPosition capture = new ChessPosition(myPosition.getRow() + direction, myPosition.getColumn() + adjacent);
-//            checks for valid move
-            if (myPosition.getRow() >= 1 && myPosition.getRow() <= 8 && myPosition.getColumn() >= 1 && myPosition.getColumn() <= 8){
-                ChessPiece enemy = board.getPiece(capture);
-                if (enemy != null && enemy.getTeamColor() != pieceColor){
-                    if (capture.getRow() == promotionRow){
-                        for (ChessPiece.PieceType promotion : ChessPiece.PieceType.values()){
-                            if (PieceType.PAWN  != promotion && PieceType.KING != promotion){
-                                moves.add(new ChessMove(myPosition, capture, promotion));
-                            }
-                        }
-                    }
-                    else{
-                        moves.add(new ChessMove(myPosition, capture, null));}
-                }
-            }
-        }
-
-    }
-    private void rookMovesCalculator(ChessBoard board, ChessPosition myPosition, Collection<ChessMove> moves) {
-        int [][] directions = {{1,0},{0,1},{-1,0},{0,-1}};
-        for (int[] direction : directions){
-            int row = myPosition.getRow();
-            int col = myPosition.getColumn();
-
-            while (true) {
-                row += direction[0];
-                col += direction[1];
-
-                if (row < 1 || row >= 8 || col < 1 || col >= 8) {
-                    break;
-                }
-
-                ChessPosition newPosition = new ChessPosition(row,col);
-                ChessPiece pieceAtNewPosition = board.getPiece(newPosition);
-
-                if (pieceAtNewPosition == null){
-                    moves.add(new ChessMove(myPosition, newPosition, null));
-                }
-                else if (pieceAtNewPosition.getTeamColor() != pieceColor){
-                    moves.add(new ChessMove(myPosition, newPosition, null));
-                    break;
-                }
-                else{
-                    break;
-                }
-            }
-        }
-    }
-
-    private void knightMovesCalculator(ChessBoard board, ChessPosition myPosition, Collection<ChessMove> moves) {
-
-    }
-
-    private void bishopMovesCalculator(ChessBoard board, ChessPosition myPosition, Collection<ChessMove> moves) {
 
     }
 }
