@@ -10,12 +10,12 @@ import java.util.Collection;
  */
 public class ChessGame {
     private ChessBoard board;
-    private TeamColor currectColor;
+    private TeamColor currentColor;
 
     public ChessGame() {
         this.board = new ChessBoard();
         this.board.resetBoard();
-        this.currectColor = TeamColor.WHITE;
+        this.currentColor = TeamColor.WHITE;
 
     }
 
@@ -23,7 +23,7 @@ public class ChessGame {
      * @return Which team's turn it is
      */
     public TeamColor getTeamTurn() {
-        return currectColor;
+        return currentColor;
 //        throw new RuntimeException("Not implemented");
     }
 
@@ -33,7 +33,7 @@ public class ChessGame {
      * @param team the team whose turn it is
      */
     public void setTeamTurn(TeamColor team) {
-        this.currectColor = team;
+        this.currentColor = team;
 //        throw new RuntimeException("Not implemented");
     }
 
@@ -78,7 +78,37 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+//        find the kings position
+        ChessPosition kingPos = null;
+        for (int row = 1; row <= 8; row++){
+            for (int col = 1; col <= 8; col++) {
+                ChessPosition newPos = new ChessPosition(row, col);
+                ChessPiece newPiece = board.getPiece(newPos);
+                if(newPiece != null && newPiece.getTeamColor() == teamColor && newPiece.getPieceType() == ChessPiece.PieceType.KING){
+                    kingPos = newPos;
+                }
+            }
+        }
+
+//        see if the king is in check by looping through each enemy piece to see if it can attack where the kingPos is
+        for(int row = 1; row <= 8; row++){
+            for (int col = 1; col <= 8; col++){
+                ChessPosition position = new ChessPosition(row, col);
+                ChessPiece piece = board.getPiece(position);
+//                check to see if it's enemy piece and it's not empty(there is a piece there)
+                if(piece != null && piece.getTeamColor() != teamColor){
+//                    loop through each of the enemies moves to see if it can attack our king
+                    for(ChessMove move : piece.pieceMoves(board, position)){
+                        if(move.getEndPosition().equals(kingPos)){
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+
+//        throw new RuntimeException("Not implemented");
+        return false;
     }
 
     /**
@@ -88,6 +118,7 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
+
         throw new RuntimeException("Not implemented");
     }
 
@@ -118,6 +149,7 @@ public class ChessGame {
      * @return the chessboard
      */
     public ChessBoard getBoard() {
-        throw new RuntimeException("Not implemented");
+        return board;
+//        throw new RuntimeException("Not implemented");
     }
 }
