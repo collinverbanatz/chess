@@ -61,9 +61,7 @@ public class ChessGame {
 
 //        get current pieces endpositions and see if you're in check implementation: move piece temporarily and then check to see if in check
         Collection<ChessMove> legalMoves = new HashSet<>();
-//        for (ChessMove move : piece.pieceMoves(board, startPosition)){
-//            legalMoves.add(move);
-//        }
+
         for(ChessMove possibleMoves : piece.pieceMoves(board, startPosition)){
             ChessPiece capturedPiece = board.getPiece(possibleMoves.getEndPosition());
             board.addPiece(startPosition, null);
@@ -89,7 +87,38 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        throw new RuntimeException("Not implemented hello world");
+        ChessPiece myPiece  = board.getPiece(move.getStartPosition());
+        if(myPiece == null || myPiece.getTeamColor() != currentColor){
+            throw new InvalidMoveException("either piece is null or wrong color");
+        }
+
+        if(!validMoves(move.getStartPosition()).contains(move)){
+            throw new InvalidMoveException("this move is not allowed");
+        }
+
+        board.addPiece(move.getEndPosition(), myPiece);
+        board.addPiece(move.getStartPosition(), null);
+        if(myPiece.getTeamColor() == TeamColor.WHITE){
+            if(myPiece.getPieceType() == ChessPiece.PieceType.PAWN){
+                int finalRow = move.getEndPosition().getRow();
+                if(finalRow == 8){
+                    ChessPiece promotionPiece = new ChessPiece(currentColor, move.getPromotionPiece());
+                    board.addPiece(move.getEndPosition(), promotionPiece);
+                }
+            }
+            currentColor = TeamColor.BLACK;
+        }
+        else{
+            if(myPiece.getPieceType() == ChessPiece.PieceType.PAWN){
+                int finalRow = move.getEndPosition().getRow();
+                if(finalRow == 1){
+                    ChessPiece promotionPiece = new ChessPiece(currentColor, move.getPromotionPiece());
+                    board.addPiece(move.getEndPosition(), promotionPiece);
+                }
+            }
+            currentColor = TeamColor.WHITE;
+        }
+//        throw new RuntimeException("Not implemented hello world");
     }
 
     /**
@@ -115,15 +144,6 @@ public class ChessGame {
     public boolean isInCheck(TeamColor teamColor) {
 //        find the kings position
         ChessPosition kingPos = findKing(teamColor);
-//        for (int row = 1; row <= 8; row++){
-//            for (int col = 1; col <= 8; col++) {
-//                ChessPosition newPos = new ChessPosition(row, col);
-//                ChessPiece newPiece = board.getPiece(newPos);
-//                if(newPiece != null && newPiece.getTeamColor() == teamColor && newPiece.getPieceType() == ChessPiece.PieceType.KING){
-//                    kingPos = newPos;
-//                }
-//            }
-//        }
 
 //        see if the king is in check by looping through each enemy piece to see if it can attack where the kingPos is
         for(int row = 1; row <= 8; row++){
