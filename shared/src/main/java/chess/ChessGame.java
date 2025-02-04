@@ -56,23 +56,29 @@ public class ChessGame {
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         ChessPiece piece = board.getPiece(startPosition);
         if( piece == null){
-            return null;
+            return new HashSet<>();
         }
 
 //        get current pieces endpositions and see if you're in check implementation: move piece temporarily and then check to see if in check
         Collection<ChessMove> legalMoves = new HashSet<>();
-        for (ChessMove move : piece.pieceMoves(board, startPosition)){
-            legalMoves.add(move);
-        }
-        for(ChessMove posibleMove : legalMoves){
-            ChessPiece tempPiece = board.getPiece(posibleMove.getEndPosition());
+//        for (ChessMove move : piece.pieceMoves(board, startPosition)){
+//            legalMoves.add(move);
+//        }
+        for(ChessMove possibleMoves : piece.pieceMoves(board, startPosition)){
+            ChessPiece capturedPiece = board.getPiece(possibleMoves.getEndPosition());
             board.addPiece(startPosition, null);
-            board.addPiece(posibleMove.getEndPosition(), piece);
-
+            board.addPiece(possibleMoves.getEndPosition(), piece);
+            ChessPosition KingPosition = findKing(piece.getTeamColor());
+            if(KingPosition != null && !isInCheck(piece.getTeamColor())){
+                legalMoves.add(possibleMoves);
+            }
+//            reset board back to normal
+            board.addPiece(startPosition, piece);
+            board.addPiece(possibleMoves.getEndPosition(), capturedPiece);
         }
 
 
-        return piece.pieceMoves(board, startPosition);
+        return legalMoves;
 //        throw new RuntimeException("Not implemented");
     }
 
