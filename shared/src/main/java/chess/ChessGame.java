@@ -190,13 +190,13 @@ public class ChessGame {
             return false;
         }
 
-        //        check to see if king has no available move to make that don't put it in check
+        //        check to see if king has no available move to make that doesn't put it in check
         for (int row = 1; row <= 8; row++) {
             for (int col = 1; col <= 8; col++) {
                 ChessPosition position = new ChessPosition(row, col);
                 ChessPiece piece = board.getPiece(position);
                 if(piece != null && teamColor == piece.getTeamColor()){
-                    for(ChessMove move : piece.pieceMoves(board, position)) {
+                    for(ChessMove move : validMoves(position)) {
                         if (move.getEndPosition() != null) {
                             return false;
                         }
@@ -204,6 +204,7 @@ public class ChessGame {
                 }
             }
         }
+
 
 //        throw new RuntimeException("Not implemented");
         return true;
