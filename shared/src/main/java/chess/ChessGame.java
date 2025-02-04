@@ -1,6 +1,7 @@
 package chess;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -57,6 +58,20 @@ public class ChessGame {
         if( piece == null){
             return null;
         }
+
+//        get current pieces endpositions and see if you're in check implementation: move piece temporarily and then check to see if in check
+        Collection<ChessMove> legalMoves = new HashSet<>();
+        for (ChessMove move : piece.pieceMoves(board, startPosition)){
+            legalMoves.add(move);
+        }
+        for(ChessMove posibleMove : legalMoves){
+            ChessPiece tempPiece = board.getPiece(posibleMove.getEndPosition());
+            board.addPiece(startPosition, null);
+            board.addPiece(posibleMove.getEndPosition(), piece);
+
+        }
+
+
         return piece.pieceMoves(board, startPosition);
 //        throw new RuntimeException("Not implemented");
     }
@@ -77,8 +92,7 @@ public class ChessGame {
      * @param teamColor which team to check for check
      * @return True if the specified team is in check
      */
-    public boolean isInCheck(TeamColor teamColor) {
-//        find the kings position
+    public ChessPosition findKing(TeamColor teamColor){
         ChessPosition kingPos = null;
         for (int row = 1; row <= 8; row++){
             for (int col = 1; col <= 8; col++) {
@@ -89,6 +103,21 @@ public class ChessGame {
                 }
             }
         }
+        return kingPos;
+    }
+
+    public boolean isInCheck(TeamColor teamColor) {
+//        find the kings position
+        ChessPosition kingPos = findKing(teamColor);
+//        for (int row = 1; row <= 8; row++){
+//            for (int col = 1; col <= 8; col++) {
+//                ChessPosition newPos = new ChessPosition(row, col);
+//                ChessPiece newPiece = board.getPiece(newPos);
+//                if(newPiece != null && newPiece.getTeamColor() == teamColor && newPiece.getPieceType() == ChessPiece.PieceType.KING){
+//                    kingPos = newPos;
+//                }
+//            }
+//        }
 
 //        see if the king is in check by looping through each enemy piece to see if it can attack where the kingPos is
         for(int row = 1; row <= 8; row++){
@@ -130,7 +159,28 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+//        checks to see if in check
+        if(isInCheck(teamColor)){
+            return false;
+        }
+
+        //        check to see if king has no available move to make that don't put it in check
+        for (int row = 1; row <= 8; row++) {
+            for (int col = 1; col <= 8; col++) {
+                ChessPosition position = new ChessPosition(row, col);
+                ChessPiece piece = board.getPiece(position);
+                if(piece != null && teamColor == piece.getTeamColor()){
+                    for(ChessMove move : piece.pieceMoves(board, position)) {
+                        if (move.getEndPosition() != null) {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+
+//        throw new RuntimeException("Not implemented");
+        return true;
     }
 
     /**
