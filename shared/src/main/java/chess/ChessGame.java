@@ -56,7 +56,7 @@ public class ChessGame {
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         ChessPiece piece = board.getPiece(startPosition);
         if( piece == null){
-            return new HashSet<>();
+            return null;
         }
 
 //        get current pieces endpositions and see if you're in check implementation: move piece temporarily and then check to see if in check
@@ -173,8 +173,19 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-
-        throw new RuntimeException("Not implemented");
+        if(!isInCheck(teamColor)){
+            for (int row = 1; row <= 8; row++) {
+                for (int col = 1; col <= 8; col++) {
+                    ChessPosition position = new ChessPosition(row, col);
+                    ChessPiece piece = board.getPiece(position);
+                    if(validMoves(position) == null) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+//        throw new RuntimeException("Not implemented");
     }
 
     /**
