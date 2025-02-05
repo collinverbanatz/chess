@@ -173,23 +173,39 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        if(isInCheck(teamColor)){
+        if(!isInCheck(teamColor)){
+            return false;
+        }
             for (int row = 1; row <= 8; row++) {
                 for (int col = 1; col <= 8; col++) {
                     ChessPosition position = new ChessPosition(row, col);
                     ChessPiece piece = board.getPiece(position);
-                    if(piece != null) {
-                        if (piece.getTeamColor() == teamColor) {
-                            if (validMoves(position) != null) {
-                                return true;
-//                        loop through each peice that is your and call validmove on it to see if it can get out of check and if by the end of the loop there is no piece that can get you out you're in checkmate
+                    if(piece != null && piece.getTeamColor() == teamColor) {
+                        Collection<ChessMove> moves = validMoves(position);
+                        if (moves != null) {
+                            for(ChessMove move : moves){
+                                ChessPiece capturedPiece = board.getPiece(move.getEndPosition());
+                                board.addPiece(position, null);
+                                board.addPiece(move.getEndPosition(), piece);
+
+                                if(!isInCheck(teamColor)){
+                                    board.addPiece(position, piece);
+                                    board.addPiece(move.getEndPosition(), capturedPiece);
+                                    return false;
+                                }
+
+                //            reset board back to normal
+                                board.addPiece(position, piece);
+                                board.addPiece(move.getEndPosition(), capturedPiece);
                             }
+//                        loop through each piece that is your and call validmove on it to see if it can get out of check and if by the end of the loop there is no piece that can get you out you're in checkmate
                         }
+
                     }
                 }
             }
-        }
-        return false;
+
+        return true;
 //        throw new RuntimeException("Not implemented");
     }
 
