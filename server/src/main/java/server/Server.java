@@ -18,7 +18,7 @@ public class Server {
         return Spark.port();
     }
 
-    privat void RegisterRouts(){
+    private void RegisterRouts(){
         Spark.post("/session", UserHandler.login);
     }
 
