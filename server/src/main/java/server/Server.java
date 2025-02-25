@@ -19,7 +19,7 @@ public class Server {
     }
 
     private void RegisterRouts(){
-        Spark.post("/session", UserHandler.login);
+        Spark.post("/session", UserHandler::Login);
     }
 
     public void stop() {
