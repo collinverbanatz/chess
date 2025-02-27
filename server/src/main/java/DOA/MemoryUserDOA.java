@@ -11,13 +11,12 @@ public class MemoryUserDOA implements UsrDOA{
 
     @Override
     public UserData getUser(String userName) throws DataAccessException {
-        if(AllUserData.containsKey(userName)){
-            UserData userData = AllUserData.get(userName);
-            return userData;
-        }
-        else{
-            throw new DataAccessException("no user with that user name.");
-        }
+        return AllUserData.get(userName);
+    }
+
+    @Override
+    public void putUser(UserData userData) {
+        AllUserData.put(userData.userName, userData);
     }
 
     private Map<String, UserData> AllUserData = new HashMap<>();

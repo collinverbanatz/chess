@@ -15,7 +15,7 @@ public class UserHandler {
     // implements loging in the user give a userName and password
     public static Object Login(Request req, Response response){
         UserService.LoginRequest user = gson.fromJson(req.body(), UserService.LoginRequest.class);
-        UserService.LoginResult data = null;
+        UserService.LoginResult data;
 
         try {
             data = userService.login(user);
@@ -23,6 +23,23 @@ public class UserHandler {
         catch (DataAccessException | IllegalStateException e) {
             response.status(401);
             return "{ \"message\": \"Error: unauthorized\" }";
+        }
+
+        response.status(200);
+        return gson.toJson(data);
+    }
+
+    public static Object Register(Request req, Response response){
+        UserService.RegisterRequest user = gson.fromJson(req.body(), UserService.RegisterRequest.class);
+        UserService.RegisterResult data;
+
+
+        try {
+            data = userService.register(user);
+        }
+        catch (DataAccessException | IllegalStateException e) {
+            response.status(403);
+            return "{ \"message\": \"Error: already taken\" }";
         }
 
         response.status(200);
