@@ -12,6 +12,8 @@ public class UserHandler {
     static final Gson gson = new Gson();
     static final UserService userService = new UserService();
 
+
+
     // implements loging in the user give a userName and password
     public static Object Login(Request req, Response response){
         UserService.LoginRequest user = gson.fromJson(req.body(), UserService.LoginRequest.class);
@@ -28,6 +30,8 @@ public class UserHandler {
         response.status(200);
         return gson.toJson(data);
     }
+
+
 
     public static Object Register(Request req, Response response){
         UserService.RegisterRequest user = gson.fromJson(req.body(), UserService.RegisterRequest.class);

@@ -19,5 +19,9 @@ public class MemoryUserDOA implements UsrDOA{
         AllUserData.put(userData.userName, userData);
     }
 
+    public void clear(){
+        AllUserData.clear();
+    }
+
     private Map<String, UserData> AllUserData = new HashMap<>();
 }

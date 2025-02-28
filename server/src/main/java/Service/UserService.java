@@ -44,8 +44,13 @@ public class UserService {
 
     }
 //    public void logout(LogoutRequest logoutRequest) {
-
+//
 //    }
+
+    public void clear(){
+        userDao.clear();
+        authDao.clear();
+    }
 
 
     private AuthData createAndSaveAuthToken(String username){

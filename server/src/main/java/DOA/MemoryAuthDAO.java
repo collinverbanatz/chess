@@ -11,5 +11,11 @@ public class MemoryAuthDAO implements AuthDOA{
     public void putAuthToken(AuthData authToken) {
         allAuthData.put(authToken.authToken, authToken);
     }
+
+    @Override
+    public void clear() {
+        allAuthData.clear();
+    }
+
     private Map<String, AuthData> allAuthData = new HashMap<>();
 }

@@ -1,6 +1,7 @@
 package server;
 
 import spark.*;
+import Service.UserService;
 
 public class Server {
 
@@ -21,10 +22,22 @@ public class Server {
     private void RegisterRouts(){
         Spark.post("/session", UserHandler::Login);
         Spark.post("/user", UserHandler::Register);
+        Spark.delete("db", this::Clear);
+    }
+
+    private final UserService userService = new UserService();
+
+    private Object Clear(Request request, Response response) {
+        userService.clear();
+//        need to add gameService.clear();
+
+        return "{}";
     }
 
     public void stop() {
         Spark.stop();
         Spark.awaitStop();
     }
+
+
 }
