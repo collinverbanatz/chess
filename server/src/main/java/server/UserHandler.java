@@ -51,7 +51,7 @@ public class UserHandler {
     }
 
     public static Object Logout(Request req, Response response) throws DataAccessException {
-        UserService.LogoutRequest user = gson.fromJson(req.body(), UserService.LogoutRequest.class);
+//        UserService.LogoutRequest user = gson.fromJson(req.body(), UserService.LogoutRequest.class);
 //        UserService.LogoutResult data;
         String authToken = req.headers("authorization");
 

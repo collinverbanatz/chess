@@ -25,7 +25,7 @@ public class Server {
         Spark.delete("/db", this::Clear);
         Spark.delete("/session", UserHandler::Logout);
 
-//        Spark.post("/game", GameHandler::CreateGame);
+        Spark.post("/game", GameHandler::CreateGame);
     }
 
     private final UserService userService = new UserService();
