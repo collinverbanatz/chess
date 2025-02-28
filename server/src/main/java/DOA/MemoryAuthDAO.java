@@ -17,5 +17,15 @@ public class MemoryAuthDAO implements AuthDOA{
         allAuthData.clear();
     }
 
+    @Override
+    public void removeAuthToken(String authData) {
+        allAuthData.remove(authData);
+    }
+
+    @Override
+    public boolean authTokenExists(String authToken) {
+        return allAuthData.containsKey(authToken);
+    }
+
     private Map<String, AuthData> allAuthData = new HashMap<>();
 }

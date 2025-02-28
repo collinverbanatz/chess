@@ -43,9 +43,17 @@ public class UserService {
         }
 
     }
-//    public void logout(LogoutRequest logoutRequest) {
-//
-//    }
+
+
+    public void logout(String authToken) throws DataAccessException {
+        if (!authDao.authTokenExists(authToken)){
+            throw new DataAccessException("Invalid authToken");
+        }
+        authDao.removeAuthToken(authToken);
+
+
+    }
+
 
     public void clear(){
         userDao.clear();
@@ -59,6 +67,27 @@ public class UserService {
         authDao.putAuthToken(authData);
         return authData;
     }
+
+    public static class LogoutRequest{
+        private String authToken;
+
+        public LogoutRequest(String authToken) {
+            this.authToken = authToken;
+        }
+
+        public String getAuthToken() {
+            return authToken;
+        }
+
+        public void setAuthToken(String authToken) {
+            this.authToken = authToken;
+        }
+    }
+
+
+
+
+
 
     public static class RegisterResult{
         private String username;
@@ -121,6 +150,10 @@ public class UserService {
             this.email = email;
         }
     }
+
+
+
+
 
     public static class LoginResult{
         private String username;

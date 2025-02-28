@@ -50,6 +50,28 @@ public class UserHandler {
         return gson.toJson(data);
     }
 
+    public static Object Logout(Request req, Response response) throws DataAccessException {
+        UserService.LogoutRequest user = gson.fromJson(req.body(), UserService.LogoutRequest.class);
+//        UserService.LogoutResult data;
+        String authToken = req.headers("authorization");
+
+        if(authToken == null || authToken.isEmpty()){
+            response.status(401);
+            return "{ \"message\": \"Error: unauthorized\" }";
+        }
+
+        try {
+            userService.logout(authToken);
+        }
+        catch(DataAccessException e){
+            response.status(500);
+            return "{ \"message\": \"Error: Invalid authToken\" }";
+        }
+
+        response.status(200);
+        return "{}";
+    }
+
 
 
 

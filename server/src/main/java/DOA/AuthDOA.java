@@ -6,4 +6,8 @@ public interface AuthDOA {
     void putAuthToken(AuthData authToken);
 
     void clear();
+
+    void removeAuthToken(String authData);
+
+    boolean authTokenExists(String authToken);
 }

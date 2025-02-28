@@ -22,7 +22,10 @@ public class Server {
     private void RegisterRouts(){
         Spark.post("/session", UserHandler::Login);
         Spark.post("/user", UserHandler::Register);
-        Spark.delete("db", this::Clear);
+        Spark.delete("/db", this::Clear);
+        Spark.delete("/session", UserHandler::Logout);
+
+//        Spark.post("/game", GameHandler::CreateGame);
     }
 
     private final UserService userService = new UserService();
