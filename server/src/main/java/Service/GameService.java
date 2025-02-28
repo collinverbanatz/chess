@@ -9,13 +9,17 @@ import Models.AuthData;
 import Models.UserData;
 import dataaccess.DataAccessException;
 
-public class GameService {
+import java.util.UUID;
 
+public class GameService {
+    UsrDOA userDao = new MemoryUserDOA();
+    AuthDOA authDao = new MemoryAuthDAO();
 
     public CreateResult createGame(String authToken, CreateRequest game) throws DataAccessException {
         if (!authDao.authTokenExists(authToken)){
             throw new DataAccessException("Invalid authToken");
         }
+
 
     }
 
