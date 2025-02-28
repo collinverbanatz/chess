@@ -16,9 +16,13 @@ public class GameService {
     AuthDOA authDao = new MemoryAuthDAO();
 
     public CreateResult createGame(String authToken, CreateRequest game) throws DataAccessException {
+//        check to see if authToken exists
         if (!authDao.authTokenExists(authToken)){
             throw new DataAccessException("Invalid authToken");
         }
+
+        if(authToken == null)
+
 
 
     }
