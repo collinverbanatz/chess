@@ -5,6 +5,9 @@ import Models.GameData;
 import chess.ChessGame;
 import dataaccess.DataAccessException;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+
 public class GameService {
 
     AuthDOA authDao;
@@ -20,30 +23,31 @@ public class GameService {
 
     public CreateResult createGame(String authToken, CreateRequest game) throws DataAccessException {
 
-//        if(authToken == null){
-//            throw new DataAccessException("name can't be null");
-//        }
+        if(authToken == null){
+            throw new DataAccessException("name can't be null");
+        }
 
 //        check to see if authToken exists
         if (!authDao.authTokenExists(authToken)){
             throw new DataAccessException("Invalid authToken");
         }
 
-
         gameID = gameID +1;
-
         ChessGame chessGame = new ChessGame();
-
         return gameDao.createGame(new GameData(gameID, null, null, game.getGameName(), chessGame));
-
-
-//        psudo code
-//        create game id
-//        create chess board
-//        daoGame to put game id and board into a map
-//        return CreateResult data (will include gameID
-
     }
+
+
+
+    public ArrayList ListGames(String authToken) throws DataAccessException {
+        if (!authDao.authTokenExists(authToken)){
+            throw new DataAccessException("Invalid authToken");
+        }
+        return gameDao.getListGames();
+    }
+
+
+
 
     public static class CreateRequest{
         private String gameName;
@@ -78,4 +82,11 @@ public class GameService {
             this.gameID = gameID;
         }
     }
+
+
+
+    public static class ListGameResult{
+        private HashSet gameLlist;
+    }
+
 }

@@ -33,7 +33,7 @@ public class UserHandler {
 
 
 
-    public static Object Register(Request req, Response response){
+    public  Object Register(Request req, Response response){
         UserService.RegisterRequest user = gson.fromJson(req.body(), UserService.RegisterRequest.class);
         UserService.RegisterResult data;
 
@@ -54,7 +54,7 @@ public class UserHandler {
         return gson.toJson(data);
     }
 
-    public static Object Logout(Request req, Response response) throws DataAccessException {
+    public  Object Logout(Request req, Response response) throws DataAccessException {
 //        UserService.LogoutRequest user = gson.fromJson(req.body(), UserService.LogoutRequest.class);
 //        UserService.LogoutResult data;
         String authToken = req.headers("authorization");

@@ -39,11 +39,13 @@ public class Server {
     private void RegisterRouts(){
         UserHandler userHandler = new UserHandler(userService);
         Spark.post("/session", userHandler::Login);
-        Spark.post("/user", UserHandler::Register);
+        Spark.post("/user", userHandler::Register);
         Spark.delete("/db", this::Clear);
-        Spark.delete("/session", UserHandler::Logout);
+        Spark.delete("/session", userHandler::Logout);
 
-        Spark.post("/game", GameHandler::CreateGame);
+        GameHandler gameHandler = new GameHandler(gameService);
+        Spark.post("/game", gameHandler::CreateGame);
+        Spark.get("/game", gameHandler::ListGames);
     }
 
     private Object Clear(Request request, Response response) {
