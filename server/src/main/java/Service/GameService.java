@@ -1,29 +1,41 @@
 package Service;
 
+import DOA.*;
+import Models.GameData;
+import chess.ChessGame;
 import dataaccess.DataAccessException;
-import DOA.AuthDOA;
-import DOA.MemoryAuthDAO;
-import DOA.MemoryUserDOA;
-import DOA.UsrDOA;
-import Models.AuthData;
-import Models.UserData;
-import dataaccess.DataAccessException;
-
-import java.util.UUID;
 
 public class GameService {
-    UsrDOA userDao = new MemoryUserDOA();
-    AuthDOA authDao = new MemoryAuthDAO();
+//    UsrDOA userDao = new MemoryUserDOA();
+//    AuthDOA authDao = new MemoryAuthDAO();
+    GameDAO gameDao = new MemoryGameDAO();
+    int gameID = 0;
+
 
     public CreateResult createGame(String authToken, CreateRequest game) throws DataAccessException {
+
+//        if(authToken == null){
+//            throw new DataAccessException("name can't be null");
+//        }
+
 //        check to see if authToken exists
-        if (!authDao.authTokenExists(authToken)){
+        if (!UserService.authDao.authTokenExists(authToken)){
             throw new DataAccessException("Invalid authToken");
         }
 
-        if(authToken == null)
+
+        gameID = gameID +1;
+
+        ChessGame chessGame = new ChessGame();
+
+        return gameDao.createGame(new GameData(gameID, null, null, game.getGameName(), chessGame));
 
 
+//        psudo code
+//        create game id
+//        create chess board
+//        daoGame to put game id and board into a map
+//        return CreateResult data (will include gameID
 
     }
 

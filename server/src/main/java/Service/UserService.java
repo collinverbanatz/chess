@@ -7,13 +7,12 @@ import DOA.UsrDOA;
 import Models.AuthData;
 import Models.UserData;
 import dataaccess.DataAccessException;
-import server.UserHandler;
 
 import java.util.UUID;
 
 public class UserService {
     UsrDOA userDao = new MemoryUserDOA();
-    AuthDOA authDao = new MemoryAuthDAO();
+    static AuthDOA authDao = new MemoryAuthDAO();
 
 
     public RegisterResult register(RegisterRequest registerRequest) throws DataAccessException {

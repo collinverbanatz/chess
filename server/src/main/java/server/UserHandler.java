@@ -1,7 +1,5 @@
 package server;
 
-import Models.AuthData;
-import Models.UserData;
 import dataaccess.DataAccessException;
 import spark.Request;
 import spark.Response;

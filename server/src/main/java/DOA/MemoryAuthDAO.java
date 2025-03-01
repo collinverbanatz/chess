@@ -1,7 +1,6 @@
 package DOA;
 
 import Models.AuthData;
-import Models.UserData;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,6 +23,8 @@ public class MemoryAuthDAO implements AuthDOA{
 
     @Override
     public boolean authTokenExists(String authToken) {
+        System.out.println("Storing authToken: " + authToken); // Debugging output
+
         return allAuthData.containsKey(authToken);
     }
 
