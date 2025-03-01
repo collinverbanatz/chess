@@ -37,7 +37,8 @@ public class Server {
     }
 
     private void RegisterRouts(){
-        Spark.post("/session", UserHandler::Login);
+        UserHandler userHandler = new UserHandler(userService);
+        Spark.post("/session", userHandler::Login);
         Spark.post("/user", UserHandler::Register);
         Spark.delete("/db", this::Clear);
         Spark.delete("/session", UserHandler::Logout);

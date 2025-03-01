@@ -7,13 +7,15 @@ import com.google.gson.Gson;
 import Service.UserService;
 
 public class UserHandler {
-    static final Gson gson = new Gson();
-    static final UserService userService = new UserService();
+     final Gson gson = new Gson();
+     final UserService userService;
 
-
+    public UserHandler(UserService userService) {
+        this.userService = userService;
+    }
 
     // implements loging in the user give a userName and password
-    public static Object Login(Request req, Response response){
+    public Object Login(Request req, Response response){
         UserService.LoginRequest user = gson.fromJson(req.body(), UserService.LoginRequest.class);
         UserService.LoginResult data;
 
