@@ -35,6 +35,10 @@ public class UserHandler {
         UserService.RegisterRequest user = gson.fromJson(req.body(), UserService.RegisterRequest.class);
         UserService.RegisterResult data;
 
+        if(user.getPassword() == null || user.getUsername() == null || user.getEmail() == null ){
+            response.status(400);
+            return ("{ \"message\": \"Error: bad request\" }");
+        }
 
         try {
             data = userService.register(user);
