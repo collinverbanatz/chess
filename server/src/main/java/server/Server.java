@@ -1,9 +1,24 @@
 package server;
 
+import DOA.*;
 import spark.*;
 import Service.UserService;
+import Service.GameService;
 
 public class Server {
+    private UserService userService;
+    private GameService gameService;
+
+
+    private void createServices(){
+        UsrDOA userDoa = new MemoryUserDOA();
+        AuthDOA authDao = new MemoryAuthDAO();
+        GameDAO gameDao = new MemoryGameDAO();
+
+        userService =  new UserService(userDoa, authDao);
+        gameService = new GameService(authDao, gameDao);
+
+    }
 
 
     public int run(int desiredPort) {
@@ -12,6 +27,7 @@ public class Server {
         Spark.staticFiles.location("web");
 
         // Register your endpoints and handle exceptions here.
+        createServices();
         RegisterRouts();
         //This line initializes the server and can be removed once you have a functioning endpoint 
         Spark.init();
@@ -28,8 +44,6 @@ public class Server {
 
         Spark.post("/game", GameHandler::CreateGame);
     }
-
-    private final UserService userService = new UserService();
 
     private Object Clear(Request request, Response response) {
         userService.clear();

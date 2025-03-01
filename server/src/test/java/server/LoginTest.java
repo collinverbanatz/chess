@@ -21,7 +21,7 @@ public class LoginTest {
     void setup() {
         userDOA = new MemoryUserDOA();
         authDAO = new MemoryAuthDAO();
-        userService = new UserService();
+        userService = new UserService(userDOA, authDAO);
 //        authData = new AuthData();
 //        userData = new UserData();
 

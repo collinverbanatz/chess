@@ -1,8 +1,6 @@
 package Service;
 
 import DOA.AuthDOA;
-import DOA.MemoryAuthDAO;
-import DOA.MemoryUserDOA;
 import DOA.UsrDOA;
 import Models.AuthData;
 import Models.UserData;
@@ -11,15 +9,15 @@ import dataaccess.DataAccessException;
 import java.util.UUID;
 
 public class UserService {
-    UsrDOA userDao = new MemoryUserDOA();
-    static AuthDOA authDao = new MemoryAuthDAO();
 
-//    UsrDOA userDoa;
-//    AuthDOA authDao;
-//
-//    public  UserService(UsrDOA userDoa,  AuthDOA authDao){
-//        this.authDao = authDao;
-//    }
+
+    UsrDOA userDao;
+    AuthDOA authDao;
+
+    public  UserService(UsrDOA userDoa,  AuthDOA authDao){
+        this.authDao = authDao;
+        this.userDao = userDoa;
+    }
 
 
     public RegisterResult register(RegisterRequest registerRequest) throws DataAccessException {

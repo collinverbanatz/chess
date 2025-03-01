@@ -8,10 +8,10 @@ import spark.Request;
 import spark.Response;
 
 public class GameHandler {
-    static final Gson gson = new Gson();
-    static final GameService gameService = new GameService();
+    Gson gson = new Gson();
+    GameService gameService;
 
-    public static Object CreateGame(Request req, Response response) throws DataAccessException {
+    public Object CreateGame(Request req, Response response) throws DataAccessException {
         GameService.CreateRequest gameData = gson.fromJson(req.body(), GameService.CreateRequest.class);
         GameService.CreateResult data;
 

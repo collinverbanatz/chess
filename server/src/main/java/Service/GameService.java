@@ -6,9 +6,15 @@ import chess.ChessGame;
 import dataaccess.DataAccessException;
 
 public class GameService {
-//    UsrDOA userDao = new MemoryUserDOA();
-//    AuthDOA authDao = new MemoryAuthDAO();
-    GameDAO gameDao = new MemoryGameDAO();
+
+    AuthDOA authDao;
+    GameDAO gameDao;
+
+    public GameService(AuthDOA authDao, GameDAO gameDao) {
+        this.authDao = authDao;
+        this.gameDao = gameDao;
+    }
+
     int gameID = 0;
 
 
@@ -19,7 +25,7 @@ public class GameService {
 //        }
 
 //        check to see if authToken exists
-        if (!UserService.authDao.authTokenExists(authToken)){
+        if (!authDao.authTokenExists(authToken)){
             throw new DataAccessException("Invalid authToken");
         }
 
