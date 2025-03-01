@@ -6,8 +6,8 @@ import chess.ChessGame;
 import dataaccess.DataAccessException;
 
 public class GameService {
-    UsrDOA userDao = new MemoryUserDOA();
-    AuthDOA authDao = new MemoryAuthDAO();
+//    UsrDOA userDao = new MemoryUserDOA();
+//    AuthDOA authDao = new MemoryAuthDAO();
     GameDAO gameDao = new MemoryGameDAO();
     int gameID = 0;
 
@@ -40,36 +40,36 @@ public class GameService {
     }
 
     public static class CreateRequest{
-            private String gameName;
+        private String gameName;
 
-            public CreateRequest(String gameName) {
-                this.gameName = gameName;
-            }
-
-            public String getGameName() {
-                return gameName;
-            }
-
-            public void setGameName(String gameName) {
-                this.gameName = gameName;
-            }
+        public CreateRequest(String gameName) {
+            this.gameName = gameName;
         }
 
-
-
-        public static class CreateResult{
-            private int gameID;
-
-            public CreateResult(int gameID) {
-                this.gameID = gameID;
-            }
-
-            public int getGameID() {
-                return gameID;
-            }
-
-            public void setGameID(int gameID) {
-                this.gameID = gameID;
-            }
+        public String getGameName() {
+            return gameName;
         }
+
+        public void setGameName(String gameName) {
+            this.gameName = gameName;
+        }
+    }
+
+
+
+    public static class CreateResult{
+        private int gameID;
+
+        public CreateResult(int gameID) {
+            this.gameID = gameID;
+        }
+
+        public int getGameID() {
+            return gameID;
+        }
+
+        public void setGameID(int gameID) {
+            this.gameID = gameID;
+        }
+    }
 }
