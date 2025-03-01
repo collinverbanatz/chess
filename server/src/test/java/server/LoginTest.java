@@ -37,8 +37,7 @@ public class LoginTest {
         UserService.RegisterRequest user= new UserService.RegisterRequest("collin", "12345", "collin@gmail.com");
         UserService.RegisterResult result = userService.register(user);
 
-//        Assertions.assertEquals(result, userDOA.getUser(user.getUsername()));
-//        assertnotnull
+
         Assertions.assertNotNull(userDOA.getUser(user.getUsername()));
     }
 

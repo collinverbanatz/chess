@@ -11,8 +11,11 @@ import dataaccess.DataAccessException;
 import java.util.UUID;
 
 public class UserService {
+    public static MemoryAuthDAO authDao;
     UsrDOA userDao = new MemoryUserDOA();
     static AuthDOA authDao = new MemoryAuthDAO();
+
+
 
 
     public RegisterResult register(RegisterRequest registerRequest) throws DataAccessException {

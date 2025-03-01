@@ -6,8 +6,8 @@ import chess.ChessGame;
 import dataaccess.DataAccessException;
 
 public class GameService {
-//    UsrDOA userDao = new MemoryUserDOA();
-//    AuthDOA authDao = new MemoryAuthDAO();
+    UsrDOA userDao = new MemoryUserDOA();
+    AuthDOA authDao = new MemoryAuthDAO();
     GameDAO gameDao = new MemoryGameDAO();
     int gameID = 0;
 
