@@ -15,12 +15,13 @@ public class UserTest {
     static MemoryUserDOA userDOA;
     static AuthData authData;
     static UserData userData;
+    static MemoryGameDAO gameDAO;
 
     @BeforeEach
     void setup() {
         userDOA = new MemoryUserDOA();
         authDAO = new MemoryAuthDAO();
-        userService = new UserService(userDOA, authDAO);
+        userService = new UserService(userDOA, authDAO, gameDAO);
 //        authData = new AuthData();
 //        userData = new UserData();
 
@@ -28,6 +29,7 @@ public class UserTest {
         // Clear existing data to ensure a fresh start
         userDOA.clear();
         authDAO.clear();
+        gameDAO.clear();
     }
 
 

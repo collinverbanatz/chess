@@ -68,8 +68,8 @@ public class UserHandler {
             userService.logout(authToken);
         }
         catch(DataAccessException e){
-            response.status(500);
-            return "{ \"message\": \"Error: Invalid authToken\" }";
+            response.status(401);
+            return "{ \"message\": \"Error: unauthorized\" }";
         }
 
         response.status(200);

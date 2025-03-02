@@ -4,15 +4,15 @@ import chess.ChessGame;
 
 public class GameData {
     public int gameID;;
-    public String whiteUserName;
-    public String blackUserName;
+    public String whiteUsername;
+    public String blackUsername;
     public String gameName;
-    public ChessGame game;
+    public transient ChessGame game;
 
-    public GameData(int gameID, String whiteUserName, String blackUserName, String gameName, ChessGame game) {
+    public GameData(int gameID, String whiteUsername, String blackUsername, String gameName, ChessGame game) {
         this.gameID = gameID;
-        this.whiteUserName = whiteUserName;
-        this.blackUserName = blackUserName;
+        this.whiteUsername = whiteUsername;
+        this.blackUsername = blackUsername;
         this.gameName = gameName;
         this.game = game;
     }
@@ -21,12 +21,12 @@ public class GameData {
         return gameID;
     }
 
-    public String getWhiteUserName() {
-        return whiteUserName;
+    public String getWhiteUsername() {
+        return whiteUsername;
     }
 
-    public String getBlackUserName() {
-        return blackUserName;
+    public String getBlackUsername() {
+        return blackUsername;
     }
 
     public String getGameName() {
@@ -41,12 +41,12 @@ public class GameData {
         this.gameID = gameID;
     }
 
-    public void setWhiteUserName(String whiteUserName) {
-        this.whiteUserName = whiteUserName;
+    public void setWhiteUsername(String whiteUsername) {
+        this.whiteUsername = whiteUsername;
     }
 
-    public void setBlackUserName(String blackUserName) {
-        this.blackUserName = blackUserName;
+    public void setBlackUsername(String blackUsername) {
+        this.blackUsername = blackUsername;
     }
 
     public void setGameName(String gameName) {

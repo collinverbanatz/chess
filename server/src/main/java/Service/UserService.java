@@ -1,6 +1,7 @@
 package Service;
 
 import DOA.AuthDOA;
+import DOA.GameDAO;
 import DOA.UsrDOA;
 import Models.AuthData;
 import Models.UserData;
@@ -13,10 +14,12 @@ public class UserService {
 
     UsrDOA userDao;
     AuthDOA authDao;
+    GameDAO gameDao;
 
-    public  UserService(UsrDOA userDoa,  AuthDOA authDao){
+    public  UserService(UsrDOA userDoa,  AuthDOA authDao, GameDAO gameDao){
         this.authDao = authDao;
         this.userDao = userDoa;
+        this.gameDao = gameDao;
     }
 
 
@@ -62,6 +65,7 @@ public class UserService {
     public void clear(){
         userDao.clear();
         authDao.clear();
+        gameDao.clear();
     }
 
 

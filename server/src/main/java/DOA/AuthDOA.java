@@ -10,4 +10,6 @@ public interface AuthDOA {
     void removeAuthToken(String authData);
 
     boolean authTokenExists(String authToken);
+
+    AuthData getAuthDataByToken(String authToken);
 }

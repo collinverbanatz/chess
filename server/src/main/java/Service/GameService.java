@@ -1,12 +1,13 @@
 package Service;
 
 import DOA.*;
+import Models.AuthData;
 import Models.GameData;
 import chess.ChessGame;
 import dataaccess.DataAccessException;
 
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
 
 public class GameService {
 
@@ -39,36 +40,64 @@ public class GameService {
 
 
 
-    public ArrayList ListGames(String authToken) throws DataAccessException {
+    public ListGameResult ListGames(String authToken) throws DataAccessException {
         if (!authDao.authTokenExists(authToken)){
             throw new DataAccessException("Invalid authToken");
         }
-        return gameDao.getListGames();
+        return new ListGameResult(gameDao.getListGames());
     }
 
 
     public void JoinGame(JoinGameRequest gameData, String authToken) throws DataAccessException {
-        if (!authDao.authTokenExists(authToken)){
+        AuthData authData = authDao.getAuthDataByToken(authToken);
+        if(authData == null) {
             throw new DataAccessException("Invalid authToken");
         }
-        int gameId = gameData.getGameID();
 
-        if(!gameDao.getGameID(gameId)){
-            throw new DataAccessException("InvalidGameId");
+        if(!Objects.equals(gameData.playerColor, "WHITE") && !Objects.equals(gameData.playerColor, "BLACK")){
+            throw new DataAccessException("not a valid color");
         }
 
-        GameData gameData2 = gameDao.getGame(gameId);
+        int gameId = gameData.getGameID();
 
+        GameData realGameData = gameDao.getGameByID(gameId);
+        if(realGameData == null){
+            throw new DataAccessException("No game exists");
+        }
 
+        String wantedColor = gameData.playerColor;
 
-//       GameData gameData1 = gameDao.getGameData();
-//       int realGameId = gameData1.gameID;
-//        if(gameId != realGameId){
-//            throw new DataAccessException("InvalidGameId");
-//        }
+        if(wantedColor.equals("BLACK") && realGameData.blackUsername != null || wantedColor.equals("WHITE") && realGameData.whiteUsername != null){
+            throw new DataAccessException("already taken");
+        }
 
-
+        String userName = authData.username;
+        if (wantedColor.equals("BLACK")) {
+            realGameData.setBlackUsername(userName);
+        }
+        else{
+            realGameData.setWhiteUsername(userName);
+        }
+        gameDao.updateGameData(realGameData);
     }
+
+
+    public static class ListGameResult{
+        private List<GameData> games;
+
+        public ListGameResult(List<GameData> games) {
+            this.games = games;
+        }
+
+        public List<GameData> getGames() {
+            return games;
+        }
+
+        public void setGames(List<GameData> games) {
+            this.games = games;
+        }
+    }
+
 
 
     public static class CreateRequest{
@@ -104,14 +133,6 @@ public class GameService {
             this.gameID = gameID;
         }
     }
-
-
-
-    public static class ListGameResult{
-        private HashSet gameLlist;
-    }
-
-
 
     public static class JoinGameRequest{
         private String playerColor;

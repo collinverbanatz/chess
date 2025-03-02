@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class MemoryGameDAO implements GameDAO{
 
-    private Map<Integer, GameData> AllGameData = new HashMap<>();
+    private static Map<Integer, GameData> AllGameData = new HashMap<>();
 
 
     @Override
@@ -25,5 +25,26 @@ public class MemoryGameDAO implements GameDAO{
     @Override
     public ArrayList<GameData> getListGames() {
         return new ArrayList<>(AllGameData.values());
+    }
+
+    @Override
+    public GameData getGameByID(int gameId) {
+        return AllGameData.get(gameId);
+    }
+
+    @Override
+    public void joinGame(int gameId, String wantedColor) {
+        AllGameData.get(gameId);
+
+    }
+
+    @Override
+    public void updateGameData(GameData gameData) {
+        AllGameData.put(gameData.getGameID(), gameData);
+    }
+
+    @Override
+    public void clear() {
+        AllGameData.clear();
     }
 }

@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class MemoryUserDOA implements UsrDOA{
 
-    private Map<String, UserData> AllUserData = new HashMap<>();
+    private static Map<String, UserData> AllUserData = new HashMap<>();
 
     @Override
     public UserData getUser(String userName) throws DataAccessException {

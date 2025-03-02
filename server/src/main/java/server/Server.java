@@ -15,7 +15,7 @@ public class Server {
         AuthDOA authDao = new MemoryAuthDAO();
         GameDAO gameDao = new MemoryGameDAO();
 
-        userService =  new UserService(userDoa, authDao);
+        userService =  new UserService(userDoa, authDao, gameDao);
         gameService = new GameService(authDao, gameDao);
 
     }

@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class MemoryAuthDAO implements AuthDOA{
 
-    private Map<String, AuthData> allAuthData = new HashMap<>();
+    private static Map<String, AuthData> allAuthData = new HashMap<>();
 
     @Override
     public void putAuthToken(AuthData authToken) {
@@ -29,5 +29,10 @@ public class MemoryAuthDAO implements AuthDOA{
         System.out.println("Storing authToken: " + authToken); // Debugging output
 
         return allAuthData.containsKey(authToken);
+    }
+
+    @Override
+    public AuthData getAuthDataByToken(String authToken) {
+        return allAuthData.get(authToken);
     }
 }
