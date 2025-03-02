@@ -11,4 +11,5 @@ public interface GameDAO {
     GameService.CreateResult createGame(GameData gameData);
 
     ArrayList getListGames();
+
 }

@@ -46,6 +46,7 @@ public class Server {
         GameHandler gameHandler = new GameHandler(gameService);
         Spark.post("/game", gameHandler::CreateGame);
         Spark.get("/game", gameHandler::ListGames);
+        Spark.put("/game", gameHandler::JoinGame);
     }
 
     private Object Clear(Request request, Response response) {

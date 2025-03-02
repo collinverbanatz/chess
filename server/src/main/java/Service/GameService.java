@@ -47,6 +47,28 @@ public class GameService {
     }
 
 
+    public void JoinGame(JoinGameRequest gameData, String authToken) throws DataAccessException {
+        if (!authDao.authTokenExists(authToken)){
+            throw new DataAccessException("Invalid authToken");
+        }
+        int gameId = gameData.getGameID();
+
+        if(!gameDao.getGameID(gameId)){
+            throw new DataAccessException("InvalidGameId");
+        }
+
+        GameData gameData2 = gameDao.getGame(gameId);
+
+
+
+//       GameData gameData1 = gameDao.getGameData();
+//       int realGameId = gameData1.gameID;
+//        if(gameId != realGameId){
+//            throw new DataAccessException("InvalidGameId");
+//        }
+
+
+    }
 
 
     public static class CreateRequest{
@@ -87,6 +109,34 @@ public class GameService {
 
     public static class ListGameResult{
         private HashSet gameLlist;
+    }
+
+
+
+    public static class JoinGameRequest{
+        private String playerColor;
+        private int gameID;
+
+        public JoinGameRequest(String playerColor, int gameID) {
+            this.playerColor = playerColor;
+            this.gameID = gameID;
+        }
+
+        public String getPlayerColor() {
+            return playerColor;
+        }
+
+        public void setPlayerColor(String playerColor) {
+            this.playerColor = playerColor;
+        }
+
+        public int getGameID() {
+            return gameID;
+        }
+
+        public void setGameID(int gameID) {
+            this.gameID = gameID;
+        }
     }
 
 }

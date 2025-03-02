@@ -19,7 +19,6 @@ public class MemoryGameDAO implements GameDAO{
     public GameService.CreateResult createGame(GameData gameData) {
         AllGameData.put(gameData.getGameID(), gameData);
 
-
         return new GameService.CreateResult(gameData.gameID);
     }
 
