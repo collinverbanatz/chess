@@ -30,7 +30,7 @@ public class GameService {
 
 //        check to see if authToken exists
         if (!authdao.authTokenExists(authToken)){
-            throw new DataAccessException("FF");
+            throw new DataAccessException("Invalid authToken");
         }
 
         gameID = gameID +1;
