@@ -168,6 +168,45 @@ public class ChessGame {
         return false;
     }
 
+    private boolean canEscapeCheck(TeamColor teamColor, ChessPosition position, ChessPiece piece){
+        if(piece != null && piece.getTeamColor() == teamColor) {
+            Collection<ChessMove> moves = validMoves(position);
+            if (moves != null) {
+                for(ChessMove move : moves){
+                    ChessPiece capturedPiece = board.getPiece(move.getEndPosition());
+                    board.addPiece(position, null);
+                    board.addPiece(move.getEndPosition(), piece);
+
+                    if(!isInCheck(teamColor)){
+                        board.addPiece(position, piece);
+                        board.addPiece(move.getEndPosition(), capturedPiece);
+                        return true;
+                    }
+
+                    //            reset board back to normal
+                    board.addPiece(position, piece);
+                    board.addPiece(move.getEndPosition(), capturedPiece);
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean hasNoValidMoves(TeamColor teamColor){
+        for (int row = 1; row <= 8; row++) {
+            for (int col = 1; col <= 8; col++) {
+                ChessPosition position = new ChessPosition(row, col);
+                ChessPiece piece = board.getPiece(position);
+                if(canEscapeCheck(teamColor, position, piece)){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+
+
     /**
      * Determines if the given team is in checkmate
      *
@@ -178,36 +217,8 @@ public class ChessGame {
         if(!isInCheck(teamColor)){
             return false;
         }
-            for (int row = 1; row <= 8; row++) {
-                for (int col = 1; col <= 8; col++) {
-                    ChessPosition position = new ChessPosition(row, col);
-                    ChessPiece piece = board.getPiece(position);
-                    if(piece != null && piece.getTeamColor() == teamColor) {
-                        Collection<ChessMove> moves = validMoves(position);
-                        if (moves != null) {
-                            for(ChessMove move : moves){
-                                ChessPiece capturedPiece = board.getPiece(move.getEndPosition());
-                                board.addPiece(position, null);
-                                board.addPiece(move.getEndPosition(), piece);
 
-                                if(!isInCheck(teamColor)){
-                                    board.addPiece(position, piece);
-                                    board.addPiece(move.getEndPosition(), capturedPiece);
-                                    return false;
-                                }
-
-                //            reset board back to normal
-                                board.addPiece(position, piece);
-                                board.addPiece(move.getEndPosition(), capturedPiece);
-                            }
-                        }
-
-                    }
-                }
-            }
-
-        return true;
-//        throw new RuntimeException("Not implemented");
+        return hasNoValidMoves(teamColor);
     }
 
     /**
