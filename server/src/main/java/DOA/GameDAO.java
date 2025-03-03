@@ -1,6 +1,6 @@
 package DOA;
 
-import Models.GameData;
+import models.GameData;
 import service.GameService;
 
 import java.util.ArrayList;

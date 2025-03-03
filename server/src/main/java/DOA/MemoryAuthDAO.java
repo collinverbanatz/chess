@@ -1,11 +1,11 @@
 package DOA;
 
-import Models.AuthData;
+import models.AuthData;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class MemoryAuthDAO implements AuthDOA{
+public class MemoryAuthDAO implements AuthDAO {
 
     private static Map<String, AuthData> allAuthData = new HashMap<>();
 

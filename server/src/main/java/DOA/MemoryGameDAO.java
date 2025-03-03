@@ -1,6 +1,6 @@
 package DOA;
 
-import Models.GameData;
+import models.GameData;
 import service.GameService;
 
 import java.util.ArrayList;
@@ -9,39 +9,39 @@ import java.util.Map;
 
 public class MemoryGameDAO implements GameDAO{
 
-    private static Map<Integer, GameData> AllGameData = new HashMap<>();
+    private static Map<Integer, GameData> allGameData = new HashMap<>();
 
 
     @Override
     public GameService.CreateResult createGame(GameData gameData) {
-        AllGameData.put(gameData.getGameID(), gameData);
+        allGameData.put(gameData.getGameID(), gameData);
 
         return new GameService.CreateResult(gameData.gameID);
     }
 
     @Override
     public ArrayList<GameData> getListGames() {
-        return new ArrayList<>(AllGameData.values());
+        return new ArrayList<>(allGameData.values());
     }
 
     @Override
     public GameData getGameByID(int gameId) {
-        return AllGameData.get(gameId);
+        return allGameData.get(gameId);
     }
 
     @Override
     public void joinGame(int gameId, String wantedColor) {
-        AllGameData.get(gameId);
+        allGameData.get(gameId);
 
     }
 
     @Override
     public void updateGameData(GameData gameData) {
-        AllGameData.put(gameData.getGameID(), gameData);
+        allGameData.put(gameData.getGameID(), gameData);
     }
 
     @Override
     public void clear() {
-        AllGameData.clear();
+        allGameData.clear();
     }
 }

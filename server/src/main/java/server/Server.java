@@ -11,8 +11,8 @@ public class Server {
 
 
     private void createServices(){
-        UsrDOA userDoa = new MemoryUserDOA();
-        AuthDOA authDao = new MemoryAuthDAO();
+        UsrDAO userDoa = new MemoryUserDAO();
+        AuthDAO authDao = new MemoryAuthDAO();
         GameDAO gameDao = new MemoryGameDAO();
 
         userService =  new UserService(userDoa, authDao, gameDao);
@@ -26,9 +26,9 @@ public class Server {
 
         Spark.staticFiles.location("web");
 
-        // Register your endpoints and handle exceptions here.
+        // register your endpoints and handle exceptions here.
         createServices();
-        RegisterRouts();
+        registerRouts();
         //This line initializes the server and can be removed once you have a functioning endpoint 
         Spark.init();
 
@@ -36,20 +36,20 @@ public class Server {
         return Spark.port();
     }
 
-    private void RegisterRouts(){
+    private void registerRouts(){
         UserHandler userHandler = new UserHandler(userService);
-        Spark.post("/session", userHandler::Login);
-        Spark.post("/user", userHandler::Register);
-        Spark.delete("/db", this::Clear);
-        Spark.delete("/session", userHandler::Logout);
+        Spark.post("/session", userHandler::login);
+        Spark.post("/user", userHandler::register);
+        Spark.delete("/db", this::clear);
+        Spark.delete("/session", userHandler::logout);
 
         GameHandler gameHandler = new GameHandler(gameService);
-        Spark.post("/game", gameHandler::CreateGame);
-        Spark.get("/game", gameHandler::ListGames);
-        Spark.put("/game", gameHandler::JoinGame);
+        Spark.post("/game", gameHandler::createGame);
+        Spark.get("/game", gameHandler::listGames);
+        Spark.put("/game", gameHandler::joinGame);
     }
 
-    private Object Clear(Request request, Response response) {
+    private Object clear(Request request, Response response) {
         userService.clear();
 //        need to add gameService.clear();
 

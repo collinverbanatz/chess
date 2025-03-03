@@ -1,8 +1,8 @@
 package service;
 
 import DOA.*;
-import Models.AuthData;
-import Models.UserData;
+import models.AuthData;
+import models.UserData;
 import dataaccess.DataAccessException;
 import org.junit.jupiter.api.*;
 
@@ -11,14 +11,14 @@ public class UserServiceTest {
 
     static UserService userService;
     static MemoryAuthDAO authDAO;
-    static MemoryUserDOA userDOA;
+    static MemoryUserDAO userDOA;
     static AuthData authData;
     static UserData userData;
     static MemoryGameDAO gameDAO;
 
     @BeforeEach
     void setup() {
-        userDOA = new MemoryUserDOA();
+        userDOA = new MemoryUserDAO();
         authDAO = new MemoryAuthDAO();
         gameDAO = new MemoryGameDAO();
         userService = new UserService(userDOA, authDAO, gameDAO);
@@ -55,7 +55,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void LoginSuccessTest() throws DataAccessException {
+    void loginSuccessTest() throws DataAccessException {
         userService.register(user);
         UserService.LoginRequest loginRequest = new UserService.LoginRequest("collin", "12345");
         UserService.LoginResult loginResult = userService.login(loginRequest);
@@ -64,7 +64,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void LoginFailureTest(){
+    void loginFailureTest(){
         UserService.LoginRequest user1 = new UserService.LoginRequest("collin", "12345");
 
         DataAccessException e = Assertions.assertThrows(DataAccessException.class, () -> {
@@ -74,7 +74,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void LogoutSuccessTest() throws DataAccessException {
+    void logoutSuccessTest() throws DataAccessException {
         UserService.RegisterResult registerResult = userService.register(user);
         UserService.LoginRequest loginRequest = new UserService.LoginRequest("collin", "12345");
         UserService.LoginResult loginResult = userService.login(loginRequest);
@@ -94,7 +94,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void ClearTest() throws DataAccessException {
+    void clearTest() throws DataAccessException {
 //        checks to see if it registers correctly
         Assertions.assertDoesNotThrow(() -> userService.register(user));
 

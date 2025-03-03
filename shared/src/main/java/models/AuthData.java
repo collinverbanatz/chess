@@ -1,4 +1,4 @@
-package Models;
+package models;
 
 // class to get authToken
 public class AuthData {

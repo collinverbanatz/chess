@@ -1,8 +1,8 @@
 package service;
 
 import DOA.*;
-import Models.AuthData;
-import Models.GameData;
+import models.AuthData;
+import models.GameData;
 import chess.ChessGame;
 import dataaccess.DataAccessException;
 
@@ -11,10 +11,10 @@ import java.util.Objects;
 
 public class GameService {
 
-    AuthDOA authDao;
+    AuthDAO authDao;
     GameDAO gameDao;
 
-    public GameService(AuthDOA authDao, GameDAO gameDao) {
+    public GameService(AuthDAO authDao, GameDAO gameDao) {
         this.authDao = authDao;
         this.gameDao = gameDao;
     }
@@ -30,7 +30,7 @@ public class GameService {
 
 //        check to see if authToken exists
         if (!authDao.authTokenExists(authToken)){
-            throw new DataAccessException("Invalid authToken");
+            throw new DataAccessException("FF");
         }
 
         gameID = gameID +1;
@@ -40,7 +40,7 @@ public class GameService {
 
 
 
-    public ListGameResult ListGames(String authToken) throws DataAccessException {
+    public ListGameResult listGames(String authToken) throws DataAccessException {
         if (!authDao.authTokenExists(authToken)){
             throw new DataAccessException("Invalid authToken");
         }
@@ -48,7 +48,7 @@ public class GameService {
     }
 
 
-    public void JoinGame(JoinGameRequest gameData, String authToken) throws DataAccessException {
+    public void joinGame(JoinGameRequest gameData, String authToken) throws DataAccessException {
         AuthData authData = authDao.getAuthDataByToken(authToken);
         if(authData == null) {
             throw new DataAccessException("Invalid authToken");

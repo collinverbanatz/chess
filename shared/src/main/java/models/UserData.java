@@ -1,4 +1,4 @@
-package Models;
+package models;
 
 //class to clas out userName and Password out of the object after being converted from gson
 public class UserData {

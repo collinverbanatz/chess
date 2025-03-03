@@ -16,7 +16,7 @@ public class GameHandler {
         this.gameService = gameService;
     }
 
-    public Object CreateGame(Request req, Response response) throws DataAccessException {
+    public Object createGame(Request req, Response response) throws DataAccessException {
         GameService.CreateRequest gameData = gson.fromJson(req.body(), GameService.CreateRequest.class);
         GameService.CreateResult data;
 
@@ -35,12 +35,12 @@ public class GameHandler {
     }
 
 
-    public Object ListGames(Request req, Response response) throws DataAccessException {
+    public Object listGames(Request req, Response response) throws DataAccessException {
         GameService.ListGameResult data;
 
         String authToken = req.headers("authorization");
         try {
-            data = gameService.ListGames(authToken);
+            data = gameService.listGames(authToken);
         }
         catch (DataAccessException e){
             response.status(401);
@@ -51,7 +51,7 @@ public class GameHandler {
     }
 
 
-    public Object JoinGame(Request req, Response response) throws DataAccessException {
+    public Object joinGame(Request req, Response response) throws DataAccessException {
         GameService.JoinGameRequest gameData = gson.fromJson(req.body(), GameService.JoinGameRequest.class);
 
         String authToken = req.headers("authorization");
@@ -61,7 +61,7 @@ public class GameHandler {
         }
 
         try {
-            gameService.JoinGame(gameData, authToken);
+            gameService.joinGame(gameData, authToken);
         }
         catch (DataAccessException e){
             String message = e.getMessage();

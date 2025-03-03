@@ -1,10 +1,10 @@
 package service;
 
-import DOA.AuthDOA;
+import DOA.AuthDAO;
 import DOA.GameDAO;
-import DOA.UsrDOA;
-import Models.AuthData;
-import Models.UserData;
+import DOA.UsrDAO;
+import models.AuthData;
+import models.UserData;
 import dataaccess.DataAccessException;
 
 import java.util.UUID;
@@ -12,11 +12,11 @@ import java.util.UUID;
 public class UserService {
 
 
-    UsrDOA userDao;
-    AuthDOA authDao;
+    UsrDAO userDao;
+    AuthDAO authDao;
     GameDAO gameDao;
 
-    public  UserService(UsrDOA userDoa,  AuthDOA authDao, GameDAO gameDao){
+    public  UserService(UsrDAO userDoa, AuthDAO authDao, GameDAO gameDao){
         this.authDao = authDao;
         this.userDao = userDoa;
         this.gameDao = gameDao;

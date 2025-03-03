@@ -2,9 +2,9 @@ package service;
 
 import DOA.MemoryAuthDAO;
 import DOA.MemoryGameDAO;
-import DOA.MemoryUserDOA;
-import Models.AuthData;
-import Models.UserData;
+import DOA.MemoryUserDAO;
+import models.AuthData;
+import models.UserData;
 import dataaccess.DataAccessException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +15,7 @@ public class GameServiceTest {
 
     static UserService userService;
     static MemoryAuthDAO authDAO;
-    static MemoryUserDOA userDOA;
+    static MemoryUserDAO userDOA;
     static AuthData authData;
     static UserData userData;
     static MemoryGameDAO gameDAO;
@@ -24,7 +24,7 @@ public class GameServiceTest {
 
     @BeforeEach
     void setup() throws DataAccessException {
-        userDOA = new MemoryUserDOA();
+        userDOA = new MemoryUserDAO();
         authDAO = new MemoryAuthDAO();
         gameDAO = new MemoryGameDAO();
         userService = new UserService(userDOA, authDAO, gameDAO);
@@ -45,14 +45,14 @@ public class GameServiceTest {
     }
 
     @Test
-    void CreateGameSuccess() throws DataAccessException {
+    void createGameSuccess() throws DataAccessException {
         GameService.CreateRequest createRequest = new GameService.CreateRequest("gamename");
 
         Assertions.assertDoesNotThrow(() -> gameService.createGame(authToken, createRequest));
     }
 
     @Test
-    void CreateGameFailure(){
+    void createGameFailure(){
         DataAccessException e = Assertions.assertThrows(DataAccessException.class, () -> {
             GameService.CreateRequest createRequest = new GameService.CreateRequest("gamename");
             gameService.createGame("badAuthToken", createRequest);
@@ -62,43 +62,43 @@ public class GameServiceTest {
     }
 
     @Test
-    void JoinGameSuccess() throws DataAccessException {
+    void joinGameSuccess() throws DataAccessException {
         GameService.CreateRequest createRequest = new GameService.CreateRequest("gamename");
         gameService.createGame(authToken, createRequest);
 
         GameService.JoinGameRequest joinGameRequest = new GameService.JoinGameRequest("WHITE", 1);
-        Assertions.assertDoesNotThrow(() -> gameService.JoinGame(joinGameRequest ,authToken));
+        Assertions.assertDoesNotThrow(() -> gameService.joinGame(joinGameRequest ,authToken));
 
     }
 
     @Test
-    void JoinGameFailure() throws DataAccessException {
+    void joinGameFailure() throws DataAccessException {
         GameService.CreateRequest createRequest = new GameService.CreateRequest("gamename");
         gameService.createGame(authToken, createRequest);
 
         GameService.JoinGameRequest joinGameRequest = new GameService.JoinGameRequest("BLUE", 1);
 
         DataAccessException e = Assertions.assertThrows(DataAccessException.class, () -> {
-            gameService.JoinGame(joinGameRequest ,authToken);
+            gameService.joinGame(joinGameRequest ,authToken);
         });
         Assertions.assertEquals("not a valid color", e.getMessage());
     }
 
     @Test
-    void ListGameSuccess() throws DataAccessException {
+    void listGameSuccess() throws DataAccessException {
         GameService.CreateRequest createRequest = new GameService.CreateRequest("gamename");
         gameService.createGame(authToken, createRequest);
 
-        Assertions.assertDoesNotThrow(() -> gameService.ListGames(authToken));
+        Assertions.assertDoesNotThrow(() -> gameService.listGames(authToken));
     }
 
     @Test
-    void ListGameFailure() throws DataAccessException {
+    void listGameFailure() throws DataAccessException {
         GameService.CreateRequest createRequest = new GameService.CreateRequest("gamename");
         gameService.createGame(authToken, createRequest);
 
         DataAccessException e = Assertions.assertThrows(DataAccessException.class, () -> {
-            gameService.ListGames("authToken");
+            gameService.listGames("authToken");
         });
         Assertions.assertEquals("Invalid authToken", e.getMessage());
     }

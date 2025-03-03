@@ -1,8 +1,8 @@
 package DOA;
 
-import Models.AuthData;
+import models.AuthData;
 
-public interface AuthDOA {
+public interface AuthDAO {
     void putAuthToken(AuthData authToken);
 
     void clear();

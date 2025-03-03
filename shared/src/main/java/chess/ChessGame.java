@@ -66,8 +66,8 @@ public class ChessGame {
             ChessPiece capturedPiece = board.getPiece(possibleMoves.getEndPosition());
             board.addPiece(startPosition, null);
             board.addPiece(possibleMoves.getEndPosition(), piece);
-            ChessPosition KingPosition = findKing(piece.getTeamColor());
-            if(KingPosition != null && !isInCheck(piece.getTeamColor())){
+            ChessPosition kingPosition = findKing(piece.getTeamColor());
+            if(kingPosition != null && !isInCheck(piece.getTeamColor())){
                 legalMoves.add(possibleMoves);
             }
 //            reset board back to normal

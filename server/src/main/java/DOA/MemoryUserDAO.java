@@ -1,27 +1,27 @@
 package DOA;
 
 
-import Models.UserData;
+import models.UserData;
 import dataaccess.DataAccessException;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class MemoryUserDOA implements UsrDOA{
+public class MemoryUserDAO implements UsrDAO {
 
-    private static Map<String, UserData> AllUserData = new HashMap<>();
+    private static Map<String, UserData> allUserData = new HashMap<>();
 
     @Override
     public UserData getUser(String userName) throws DataAccessException {
-        return AllUserData.get(userName);
+        return allUserData.get(userName);
     }
 
     @Override
     public void putUser(UserData userData) {
-        AllUserData.put(userData.userName, userData);
+        allUserData.put(userData.userName, userData);
     }
 
     public void clear(){
-        AllUserData.clear();
+        allUserData.clear();
     }
 }

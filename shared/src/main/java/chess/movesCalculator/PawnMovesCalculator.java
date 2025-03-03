@@ -1,10 +1,9 @@
-package chess.movesCalulator;
+package chess.movesCalculator;
 
 import chess.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 public class PawnMovesCalculator implements PieceMovesCalculator{
     @Override

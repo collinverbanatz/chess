@@ -67,7 +67,7 @@ public class StandardAPITests {
 
     @Test
     @Order(2)
-    @DisplayName("Normal User Login")
+    @DisplayName("Normal User login")
     public void successLogin() {
         TestAuthResult loginResult = serverFacade.login(existingUser);
 
@@ -79,7 +79,7 @@ public class StandardAPITests {
 
     @Test
     @Order(3)
-    @DisplayName("Login Invalid User")
+    @DisplayName("login Invalid User")
     public void loginInvalidUser() {
         TestAuthResult loginResult = serverFacade.login(newUser);
 
@@ -89,7 +89,7 @@ public class StandardAPITests {
 
     @Test
     @Order(3)
-    @DisplayName("Login Wrong Password")
+    @DisplayName("login Wrong Password")
     public void loginWrongPassword() {
         TestUser loginRequest = new TestUser(existingUser.getUsername(), newUser.getPassword());
 
@@ -114,7 +114,7 @@ public class StandardAPITests {
 
     @Test
     @Order(5)
-    @DisplayName("Re-Register User")
+    @DisplayName("Re-register User")
     public void registerTwice() {
         //submit register request trying to register existing user
         TestAuthResult registerResult = serverFacade.register(existingUser);
@@ -125,7 +125,7 @@ public class StandardAPITests {
 
     @Test
     @Order(5)
-    @DisplayName("Register Bad Request")
+    @DisplayName("register Bad Request")
     public void failRegister() {
         //attempt to register a user without a password
         TestUser registerRequest = new TestUser(newUser.getUsername(), null, newUser.getEmail());
@@ -138,7 +138,7 @@ public class StandardAPITests {
 
     @Test
     @Order(6)
-    @DisplayName("Normal Logout")
+    @DisplayName("Normal logout")
     public void successLogout() {
         //log out existing user
         TestResult result = serverFacade.logout(existingAuth);
@@ -148,7 +148,7 @@ public class StandardAPITests {
 
     @Test
     @Order(7)
-    @DisplayName("Invalid Auth Logout")
+    @DisplayName("Invalid Auth logout")
     public void failLogout() {
         //log out user twice
         //second logout should fail
@@ -344,15 +344,15 @@ public class StandardAPITests {
 
     @Test
     @Order(13)
-    @DisplayName("Unique Authtoken Each Login")
+    @DisplayName("Unique Authtoken Each login")
     public void uniqueAuthorizationTokens() {
         TestAuthResult loginOne = serverFacade.login(existingUser);
         assertHttpOk(loginOne);
-        Assertions.assertNotNull(loginOne.getAuthToken(), "Login result did not contain an authToken");
+        Assertions.assertNotNull(loginOne.getAuthToken(), "login result did not contain an authToken");
 
         TestAuthResult loginTwo = serverFacade.login(existingUser);
         assertHttpOk(loginTwo);
-        Assertions.assertNotNull(loginTwo.getAuthToken(), "Login result did not contain an authToken");
+        Assertions.assertNotNull(loginTwo.getAuthToken(), "login result did not contain an authToken");
 
         Assertions.assertNotEquals(existingAuth, loginOne.getAuthToken(),
                 "Authtoken returned by login matched authtoken from prior register");
