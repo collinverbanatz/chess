@@ -142,6 +142,17 @@ public class ChessGame {
         return kingPos;
     }
 
+    private boolean canEscapeCheck(TeamColor teamColor, ChessPiece piece, ChessPosition position, ChessPosition kingPos){
+        if(piece != null && piece.getTeamColor() != teamColor){
+//                    loop through each of the enemies moves to see if it can attack our king
+            for(ChessMove move : piece.pieceMoves(board, position)){
+                if(move.getEndPosition().equals(kingPos)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     public boolean isInCheck(TeamColor teamColor) {
 //        find the kings position
@@ -153,22 +164,16 @@ public class ChessGame {
                 ChessPosition position = new ChessPosition(row, col);
                 ChessPiece piece = board.getPiece(position);
 //                check to see if it's enemy piece and it's not empty(there is a piece there)
-                if(piece != null && piece.getTeamColor() != teamColor){
-//                    loop through each of the enemies moves to see if it can attack our king
-                    for(ChessMove move : piece.pieceMoves(board, position)){
-                        if(move.getEndPosition().equals(kingPos)){
-                            return true;
-                        }
-                    }
+                if(canEscapeCheck(teamColor, piece, position, kingPos)){
+                    return true;
                 }
+
             }
         }
-
-//        throw new RuntimeException("Not implemented");
         return false;
     }
 
-    private boolean canEscapeCheck(TeamColor teamColor, ChessPosition position, ChessPiece piece){
+    private boolean canEscapeCheckmate(TeamColor teamColor, ChessPosition position, ChessPiece piece){
         if(piece != null && piece.getTeamColor() == teamColor) {
             Collection<ChessMove> moves = validMoves(position);
             if (moves != null) {
@@ -197,7 +202,7 @@ public class ChessGame {
             for (int col = 1; col <= 8; col++) {
                 ChessPosition position = new ChessPosition(row, col);
                 ChessPiece piece = board.getPiece(position);
-                if(canEscapeCheck(teamColor, position, piece)){
+                if(canEscapeCheckmate(teamColor, position, piece)){
                     return false;
                 }
             }
@@ -221,6 +226,17 @@ public class ChessGame {
         return hasNoValidMoves(teamColor);
     }
 
+    private boolean canEscapeStalemate(TeamColor teamColor, ChessPosition position, ChessPiece piece){
+        if(piece != null && teamColor == piece.getTeamColor()){
+            for(ChessMove move : validMoves(position)) {
+                if (move.getEndPosition() != null) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     /**
      * Determines if the given team is in stalemate, which here is defined as having
      * no valid moves
@@ -239,20 +255,14 @@ public class ChessGame {
             for (int col = 1; col <= 8; col++) {
                 ChessPosition position = new ChessPosition(row, col);
                 ChessPiece piece = board.getPiece(position);
-                if(piece != null && teamColor == piece.getTeamColor()){
-                    for(ChessMove move : validMoves(position)) {
-                        if (move.getEndPosition() != null) {
-                            return false;
-                        }
-                    }
+                if(canEscapeStalemate(teamColor, position, piece)){
+                    return false;
                 }
             }
         }
-
-
-//        throw new RuntimeException("Not implemented");
         return true;
     }
+
 
     /**
      * Sets this game's chessboard with a given board
