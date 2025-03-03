@@ -1,13 +1,14 @@
-package server;
+package Service;
 
 import DOA.*;
 import Models.AuthData;
 import Models.UserData;
 import dataaccess.DataAccessException;
 import org.junit.jupiter.api.*;
-import Service.UserService;
 
-public class UserTest {
+import javax.xml.crypto.Data;
+
+public class UserServiceTest {
     UserService.RegisterRequest user= new UserService.RegisterRequest("collin", "12345", "collin@gmail.com");
 
     static UserService userService;
@@ -21,6 +22,7 @@ public class UserTest {
     void setup() {
         userDOA = new MemoryUserDOA();
         authDAO = new MemoryAuthDAO();
+        gameDAO = new MemoryGameDAO();
         userService = new UserService(userDOA, authDAO, gameDAO);
 //        authData = new AuthData();
 //        userData = new UserData();
@@ -44,18 +46,14 @@ public class UserTest {
 
     @Test
     void registerFailTest() throws DataAccessException {
-        try {
-            UserService.RegisterRequest user = new UserService.RegisterRequest("collin", "12345", "collin@gmail.com");
-            UserService.RegisterResult result = userService.register(user);
+        UserService.RegisterRequest user = new UserService.RegisterRequest("collin", "12345", "collin@gmail.com");
+        userService.register(user);
 
-            UserService.RegisterRequest user2 = new UserService.RegisterRequest("collin", "12345", "collin@gmail.com");
-
-
-            Assertions.assertNull(result.getAuthToken());
-        }
-        catch (DataAccessException e){
-            Assertions.assertTrue(e.getMessage().contains("username all ready exists"));
-        }
+        UserService.RegisterRequest user2 = new UserService.RegisterRequest("collin", "12345", "collin@gmail.com");
+        DataAccessException e = Assertions.assertThrows(DataAccessException.class, () -> {
+            userService.register(user2);
+        });
+        Assertions.assertEquals("username all ready exists", e.getMessage());
     }
 
     @Test
@@ -69,7 +67,12 @@ public class UserTest {
 
     @Test
     void LoginFailureTest(){
-        Assertions.assertEquals(1,0);
+        UserService.LoginRequest user1 = new UserService.LoginRequest("collin", "12345");
+
+        DataAccessException e = Assertions.assertThrows(DataAccessException.class, () -> {
+            userService.login(user1);
+        });
+        Assertions.assertEquals("user name doesn't exist", e.getMessage());
     }
 
     @Test
@@ -85,8 +88,11 @@ public class UserTest {
 
     @Test
     void logoutFailTest() {
-        Assertions.assertEquals(1,0);
 
+        DataAccessException e = Assertions.assertThrows(DataAccessException.class, () -> {
+            userService.logout("badToken");
+        });
+        Assertions.assertEquals("Invalid authToken", e.getMessage());
     }
 
     @Test

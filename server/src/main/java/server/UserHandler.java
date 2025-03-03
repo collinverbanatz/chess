@@ -45,7 +45,7 @@ public class UserHandler {
         try {
             data = userService.register(user);
         }
-        catch (DataAccessException | IllegalStateException e) {
+        catch (DataAccessException e) {
             response.status(403);
             return "{ \"message\": \"Error: already taken\" }";
         }

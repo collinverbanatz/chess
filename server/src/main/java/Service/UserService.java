@@ -26,7 +26,7 @@ public class UserService {
     public RegisterResult register(RegisterRequest registerRequest) throws DataAccessException {
         UserData userData = userDao.getUser(registerRequest.username);
         if(userData != null){
-            throw new IllegalStateException("username all ready exists");
+            throw new DataAccessException("username all ready exists");
         }
         userDao.putUser(new UserData(registerRequest.username, registerRequest.password, registerRequest.email));
         AuthData authData = createAndSaveAuthToken(registerRequest.username);
@@ -37,7 +37,7 @@ public class UserService {
     public LoginResult login(LoginRequest loginRequest) throws DataAccessException {
         UserData userData = userDao.getUser(loginRequest.username);
         if(userData == null){
-            throw new IllegalStateException("user name doesn't exist");
+            throw new DataAccessException("user name doesn't exist");
         }
         String correctPassword = userData.getPassword();
         String password = loginRequest.password;
@@ -46,7 +46,7 @@ public class UserService {
             return new LoginResult(userData.userName, authData.authToken);
         }
         else{
-            throw new IllegalStateException("wrong password");
+            throw new DataAccessException("wrong password");
         }
 
     }
