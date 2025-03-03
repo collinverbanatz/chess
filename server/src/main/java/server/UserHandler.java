@@ -17,7 +17,7 @@ public class UserHandler {
     // implements loging in the user give a userName and password
     public Object login(Request req, Response response){
         UserService.LoginRequest user = gson.fromJson(req.body(), UserService.LoginRequest.class);
-        UserService.LoginResult data;
+        UserService.RegisterResult data;
 
         try {
             data = userService.login(user);

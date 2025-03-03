@@ -34,7 +34,7 @@ public class UserService {
     }
 
 
-    public LoginResult login(LoginRequest loginRequest) throws DataAccessException {
+    public RegisterResult login(LoginRequest loginRequest) throws DataAccessException {
         UserData userData = userDao.getUser(loginRequest.username);
         if(userData == null){
             throw new DataAccessException("user name doesn't exist");
@@ -43,7 +43,7 @@ public class UserService {
         String password = loginRequest.password;
         if(correctPassword.equals(password)){
             AuthData authData = createAndSaveAuthToken(userData.userName);
-            return new LoginResult(userData.userName, authData.authToken);
+            return new RegisterResult(userData.userName, authData.authToken);
         }
         else{
             throw new DataAccessException("wrong password");
@@ -163,31 +163,31 @@ public class UserService {
 
 
 
-    public static class LoginResult{
-        private String username;
-        private String authToken;
-
-        public LoginResult(String username, String authToken) {
-            this.username = username;
-            this.authToken = authToken;
-        }
-
-        public String getUsername() {
-            return username;
-        }
-
-        public void setUsername(String username) {
-            this.username = username;
-        }
-
-        public String getAuthToken() {
-            return authToken;
-        }
-
-        public void setAuthToken(String authToken) {
-            this.authToken = authToken;
-        }
-    }
+//    public static class LoginResult{
+//        private String username;
+//        private String authToken;
+//
+//        public LoginResult(String username, String authToken) {
+//            this.username = username;
+//            this.authToken = authToken;
+//        }
+//
+//        public String getUsername() {
+//            return username;
+//        }
+//
+//        public void setUsername(String username) {
+//            this.username = username;
+//        }
+//
+//        public String getAuthToken() {
+//            return authToken;
+//        }
+//
+//        public void setAuthToken(String authToken) {
+//            this.authToken = authToken;
+//        }
+//    }
 
     public static class LoginRequest {
         private String username;

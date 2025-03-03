@@ -58,7 +58,7 @@ public class UserServiceTest {
     void loginSuccessTest() throws DataAccessException {
         userService.register(user);
         UserService.LoginRequest loginRequest = new UserService.LoginRequest("collin", "12345");
-        UserService.LoginResult loginResult = userService.login(loginRequest);
+        UserService.RegisterResult loginResult = userService.login(loginRequest);
 
         Assertions.assertNotNull(loginResult.getAuthToken(), "Auth token should be returned on successful login.");
     }
@@ -77,7 +77,7 @@ public class UserServiceTest {
     void logoutSuccessTest() throws DataAccessException {
         UserService.RegisterResult registerResult = userService.register(user);
         UserService.LoginRequest loginRequest = new UserService.LoginRequest("collin", "12345");
-        UserService.LoginResult loginResult = userService.login(loginRequest);
+        UserService.RegisterResult loginResult = userService.login(loginRequest);
         userService.logout(loginResult.getAuthToken());
         boolean result = authDAO.authTokenExists(loginResult.getAuthToken());
 
