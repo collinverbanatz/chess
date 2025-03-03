@@ -142,6 +142,7 @@ public class ChessGame {
         return kingPos;
     }
 
+
     public boolean isInCheck(TeamColor teamColor) {
 //        find the kings position
         ChessPosition kingPos = findKing(teamColor);
@@ -199,7 +200,6 @@ public class ChessGame {
                                 board.addPiece(position, piece);
                                 board.addPiece(move.getEndPosition(), capturedPiece);
                             }
-//                        loop through each piece that is your and call validmove on it to see if it can get out of check and if by the end of the loop there is no piece that can get you out you're in checkmate
                         }
 
                     }

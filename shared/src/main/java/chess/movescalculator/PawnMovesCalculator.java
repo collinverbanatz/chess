@@ -44,7 +44,8 @@ public class PawnMovesCalculator implements PieceMovesCalculator{
 //        makes pawn move 2 steps forward if it's at starting position
         if (team == null){
 
-            if(pieceColor == ChessGame.TeamColor.WHITE && myPosition.getRow() == 2 || pieceColor == ChessGame.TeamColor.BLACK && myPosition.getRow() == 7) {
+            if(pieceColor == ChessGame.TeamColor.WHITE && myPosition.getRow() == 2 ||
+                    pieceColor == ChessGame.TeamColor.BLACK && myPosition.getRow() == 7) {
                 ChessPosition twoStepForward = new ChessPosition(myPosition.getRow() + direction * 2, myPosition.getColumn());
                 if (board.getPiece(twoStepForward) == null && board.getPiece(oneStepForward) == null) {
                     moves.add(new ChessMove(myPosition, twoStepForward, null));

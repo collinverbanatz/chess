@@ -161,34 +161,6 @@ public class UserService {
 
 
 
-
-
-//    public static class LoginResult{
-//        private String username;
-//        private String authToken;
-//
-//        public LoginResult(String username, String authToken) {
-//            this.username = username;
-//            this.authToken = authToken;
-//        }
-//
-//        public String getUsername() {
-//            return username;
-//        }
-//
-//        public void setUsername(String username) {
-//            this.username = username;
-//        }
-//
-//        public String getAuthToken() {
-//            return authToken;
-//        }
-//
-//        public void setAuthToken(String authToken) {
-//            this.authToken = authToken;
-//        }
-//    }
-
     public static class LoginRequest {
         private String username;
         private String password;
