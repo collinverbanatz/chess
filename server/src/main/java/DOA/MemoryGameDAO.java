@@ -1,13 +1,10 @@
 package DOA;
 
 import Models.GameData;
-import Models.UserData;
-import Service.GameService;
-import chess.ChessGame;
+import service.GameService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class MemoryGameDAO implements GameDAO{

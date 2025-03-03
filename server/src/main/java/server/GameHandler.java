@@ -1,14 +1,11 @@
 package server;
 
-import Models.GameData;
-import Service.GameService;
-import Service.UserService;
+import service.GameService;
 import com.google.gson.Gson;
 import dataaccess.DataAccessException;
 import spark.Request;
 import spark.Response;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 public class GameHandler {

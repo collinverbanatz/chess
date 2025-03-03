@@ -1,12 +1,10 @@
-package Service;
+package service;
 
 import DOA.*;
 import Models.AuthData;
 import Models.UserData;
 import dataaccess.DataAccessException;
 import org.junit.jupiter.api.*;
-
-import javax.xml.crypto.Data;
 
 public class UserServiceTest {
     UserService.RegisterRequest user= new UserService.RegisterRequest("collin", "12345", "collin@gmail.com");

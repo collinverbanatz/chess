@@ -1,4 +1,4 @@
-package Service;
+package service;
 
 import DOA.MemoryAuthDAO;
 import DOA.MemoryGameDAO;

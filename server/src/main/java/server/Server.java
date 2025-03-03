@@ -2,8 +2,8 @@ package server;
 
 import DOA.*;
 import spark.*;
-import Service.UserService;
-import Service.GameService;
+import service.UserService;
+import service.GameService;
 
 public class Server {
     private UserService userService;

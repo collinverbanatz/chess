@@ -1,4 +1,4 @@
-package Service;
+package service;
 
 import DOA.AuthDOA;
 import DOA.GameDAO;
