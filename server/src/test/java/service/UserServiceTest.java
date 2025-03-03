@@ -10,17 +10,17 @@ public class UserServiceTest {
     UserService.RegisterRequest user= new UserService.RegisterRequest("collin", "12345", "collin@gmail.com");
 
     static UserService userService;
-    static MemoryAuthDAO authDAO;
-    static MemoryUserDAO userDOA;
+    static MemoryAuthdao authDAO;
+    static MemoryUserdao userDOA;
     static AuthData authData;
     static UserData userData;
-    static MemoryGameDAO gameDAO;
+    static Memorygamedao gameDAO;
 
     @BeforeEach
     void setup() {
-        userDOA = new MemoryUserDAO();
-        authDAO = new MemoryAuthDAO();
-        gameDAO = new MemoryGameDAO();
+        userDOA = new MemoryUserdao();
+        authDAO = new MemoryAuthdao();
+        gameDAO = new Memorygamedao();
         userService = new UserService(userDOA, authDAO, gameDAO);
 //        authData = new AuthData();
 //        userData = new UserData();

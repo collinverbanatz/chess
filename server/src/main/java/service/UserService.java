@@ -1,8 +1,8 @@
 package service;
 
-import DOA.AuthDAO;
-import DOA.GameDAO;
-import DOA.UsrDAO;
+import DOA.Authdao;
+import DOA.Gamedao;
+import DOA.Usrdao;
 import models.AuthData;
 import models.UserData;
 import dataaccess.DataAccessException;
@@ -12,12 +12,12 @@ import java.util.UUID;
 public class UserService {
 
 
-    UsrDAO userDao;
-    AuthDAO authDao;
-    GameDAO gameDao;
+    Usrdao userDao;
+    Authdao authdao;
+    Gamedao gameDao;
 
-    public  UserService(UsrDAO userDoa, AuthDAO authDao, GameDAO gameDao){
-        this.authDao = authDao;
+    public  UserService(Usrdao userDoa, Authdao authdao, Gamedao gameDao){
+        this.authdao = authdao;
         this.userDao = userDoa;
         this.gameDao = gameDao;
     }
@@ -53,10 +53,10 @@ public class UserService {
 
 
     public void logout(String authToken) throws DataAccessException {
-        if (!authDao.authTokenExists(authToken)){
+        if (!authdao.authTokenExists(authToken)){
             throw new DataAccessException("Invalid authToken");
         }
-        authDao.removeAuthToken(authToken);
+        authdao.removeAuthToken(authToken);
 
 
     }
@@ -64,7 +64,7 @@ public class UserService {
 
     public void clear(){
         userDao.clear();
-        authDao.clear();
+        authdao.clear();
         gameDao.clear();
     }
 
@@ -72,7 +72,7 @@ public class UserService {
     private AuthData createAndSaveAuthToken(String username){
         String authToken = UUID.randomUUID().toString();
         AuthData authData = new AuthData(authToken, username);
-        authDao.putAuthToken(authData);
+        authdao.putAuthToken(authData);
         return authData;
     }
 

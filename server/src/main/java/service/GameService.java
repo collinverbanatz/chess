@@ -11,11 +11,11 @@ import java.util.Objects;
 
 public class GameService {
 
-    AuthDAO authDao;
-    GameDAO gameDao;
+    Authdao authdao;
+    Gamedao gameDao;
 
-    public GameService(AuthDAO authDao, GameDAO gameDao) {
-        this.authDao = authDao;
+    public GameService(Authdao authdao, Gamedao gameDao) {
+        this.authdao = authdao;
         this.gameDao = gameDao;
     }
 
@@ -29,7 +29,7 @@ public class GameService {
         }
 
 //        check to see if authToken exists
-        if (!authDao.authTokenExists(authToken)){
+        if (!authdao.authTokenExists(authToken)){
             throw new DataAccessException("FF");
         }
 
@@ -41,7 +41,7 @@ public class GameService {
 
 
     public ListGameResult listGames(String authToken) throws DataAccessException {
-        if (!authDao.authTokenExists(authToken)){
+        if (!authdao.authTokenExists(authToken)){
             throw new DataAccessException("Invalid authToken");
         }
         return new ListGameResult(gameDao.getListGames());
@@ -49,7 +49,7 @@ public class GameService {
 
 
     public void joinGame(JoinGameRequest gameData, String authToken) throws DataAccessException {
-        AuthData authData = authDao.getAuthDataByToken(authToken);
+        AuthData authData = authdao.getAuthDataByToken(authToken);
         if(authData == null) {
             throw new DataAccessException("Invalid authToken");
         }

@@ -7,7 +7,7 @@ import dataaccess.DataAccessException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MemoryUserDAO implements UsrDAO {
+public class MemoryUserdao implements Usrdao {
 
     private static Map<String, UserData> allUserData = new HashMap<>();
 

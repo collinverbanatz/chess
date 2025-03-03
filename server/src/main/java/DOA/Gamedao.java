@@ -5,7 +5,7 @@ import service.GameService;
 
 import java.util.ArrayList;
 
-public interface GameDAO {
+public interface Gamedao {
     GameService.CreateResult createGame(GameData gameData);
 
     ArrayList<GameData> getListGames();

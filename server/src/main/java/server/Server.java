@@ -11,12 +11,12 @@ public class Server {
 
 
     private void createServices(){
-        UsrDAO userDoa = new MemoryUserDAO();
-        AuthDAO authDao = new MemoryAuthDAO();
-        GameDAO gameDao = new MemoryGameDAO();
+        Usrdao userDoa = new MemoryUserdao();
+        Authdao authdao = new MemoryAuthdao();
+        Gamedao gameDao = new Memorygamedao();
 
-        userService =  new UserService(userDoa, authDao, gameDao);
-        gameService = new GameService(authDao, gameDao);
+        userService =  new UserService(userDoa, authdao, gameDao);
+        gameService = new GameService(authdao, gameDao);
 
     }
 

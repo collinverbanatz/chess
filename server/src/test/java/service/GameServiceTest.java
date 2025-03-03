@@ -1,8 +1,8 @@
 package service;
 
-import DOA.MemoryAuthDAO;
-import DOA.MemoryGameDAO;
-import DOA.MemoryUserDAO;
+import DOA.MemoryAuthdao;
+import DOA.Memorygamedao;
+import DOA.MemoryUserdao;
 import models.AuthData;
 import models.UserData;
 import dataaccess.DataAccessException;
@@ -14,19 +14,19 @@ public class GameServiceTest {
     UserService.RegisterRequest user= new UserService.RegisterRequest("collin", "12345", "collin@gmail.com");
 
     static UserService userService;
-    static MemoryAuthDAO authDAO;
-    static MemoryUserDAO userDOA;
+    static MemoryAuthdao authDAO;
+    static MemoryUserdao userDOA;
     static AuthData authData;
     static UserData userData;
-    static MemoryGameDAO gameDAO;
+    static Memorygamedao gameDAO;
     static GameService gameService;
     static String authToken;
 
     @BeforeEach
     void setup() throws DataAccessException {
-        userDOA = new MemoryUserDAO();
-        authDAO = new MemoryAuthDAO();
-        gameDAO = new MemoryGameDAO();
+        userDOA = new MemoryUserdao();
+        authDAO = new MemoryAuthdao();
+        gameDAO = new Memorygamedao();
         userService = new UserService(userDOA, authDAO, gameDAO);
         gameService = new GameService(authDAO, gameDAO);
 //        authData = new AuthData();

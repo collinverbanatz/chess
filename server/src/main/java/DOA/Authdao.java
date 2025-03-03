@@ -2,7 +2,7 @@ package DOA;
 
 import models.AuthData;
 
-public interface AuthDAO {
+public interface Authdao {
     void putAuthToken(AuthData authToken);
 
     void clear();
