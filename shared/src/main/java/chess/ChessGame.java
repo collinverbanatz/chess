@@ -133,7 +133,8 @@ public class ChessGame {
             for (int col = 1; col <= 8; col++) {
                 ChessPosition newPos = new ChessPosition(row, col);
                 ChessPiece newPiece = board.getPiece(newPos);
-                if(newPiece != null && newPiece.getTeamColor() == teamColor && newPiece.getPieceType() == ChessPiece.PieceType.KING){
+                if(newPiece != null && newPiece.getTeamColor() == teamColor &&
+                        newPiece.getPieceType() == ChessPiece.PieceType.KING){
                     kingPos = newPos;
                 }
             }
