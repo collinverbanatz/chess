@@ -1,4 +1,4 @@
-package DOA;
+package dao;
 
 import models.UserData;
 import dataaccess.DataAccessException;

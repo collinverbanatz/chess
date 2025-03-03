@@ -1,4 +1,4 @@
-package DOA;
+package dao;
 
 import models.GameData;
 import service.GameService;

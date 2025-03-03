@@ -1,6 +1,6 @@
 package service;
 
-import DOA.*;
+import dao.*;
 import models.AuthData;
 import models.UserData;
 import dataaccess.DataAccessException;

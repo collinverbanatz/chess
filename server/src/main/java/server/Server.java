@@ -1,6 +1,6 @@
 package server;
 
-import DOA.*;
+import dao.*;
 import spark.*;
 import service.UserService;
 import service.GameService;
