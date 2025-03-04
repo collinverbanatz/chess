@@ -28,16 +28,7 @@ public class PawnMovesCalculator implements PieceMovesCalculator{
         ChessPiece team = board.getPiece(oneStepForward);
         if (team == null) {
             if (myPosition.getRow() >= 1 && myPosition.getRow() <= 7 && myPosition.getColumn() >= 1 && myPosition.getColumn() <= 8){
-                if (oneStepForward.getRow() == promotionRow) {
-                    for (ChessPiece.PieceType promotion : ChessPiece.PieceType.values()) {
-                        if (ChessPiece.PieceType.PAWN != promotion && ChessPiece.PieceType.KING != promotion) {
-                            moves.add(new ChessMove(myPosition, oneStepForward, promotion));
-                        }
-                    }
-                }
-                else {
-                    moves.add(new ChessMove(myPosition, oneStepForward, null));
-                }
+                pawnMove(myPosition, promotionRow, moves, oneStepForward);
             }
         }
 
@@ -61,20 +52,25 @@ public class PawnMovesCalculator implements PieceMovesCalculator{
             if (myPosition.getRow() >= 1 && myPosition.getRow() <= 7 && myPosition.getColumn() >= 1 && myPosition.getColumn() <= 8){
                 ChessPiece enemy = board.getPiece(capture);
                 if (enemy != null && enemy.getTeamColor() != pieceColor){
-                    if (capture.getRow() == promotionRow){
-                        for (ChessPiece.PieceType promotion : ChessPiece.PieceType.values()){
-                            if (ChessPiece.PieceType.PAWN  != promotion && ChessPiece.PieceType.KING != promotion){
-                                moves.add(new ChessMove(myPosition, capture, promotion));
-                            }
-                        }
-                    }
-                    else{
-                        moves.add(new ChessMove(myPosition, capture, null));}
+                    pawnMove(myPosition, promotionRow, moves, capture);
                 }
             }
         }
 
 
         return moves;
+    }
+
+    private void pawnMove(ChessPosition myPosition, int promotionRow, Collection<ChessMove> moves, ChessPosition oneStepForward) {
+        if (oneStepForward.getRow() == promotionRow) {
+            for (ChessPiece.PieceType promotion : ChessPiece.PieceType.values()) {
+                if (ChessPiece.PieceType.PAWN != promotion && ChessPiece.PieceType.KING != promotion) {
+                    moves.add(new ChessMove(myPosition, oneStepForward, promotion));
+                }
+            }
+        }
+        else {
+            moves.add(new ChessMove(myPosition, oneStepForward, null));
+        }
     }
 }
