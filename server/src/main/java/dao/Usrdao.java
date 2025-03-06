@@ -7,5 +7,5 @@ public interface Usrdao {
     UserData getUser(String userName) throws DataAccessException;
     void putUser(UserData userData);
 
-    void clear();
+    void clear() throws DataAccessException;
 }
