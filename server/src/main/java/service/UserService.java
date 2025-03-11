@@ -62,17 +62,12 @@ public class UserService {
     }
 
 
-    public void clear() {
-        try {
+    public void clear(){
             userDao.clear();
             authdao.clear();
             gameDao.clear();
-        }
-        catch (DataAccessException e){
-            System.err.println("Error clearing the data");
-            throw new RuntimeException("Error clearing data", e);
-        }
     }
+
 
 
     private AuthData createAndSaveAuthToken(String username){

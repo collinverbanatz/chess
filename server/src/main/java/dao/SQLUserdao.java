@@ -82,8 +82,13 @@ public class SQLUserdao implements Usrdao{
     }
 
     @Override
-    public void clear() throws DataAccessException {
+    public void clear() {
+        try {
             updateUser("TRUNCATE users");
+        }
+        catch (DataAccessException e){
+            System.err.println("could not clear");
+        }
     }
 
     @Override

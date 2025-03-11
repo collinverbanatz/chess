@@ -75,8 +75,4 @@ public class UserHandler {
         response.status(200);
         return "{}";
     }
-
-
-
-
 }

@@ -21,7 +21,7 @@ public class MemoryUserdao implements Usrdao {
         allUserData.put(userData.userName, userData);
     }
 
-    public void clear(){
+    public void clear() {
         allUserData.clear();
     }
 
