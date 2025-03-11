@@ -70,14 +70,14 @@ public class SQLUserdao implements Usrdao{
 
 
     @Override
-    public void putUser(UserData userData) {
+    public void putUser(UserData userData) throws DataAccessException {
         try {
             String hashedPassword = hashPassword(userData.password);
             String statement = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
             updateUser(statement, userData.userName, hashedPassword, userData.email);
         }
         catch (DataAccessException e){
-            System.err.println("Not a valid username");
+            throw new DataAccessException("Not a valid username");
         }
     }
 

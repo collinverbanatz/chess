@@ -11,7 +11,7 @@ public class Server {
     private GameService gameService;
 
 
-    private void createServices(){
+    private void createServices() throws DataAccessException {
         Usrdao userDoa = new SQLUserdao();
         Authdao authdao = new MemoryAuthdao();
         Gamedao gameDao = new Memorygamedao();
@@ -28,7 +28,12 @@ public class Server {
         Spark.staticFiles.location("web");
 
         // register your endpoints and handle exceptions here.
-        createServices();
+        try {
+            createServices();
+        }
+        catch (DataAccessException e){
+            return 500;
+        }
         registerRouts();
         //This line initializes the server and can be removed once you have a functioning endpoint 
         Spark.init();
