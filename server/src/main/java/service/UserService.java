@@ -40,7 +40,7 @@ public class UserService {
             throw new DataAccessException("user name doesn't exist");
         }
         String correctPassword = userData.getPassword();
-        String password = loginRequest.password;
+        String password = userDao.hashPassword(loginRequest.password);
         if(correctPassword.equals(password)){
             AuthData authData = createAndSaveAuthToken(userData.userName);
             return new RegisterResult(userData.userName, authData.authToken);
@@ -62,10 +62,16 @@ public class UserService {
     }
 
 
-    public void clear(){
-        userDao.clear();
-        authdao.clear();
-        gameDao.clear();
+    public void clear() {
+        try {
+            userDao.clear();
+            authdao.clear();
+            gameDao.clear();
+        }
+        catch (DataAccessException e){
+            System.err.println("Error clearing the data");
+            throw new RuntimeException("Error clearing data", e);
+        }
     }
 
 

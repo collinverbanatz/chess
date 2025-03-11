@@ -1,6 +1,7 @@
 package server;
 
 import dao.*;
+import dataaccess.DataAccessException;
 import spark.*;
 import service.UserService;
 import service.GameService;
@@ -11,7 +12,7 @@ public class Server {
 
 
     private void createServices(){
-        Usrdao userDoa = new MemoryUserdao();
+        Usrdao userDoa = new SQLUserdao();
         Authdao authdao = new MemoryAuthdao();
         Gamedao gameDao = new Memorygamedao();
 

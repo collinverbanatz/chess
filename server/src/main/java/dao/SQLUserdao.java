@@ -2,8 +2,8 @@ package dao;
 
 import dataaccess.DataAccessException;
 import models.UserData;
+import org.mindrot.jbcrypt.BCrypt;
 
-import javax.xml.crypto.Data;
 import java.sql.SQLException;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
@@ -11,18 +11,19 @@ import static java.sql.Types.NULL;
 
 public class SQLUserdao implements Usrdao{
 
-    private int executeUpdate(String statement, Object... params) throws DataAccessException {
+    private int updateUser(String statement, Object... params) throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {
-            try (var ps = conn.prepareStatement(statement, RETURN_GENERATED_KEYS)) {
+            try (var statement_prepared = conn.prepareStatement(statement, RETURN_GENERATED_KEYS)) {
                 for (var i = 0; i < params.length; i++) {
                     var param = params[i];
-                    if (param instanceof String p) ps.setString(i + 1, p);
-                    else if (param instanceof Integer p) ps.setInt(i + 1, p);
-                    else if (param == null) ps.setNull(i + 1, NULL);
+                    if (param instanceof String p) statement_prepared.setString(i + 1, p);
+                    else if (param instanceof Integer p) statement_prepared.setInt(i + 1, p);
+                    else if (param == null) statement_prepared.setNull(i + 1, NULL);
                 }
-                ps.executeUpdate();
 
-                var rs = ps.getGeneratedKeys();
+                statement_prepared.executeUpdate();
+
+                var rs = statement_prepared.getGeneratedKeys();
                 if (rs.next()) {
                     return rs.getInt(1);
                 }
@@ -63,18 +64,30 @@ public class SQLUserdao implements Usrdao{
     };
 
     @Override
-    public UserData getUser(String userName) throws DataAccessException {
+    public UserData getUser(String userName) {
         return null;
     }
 
+
     @Override
     public void putUser(UserData userData) {
-
+        try {
+            String hashedPassword = hashPassword(userData.password);
+            String statement = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
+            updateUser(statement, userData.userName, hashedPassword, userData.email);
+        }
+        catch (DataAccessException e){
+            System.err.println("Not a valid username");
+        }
     }
 
     @Override
     public void clear() throws DataAccessException {
-        var statement = "TRUNCATE users";
-        executeUpdate(statement);
+            updateUser("TRUNCATE users");
+    }
+
+    @Override
+    public String hashPassword(String password){
+        return BCrypt.hashpw(password, BCrypt.gensalt());
     }
 }

@@ -26,8 +26,7 @@ public class MemoryAuthdao implements Authdao {
 
     @Override
     public boolean authTokenExists(String authToken) {
-        System.out.println("Storing authToken: " + authToken); // Debugging output
-
+//        System.out.println("Storing authToken: " + authToken); // Debugging output
         return allAuthData.containsKey(authToken);
     }
 

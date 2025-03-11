@@ -24,4 +24,9 @@ public class MemoryUserdao implements Usrdao {
     public void clear(){
         allUserData.clear();
     }
+
+    @Override
+    public String hashPassword(String password) {
+        return "";
+    }
 }
