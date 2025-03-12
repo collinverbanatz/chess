@@ -102,4 +102,22 @@ public class DatabaseManager {
             throw new DataAccessException("DataBase Query failed", e);
         }
     }
+
+
+    static void SQLdaoConst(String[] createStatements) throws DataAccessException {
+        try {
+            DatabaseManager.createDatabase();
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
+        try (var conn = DatabaseManager.getConnection()) {
+            for (var state : createStatements) {
+                try (var preparedStatement = conn.prepareStatement(state)) {
+                    preparedStatement.executeUpdate();
+                }
+            }
+        } catch (SQLException | DataAccessException e) {
+            throw new DataAccessException("could not connect to Database");
+        }
+    }
 }

@@ -12,20 +12,7 @@ import static java.sql.Types.NULL;
 public class SQLUserdao implements Usrdao{
 
     public SQLUserdao() throws DataAccessException {
-        try {
-            DatabaseManager.createDatabase();
-        } catch (DataAccessException e) {
-            throw new RuntimeException(e);
-        }
-        try (var conn = DatabaseManager.getConnection()) {
-            for (var state : createStatements) {
-                try (var preparedStatement = conn.prepareStatement(state)) {
-                    preparedStatement.executeUpdate();
-                }
-            }
-        } catch (SQLException | DataAccessException e) {
-            throw new DataAccessException("could not connect to Database");
-        }
+        DatabaseManager.SQLdaoConst(createStatements);
     }
 
     private final String[] createStatements = {

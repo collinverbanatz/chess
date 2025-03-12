@@ -16,20 +16,8 @@ public class SQLGamedao implements Gamedao {
     final Gson gson = new Gson();
 
     public SQLGamedao() throws DataAccessException {
-        try {
-            DatabaseManager.createDatabase();
-        } catch (DataAccessException e) {
-            throw new RuntimeException(e);
-        }
-        try (var conn = DatabaseManager.getConnection()) {
-            for (var state : createStatements) {
-                try (var preparedStatement = conn.prepareStatement(state)) {
-                    preparedStatement.executeUpdate();
-                }
-            }
-        } catch (SQLException | DataAccessException e) {
-            throw new DataAccessException("could not connect to Database");
-        }
+        DatabaseManager.SQLdaoConst(createStatements);
+
     }
 
     private final String[] createStatements = {
@@ -93,16 +81,17 @@ public class SQLGamedao implements Gamedao {
             try (var preparedStatement = conn.prepareStatement(statement)) {
                 preparedStatement.setInt(1, gameId);
                 try (var queryResults = preparedStatement.executeQuery()){
-                    if(!queryResults.next()) return null;{
-                        var gameID = queryResults.getInt("gameID");
-                        var whiteUsername = queryResults.getString("whiteUsername");
-                        var blackUsername = queryResults.getString("blackUsername");
-                        var gameName = queryResults.getString("gameName");
-                        var chessGameString = queryResults.getString("chessGame");
-                        var chessGame = gson.fromJson(chessGameString, ChessGame.class);
-                        GameData gameData = new GameData(gameID, whiteUsername, blackUsername, gameName, chessGame);
-                        return gameData;
+                    if(!queryResults.next()) {
+                        return null;
                     }
+                    var gameID = queryResults.getInt("gameID");
+                    var whiteUsername = queryResults.getString("whiteUsername");
+                    var blackUsername = queryResults.getString("blackUsername");
+                    var gameName = queryResults.getString("gameName");
+                    var chessGameString = queryResults.getString("chessGame");
+                    var chessGame = gson.fromJson(chessGameString, ChessGame.class);
+                    GameData gameData = new GameData(gameID, whiteUsername, blackUsername, gameName, chessGame);
+                    return gameData;
                 }
             }
         }
