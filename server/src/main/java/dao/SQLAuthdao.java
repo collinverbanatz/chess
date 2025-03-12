@@ -31,7 +31,7 @@ public class SQLAuthdao implements Authdao{
             """
             CREATE TABLE IF NOT EXISTS  auth (
               `userName` varchar(255) ,
-              `authToken` varchar(255) ,
+              `authToken` varchar(255) NOT NULL,
               PRIMARY KEY (`authToken`)
             )"""
     };
