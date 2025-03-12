@@ -81,7 +81,7 @@ public class SQLAuthTests {
     }
 
     @Test
-    void positiviegetAuthDataByToken() throws DataAccessException {
+    void positivistAuthDataByToken() throws DataAccessException {
         AuthData authData = new AuthData("authTokenGood", "collin");
 
         authDao.putAuthToken(authData);

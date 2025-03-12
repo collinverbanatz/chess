@@ -49,7 +49,8 @@ public class SQLGamedao implements Gamedao {
         try {
             String statement = "INSERT INTO game (whiteUsername, blackUsername,gameName,chessGame) VALUES (?, ?, ?,?)";
             String gameDataString = gson.toJson(gameData.getGame());
-            var gameId = DatabaseManager.executeUpdate(statement, gameData.getWhiteUsername(), gameData.blackUsername, gameData.getGameName(), gameDataString);
+            var gameId = DatabaseManager.executeUpdate(statement, gameData.getWhiteUsername(),
+                    gameData.blackUsername, gameData.getGameName(), gameDataString);
             if(gameData.getGameName() == null){
                 throw new DataAccessException("couldn't create a new game");
             }
@@ -114,7 +115,8 @@ public class SQLGamedao implements Gamedao {
         try {
             String statement = "UPDATE game SET whiteUsername = ?, blackUsername =?, gameName =?, chessGame =? WHERE gameID =?";
             String gameDataString = gson.toJson(gameData.getGame());
-            DatabaseManager.executeUpdate(statement, gameData.getWhiteUsername(), gameData.blackUsername, gameData.getGameName(), gameDataString, gameData.getGameID());
+            DatabaseManager.executeUpdate(statement, gameData.getWhiteUsername(), gameData.blackUsername,
+                    gameData.getGameName(), gameDataString, gameData.getGameID());
         }
         catch (DataAccessException e){
             throw new DataAccessException("couldn't create a new game", e);

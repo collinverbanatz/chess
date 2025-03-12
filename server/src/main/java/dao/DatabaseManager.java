@@ -77,17 +77,17 @@ public class DatabaseManager {
 
     static int executeUpdate(String statement, Object... params) throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {
-            try (var statement_prepared = conn.prepareStatement(statement, RETURN_GENERATED_KEYS)) {
+            try (var preparedStatement = conn.prepareStatement(statement, RETURN_GENERATED_KEYS)) {
                 for (var i = 0; i < params.length; i++) {
                     var param = params[i];
-                    if (param instanceof String p) statement_prepared.setString(i + 1, p);
-                    else if (param instanceof Integer p) statement_prepared.setInt(i + 1, p);
-                    else if (param == null) statement_prepared.setNull(i + 1, NULL);
+                    if (param instanceof String p) preparedStatement.setString(i + 1, p);
+                    else if (param instanceof Integer p) preparedStatement.setInt(i + 1, p);
+                    else if (param == null) preparedStatement.setNull(i + 1, NULL);
                 }
 
-                statement_prepared.executeUpdate();
+                preparedStatement.executeUpdate();
 
-                var rs = statement_prepared.getGeneratedKeys();
+                var rs = preparedStatement.getGeneratedKeys();
                 if (rs.next()) {
                     return rs.getInt(1);
                 }
