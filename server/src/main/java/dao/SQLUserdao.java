@@ -2,17 +2,13 @@ package dao;
 
 import dataaccess.DataAccessException;
 import models.UserData;
-import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.SQLException;
-
-import static java.sql.Statement.RETURN_GENERATED_KEYS;
-import static java.sql.Types.NULL;
 
 public class SQLUserdao implements Usrdao{
 
     public SQLUserdao() throws DataAccessException {
-        DatabaseManager.SQLdaoConst(createStatements);
+        DatabaseManager.sqlDaoConst(createStatements);
     }
 
     private final String[] createStatements = {

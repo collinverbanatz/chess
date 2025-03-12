@@ -4,9 +4,7 @@ import chess.ChessGame;
 import com.google.gson.Gson;
 import dataaccess.DataAccessException;
 import models.GameData;
-import models.UserData;
 import service.GameService;
-import service.UserService;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -16,7 +14,7 @@ public class SQLGamedao implements Gamedao {
     final Gson gson = new Gson();
 
     public SQLGamedao() throws DataAccessException {
-        DatabaseManager.SQLdaoConst(createStatements);
+        DatabaseManager.sqlDaoConst(createStatements);
 
     }
 
