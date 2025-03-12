@@ -45,7 +45,9 @@ public class SQLUserdao implements Usrdao{
             try (var preparedStatement = conn.prepareStatement(statement)) {
                 preparedStatement.setString(1, userName);
                 try (var queryResults = preparedStatement.executeQuery()){
-                    if(!queryResults.next()) return null;
+                    if(!queryResults.next()) {
+                        return null;
+                    }
                     var username = queryResults.getString("username");
                     var password = queryResults.getString("password");
                     var email = queryResults.getString("email");

@@ -80,7 +80,9 @@ public class SQLAuthdao implements Authdao{
             try (var preparedStatement = conn.prepareStatement(statement)) {
                 preparedStatement.setString(1, authToken);
                 try (var queryResults = preparedStatement.executeQuery()){
-                    if(!queryResults.next()) return null;
+                    if(!queryResults.next()){
+                        return null;
+                    }
                     var username = queryResults.getString("userName");
                     var authT = queryResults.getString("authToken");
 

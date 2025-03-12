@@ -93,15 +93,16 @@ public class SQLGamedao implements Gamedao {
             try (var preparedStatement = conn.prepareStatement(statement)) {
                 preparedStatement.setInt(1, gameId);
                 try (var queryResults = preparedStatement.executeQuery()){
-                    if(!queryResults.next()) return null;
-                    var gameID = queryResults.getInt("gameID");
-                    var whiteUsername = queryResults.getString("whiteUsername");
-                    var blackUsername = queryResults.getString("blackUsername");
-                    var gameName = queryResults.getString("gameName");
-                    var chessGameString = queryResults.getString("chessGame");
-                    var chessGame = gson.fromJson(chessGameString, ChessGame.class);
-                    GameData gameData = new GameData(gameID, whiteUsername, blackUsername, gameName, chessGame);
-                    return gameData;
+                    if(!queryResults.next()) return null;{
+                        var gameID = queryResults.getInt("gameID");
+                        var whiteUsername = queryResults.getString("whiteUsername");
+                        var blackUsername = queryResults.getString("blackUsername");
+                        var gameName = queryResults.getString("gameName");
+                        var chessGameString = queryResults.getString("chessGame");
+                        var chessGame = gson.fromJson(chessGameString, ChessGame.class);
+                        GameData gameData = new GameData(gameID, whiteUsername, blackUsername, gameName, chessGame);
+                        return gameData;
+                    }
                 }
             }
         }
