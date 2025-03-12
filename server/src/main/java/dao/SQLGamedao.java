@@ -38,8 +38,8 @@ public class SQLGamedao implements Gamedao {
               `gameID` int NOT NULL AUTO_INCREMENT,
               `whiteUsername` varchar(255) ,
               `blackUsername` varchar(255) ,
-              `gameName` varchar(255) ,
-              `chessGame` TEXT,
+              `gameName` varchar(255) NOT NULL,
+              `chessGame` TEXT NOT NULL,
               PRIMARY KEY (`gameID`)
             )"""
     };
@@ -50,6 +50,9 @@ public class SQLGamedao implements Gamedao {
             String statement = "INSERT INTO game (whiteUsername, blackUsername,gameName,chessGame) VALUES (?, ?, ?,?)";
             String gameDataString = gson.toJson(gameData.getGame());
             var gameId = DatabaseManager.executeUpdate(statement, gameData.getWhiteUsername(), gameData.blackUsername, gameData.getGameName(), gameDataString);
+            if(gameData.getGameName() == null){
+                throw new DataAccessException("couldn't create a new game");
+            }
             return new GameService.CreateResult(gameId);
         }
         catch (DataAccessException e){
