@@ -104,7 +104,7 @@ public class DatabaseManager {
     }
 
 
-    static void SQLdaoConst(String[] createStatements) throws DataAccessException {
+    static void sqlDaoConst(String[] createStatements) throws DataAccessException {
         try {
             DatabaseManager.createDatabase();
         } catch (DataAccessException e) {
