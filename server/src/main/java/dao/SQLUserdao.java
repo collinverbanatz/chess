@@ -24,6 +24,7 @@ public class SQLUserdao implements Usrdao{
               PRIMARY KEY (`username`)
             )"""
     };
+//    commit
 
     @Override
     public UserData getUser(String userName) throws DataAccessException {
