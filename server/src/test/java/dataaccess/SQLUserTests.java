@@ -48,8 +48,11 @@ public class SQLUserTests {
     }
 
     @Test
-    void negativeGetUserTest(){
+    void negativeGetUserTest() throws DataAccessException {
+        UserData user = new UserData("collin", "1234", "someemail@email.com");
 
+        UserData userName = userDao.getUser(user.userName);
+        Assertions.assertNull(userName);
     }
 
     @Test
@@ -57,6 +60,7 @@ public class SQLUserTests {
         UserData user = new UserData("collin", "1234", "someemail@email.com");
         userDao.putUser(user);
 
+        userDao.clear();
         UserData userName = userDao.getUser(user.userName);
         Assertions.assertNull(userName);
     }

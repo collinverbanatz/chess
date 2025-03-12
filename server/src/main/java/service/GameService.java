@@ -19,7 +19,6 @@ public class GameService {
         this.gameDao = gameDao;
     }
 
-    int gameID = 0;
 
 
     public CreateResult createGame(String authToken, CreateRequest game) throws DataAccessException {
@@ -33,9 +32,8 @@ public class GameService {
             throw new DataAccessException("Invalid authToken");
         }
 
-        gameID = gameID +1;
         ChessGame chessGame = new ChessGame();
-        return gameDao.createGame(new GameData(gameID, null, null, game.getGameName(), chessGame));
+        return gameDao.createGame(new GameData(-1, null, null, game.getGameName(), chessGame));
     }
 
 

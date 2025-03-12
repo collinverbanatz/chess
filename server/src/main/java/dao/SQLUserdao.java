@@ -11,31 +11,6 @@ import static java.sql.Types.NULL;
 
 public class SQLUserdao implements Usrdao{
 
-    private int updateUser(String statement, Object... params) throws DataAccessException {
-        try (var conn = DatabaseManager.getConnection()) {
-            try (var statement_prepared = conn.prepareStatement(statement, RETURN_GENERATED_KEYS)) {
-                for (var i = 0; i < params.length; i++) {
-                    var param = params[i];
-                    if (param instanceof String p) statement_prepared.setString(i + 1, p);
-                    else if (param instanceof Integer p) statement_prepared.setInt(i + 1, p);
-                    else if (param == null) statement_prepared.setNull(i + 1, NULL);
-                }
-
-                statement_prepared.executeUpdate();
-
-                var rs = statement_prepared.getGeneratedKeys();
-                if (rs.next()) {
-                    return rs.getInt(1);
-                }
-
-                return 0;
-            }
-        } catch (DataAccessException | SQLException e) {
-            throw new DataAccessException("DataBase Query failed");
-        }
-    }
-
-
     public SQLUserdao() throws DataAccessException {
         try {
             DatabaseManager.createDatabase();
@@ -70,7 +45,7 @@ public class SQLUserdao implements Usrdao{
             try (var preparedStatement = conn.prepareStatement(statement)) {
                 preparedStatement.setString(1, userName);
                 try (var queryResults = preparedStatement.executeQuery()){
-                    queryResults.next();
+                    if(!queryResults.next()) return null;
                     var username = queryResults.getString("username");
                     var password = queryResults.getString("password");
                     var email = queryResults.getString("email");
@@ -88,9 +63,9 @@ public class SQLUserdao implements Usrdao{
     @Override
     public void putUser(UserData userData) throws DataAccessException {
         try {
-            String hashedPassword = hashPassword(userData.password);
+            String hashedPassword = userData.password;
             String statement = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
-            updateUser(statement, userData.userName, hashedPassword, userData.email);
+            DatabaseManager.executeUpdate(statement, userData.userName, hashedPassword, userData.email);
         }
         catch (DataAccessException e){
             throw new DataAccessException("Not a valid username");
@@ -100,15 +75,10 @@ public class SQLUserdao implements Usrdao{
     @Override
     public void clear() {
         try {
-            updateUser("TRUNCATE users");
+            DatabaseManager.executeUpdate("TRUNCATE TABLE users");
         }
         catch (DataAccessException e){
             System.err.println("could not clear");
         }
-    }
-
-    @Override
-    public String hashPassword(String password){
-        return BCrypt.hashpw(password, BCrypt.gensalt());
     }
 }

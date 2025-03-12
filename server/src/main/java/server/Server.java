@@ -13,8 +13,8 @@ public class Server {
 
     private void createServices() throws DataAccessException {
         Usrdao userDoa = new SQLUserdao();
-        Authdao authdao = new MemoryAuthdao();
-        Gamedao gameDao = new Memorygamedao();
+        Authdao authdao = new SQLAuthdao();
+        Gamedao gameDao = new SQLGamedao();
 
         userService =  new UserService(userDoa, authdao, gameDao);
         gameService = new GameService(authdao, gameDao);

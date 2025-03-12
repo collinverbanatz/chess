@@ -8,6 +8,4 @@ public interface Usrdao {
     void putUser(UserData userData) throws DataAccessException;
 
     void clear();
-
-    String hashPassword(String password);
 }

@@ -6,6 +6,7 @@ import dao.Usrdao;
 import models.AuthData;
 import models.UserData;
 import dataaccess.DataAccessException;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.UUID;
 
@@ -28,7 +29,7 @@ public class UserService {
         if(userData != null){
             throw new DataAccessException("username all ready exists");
         }
-        userDao.putUser(new UserData(registerRequest.username, registerRequest.password, registerRequest.email));
+        userDao.putUser(new UserData(registerRequest.username, hashPassword(registerRequest.password), registerRequest.email));
         AuthData authData = createAndSaveAuthToken(registerRequest.username);
         return new RegisterResult(registerRequest.username, authData.authToken);
     }
@@ -40,8 +41,8 @@ public class UserService {
             throw new DataAccessException("user name doesn't exist");
         }
         String correctPassword = userData.getPassword();
-        String password = userDao.hashPassword(loginRequest.password);
-        if(correctPassword.equals(password)){
+        String password = loginRequest.password;
+        if(BCrypt.checkpw(password, correctPassword)){
             AuthData authData = createAndSaveAuthToken(userData.userName);
             return new RegisterResult(userData.userName, authData.authToken);
         }
@@ -70,7 +71,7 @@ public class UserService {
 
 
 
-    private AuthData createAndSaveAuthToken(String username){
+    private AuthData createAndSaveAuthToken(String username) throws DataAccessException {
         String authToken = UUID.randomUUID().toString();
         AuthData authData = new AuthData(authToken, username);
         authdao.putAuthToken(authData);
@@ -188,6 +189,7 @@ public class UserService {
         }
     }
 
-
-
+    public String hashPassword(String password){
+        return BCrypt.hashpw(password, BCrypt.gensalt());
+    }
 }

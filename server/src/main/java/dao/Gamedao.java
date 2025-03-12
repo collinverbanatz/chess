@@ -7,15 +7,13 @@ import service.GameService;
 import java.util.ArrayList;
 
 public interface Gamedao {
-    GameService.CreateResult createGame(GameData gameData);
+    GameService.CreateResult createGame(GameData gameData) throws DataAccessException;
 
     ArrayList<GameData> getListGames() throws DataAccessException;
 
-    GameData getGameByID(int gameId);
+    GameData getGameByID(int gameId) throws DataAccessException;
 
-    void joinGame(int gameId, String wantedColor);
-
-    void updateGameData(GameData gameData);
+    void updateGameData(GameData gameData) throws DataAccessException;
 
     void clear();
 }

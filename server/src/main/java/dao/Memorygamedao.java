@@ -10,11 +10,14 @@ import java.util.Map;
 public class Memorygamedao implements Gamedao {
 
     private static Map<Integer, GameData> allGameData = new HashMap<>();
+    int gameID = 0;
 
 
     @Override
     public GameService.CreateResult createGame(GameData gameData) {
-        allGameData.put(gameData.getGameID(), gameData);
+        gameID = gameID + 1;
+        gameData.setGameID(gameID);
+        allGameData.put(gameID, gameData);
 
         return new GameService.CreateResult(gameData.gameID);
     }
@@ -27,12 +30,6 @@ public class Memorygamedao implements Gamedao {
     @Override
     public GameData getGameByID(int gameId) {
         return allGameData.get(gameId);
-    }
-
-    @Override
-    public void joinGame(int gameId, String wantedColor) {
-        allGameData.get(gameId);
-
     }
 
     @Override
