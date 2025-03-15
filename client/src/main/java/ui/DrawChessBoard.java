@@ -2,7 +2,6 @@ package ui;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Random;
 
 import static ui.EscapeSequences.*;
 
@@ -18,28 +17,61 @@ public class DrawChessBoard {
     public static void main(String[] args) {
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         out.print(ERASE_SCREEN);
-        drawChessBoard(out);
+        boolean isWhite = true;
+        drawChessBoard(out, isWhite);
     }
 
-    private static void drawChessBoard(PrintStream out) {
+    private static void drawChessBoard(PrintStream out, boolean isWhite) {
 // set up the starter chess board will need to replace later with the actual game data and when switching from black to white
-        String[][] board = {
-                {BLACK_ROOK, BLACK_KNIGHT, BLACK_BISHOP, BLACK_QUEEN, BLACK_KING, BLACK_BISHOP, BLACK_KNIGHT, BLACK_ROOK},
-                {BLACK_PAWN, BLACK_PAWN, BLACK_PAWN, BLACK_PAWN, BLACK_PAWN, BLACK_PAWN, BLACK_PAWN, BLACK_PAWN},
-                {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
-                {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
-                {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
-                {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
-                {WHITE_PAWN, WHITE_PAWN, WHITE_PAWN, WHITE_PAWN, WHITE_PAWN, WHITE_PAWN, WHITE_PAWN, WHITE_PAWN},
-                {WHITE_ROOK, WHITE_KNIGHT, WHITE_BISHOP, WHITE_QUEEN, WHITE_KING, WHITE_BISHOP, WHITE_KNIGHT, WHITE_ROOK}
-        };
+        String[][] board = getBoard(isWhite);
 
-        printHeading(out);
+        printHeading(out, isWhite);
 
         //Print Chess board
+        printChessBoard(out, board, isWhite);
+
+        printHeading(out, isWhite);
+    }
+
+    private static String[][] getBoard(boolean isWhite) {
+        if(isWhite){
+            String[][] board = {
+                    {BLACK_ROOK, BLACK_KNIGHT, BLACK_BISHOP, BLACK_QUEEN, BLACK_KING, BLACK_BISHOP, BLACK_KNIGHT, BLACK_ROOK},
+                    {BLACK_PAWN, BLACK_PAWN, BLACK_PAWN, BLACK_PAWN, BLACK_PAWN, BLACK_PAWN, BLACK_PAWN, BLACK_PAWN},
+                    {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
+                    {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
+                    {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
+                    {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
+                    {WHITE_PAWN, WHITE_PAWN, WHITE_PAWN, WHITE_PAWN, WHITE_PAWN, WHITE_PAWN, WHITE_PAWN, WHITE_PAWN},
+                    {WHITE_ROOK, WHITE_KNIGHT, WHITE_BISHOP, WHITE_QUEEN, WHITE_KING, WHITE_BISHOP, WHITE_KNIGHT, WHITE_ROOK}
+            };
+            return board;
+        }
+        else {
+            String[][] board = {
+                    {WHITE_ROOK, WHITE_KNIGHT, WHITE_BISHOP, WHITE_QUEEN, WHITE_KING, WHITE_BISHOP, WHITE_KNIGHT, WHITE_ROOK},
+                    {WHITE_PAWN, WHITE_PAWN, WHITE_PAWN, WHITE_PAWN, WHITE_PAWN, WHITE_PAWN, WHITE_PAWN, WHITE_PAWN},
+                    {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
+                    {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
+                    {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
+                    {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
+                    {BLACK_PAWN, BLACK_PAWN, BLACK_PAWN, BLACK_PAWN, BLACK_PAWN, BLACK_PAWN, BLACK_PAWN, BLACK_PAWN},
+                    {BLACK_ROOK, BLACK_KNIGHT, BLACK_BISHOP, BLACK_QUEEN, BLACK_KING, BLACK_BISHOP, BLACK_KNIGHT, BLACK_ROOK}
+            };
+            return board;
+        }
+    }
+
+    private static void printChessBoard(PrintStream out, String[][] board, boolean isWhite) {
+        int number = 8;
         for (int row = 0; row < BOARD_SIZE; row++) {
-            out.print(SET_BG_COLOR_WHITE);
-            out.print(" " + (row+1) + " ");
+            if (isWhite) {
+                printNumbers(out, number);
+            }
+            else{
+                out.print(SET_BG_COLOR_WHITE);
+                out.print(" " + (row+1) + " ");
+            }
             for (int col = 0; col < BOARD_SIZE; col++) {
                 if((row + col) % 2 != 0) {
                     out.print(SET_BG_COLOR_LIGHT_GREY);
@@ -50,22 +82,41 @@ public class DrawChessBoard {
                     out.print(board[row][col]);
                 }
             }
-            out.print(SET_BG_COLOR_WHITE);
-            out.print(" " + (row+1) + " ");
+            if (isWhite) {
+                printNumbers(out, number);
+            }
+            else{
+                out.print(SET_BG_COLOR_WHITE);
+                out.print(" " + (row+1) + " ");
+            }            number = number - 1;
+
             out.print(RESET_BG_COLOR + "\n");
         }
-        printHeading(out);
     }
 
-    private static void printHeading(PrintStream out) {
-        String heading = "a, b, c, d, e, f, g, h";
+    private static void printNumbers(PrintStream out, int number) {
+        out.print(SET_BG_COLOR_WHITE);
+        out.print(" " + (number) + " ");
+        number = number - 1;
+    }
+
+    private static void printHeading(PrintStream out, boolean isWhite) {
         out.print(SET_TEXT_COLOR_BLACK);
         out.print(SET_BG_COLOR_WHITE);
-
         out.print("   ");
-        for(char head = 'a'; head <= 'h'; head++){
-            out.print(" " + head + " ");
+        if (isWhite){
+            String heading = "a, b, c, d, e, f, g, h";
+            for(char head = 'a'; head <= 'h'; head++){
+                out.print(" " + head + " ");
+            }
         }
+        else{
+            String heading = "h, g, f, e, d, c, b, a";
+            for(char head = 'h'; head >= 'a'; head--){
+                out.print(" " + head + " ");
+            }
+        }
+
         out.print("   ");
         out.print(RESET_BG_COLOR + "\n");
     }
