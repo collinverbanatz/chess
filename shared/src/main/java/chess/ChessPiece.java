@@ -94,4 +94,16 @@ public class ChessPiece {
         return calculator.pieceMoves(board, myPosition);
 
     }
+    @Override
+    public String toString() {
+        String pieceSymbol = switch (type) {
+            case KING -> "K";
+            case QUEEN -> "Q";
+            case ROOK -> "R";
+            case BISHOP -> "B";
+            case KNIGHT -> "N";
+            case PAWN -> "P";
+        };
+        return pieceColor == ChessGame.TeamColor.WHITE ? pieceSymbol : pieceSymbol.toLowerCase();
+    }
 }

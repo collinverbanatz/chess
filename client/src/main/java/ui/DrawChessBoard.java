@@ -1,5 +1,8 @@
 package ui;
 
+import chess.ChessBoard;
+import chess.ChessPosition;
+
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 
@@ -17,13 +20,13 @@ public class DrawChessBoard {
     public static void main(String[] args) {
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         out.print(ERASE_SCREEN);
-        boolean isWhite = true;
+        boolean isWhite = false ;
         drawChessBoard(out, isWhite);
     }
 
     private static void drawChessBoard(PrintStream out, boolean isWhite) {
 // set up the starter chess board will need to replace later with the actual game data and when switching from black to white
-        String[][] board = getBoard(isWhite);
+        ChessBoard board = getBoard();
 
         printHeading(out, isWhite);
 
@@ -33,36 +36,13 @@ public class DrawChessBoard {
         printHeading(out, isWhite);
     }
 
-    private static String[][] getBoard(boolean isWhite) {
-        if(isWhite){
-            String[][] board = {
-                    {BLACK_ROOK, BLACK_KNIGHT, BLACK_BISHOP, BLACK_QUEEN, BLACK_KING, BLACK_BISHOP, BLACK_KNIGHT, BLACK_ROOK},
-                    {BLACK_PAWN, BLACK_PAWN, BLACK_PAWN, BLACK_PAWN, BLACK_PAWN, BLACK_PAWN, BLACK_PAWN, BLACK_PAWN},
-                    {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
-                    {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
-                    {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
-                    {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
-                    {WHITE_PAWN, WHITE_PAWN, WHITE_PAWN, WHITE_PAWN, WHITE_PAWN, WHITE_PAWN, WHITE_PAWN, WHITE_PAWN},
-                    {WHITE_ROOK, WHITE_KNIGHT, WHITE_BISHOP, WHITE_QUEEN, WHITE_KING, WHITE_BISHOP, WHITE_KNIGHT, WHITE_ROOK}
-            };
-            return board;
-        }
-        else {
-            String[][] board = {
-                    {WHITE_ROOK, WHITE_KNIGHT, WHITE_BISHOP, WHITE_QUEEN, WHITE_KING, WHITE_BISHOP, WHITE_KNIGHT, WHITE_ROOK},
-                    {WHITE_PAWN, WHITE_PAWN, WHITE_PAWN, WHITE_PAWN, WHITE_PAWN, WHITE_PAWN, WHITE_PAWN, WHITE_PAWN},
-                    {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
-                    {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
-                    {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
-                    {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
-                    {BLACK_PAWN, BLACK_PAWN, BLACK_PAWN, BLACK_PAWN, BLACK_PAWN, BLACK_PAWN, BLACK_PAWN, BLACK_PAWN},
-                    {BLACK_ROOK, BLACK_KNIGHT, BLACK_BISHOP, BLACK_QUEEN, BLACK_KING, BLACK_BISHOP, BLACK_KNIGHT, BLACK_ROOK}
-            };
-            return board;
-        }
+    private static ChessBoard getBoard() {
+        ChessBoard chessBoard = new ChessBoard();
+        chessBoard.resetBoard();
+        return chessBoard;
     }
 
-    private static void printChessBoard(PrintStream out, String[][] board, boolean isWhite) {
+    private static void printChessBoard(PrintStream out, ChessBoard board, boolean isWhite) {
         int number = 8;
         for (int row = 0; row < BOARD_SIZE; row++) {
             if (isWhite) {
@@ -74,12 +54,11 @@ public class DrawChessBoard {
             }
             for (int col = 0; col < BOARD_SIZE; col++) {
                 if((row + col) % 2 != 0) {
-                    out.print(SET_BG_COLOR_LIGHT_GREY);
-                    out.print(board[row][col]);
+                    printPieces(out, board, row, col, SET_BG_COLOR_LIGHT_GREY);
                 }
                 else{
-                    out.print(SET_BG_COLOR_DARK_GREY);
-                    out.print(board[row][col]);
+                    printPieces(out, board, row, col, SET_BG_COLOR_DARK_GREY);
+
                 }
             }
             if (isWhite) {
@@ -91,6 +70,17 @@ public class DrawChessBoard {
             }            number = number - 1;
 
             out.print(RESET_BG_COLOR + "\n");
+        }
+    }
+
+    private static void printPieces(PrintStream out, ChessBoard board, int row, int col, String setBgColorLightGrey) {
+        out.print(setBgColorLightGrey);
+        ChessPosition chessPosition = new ChessPosition(row +1, col + 1);
+        if(board.getPiece(chessPosition) == null) {
+            out.print("   ");
+        }
+        else {
+            out.print(" " + board.getPiece(chessPosition) + " ");
         }
     }
 
