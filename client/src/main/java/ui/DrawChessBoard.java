@@ -22,7 +22,7 @@ public class DrawChessBoard {
     public static void main(String[] args) {
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         out.print(ERASE_SCREEN);
-        boolean isWhite = true ;
+        boolean isWhite = false ;
         drawChessBoard(out, isWhite);
     }
 
