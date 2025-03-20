@@ -1,11 +1,14 @@
 package ui;
 
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import java.util.Scanner;
 
 public class Client {
     private static Scanner scanner = new Scanner(System.in);
     private static boolean loggedIn = false;
+    private static boolean inGame = false;
 
 
     public static void main(String[] args){
@@ -80,43 +83,49 @@ public class Client {
     }
 
     private static void postLogin() {
-        System.out.println("Help:-with possible commands");
-        System.out.println("Create: <NAME> -a game");
-        System.out.println("List: -games");
-        System.out.println("Play: <ID> -game");
-        System.out.println("Observe: <ID> -game:");
-        System.out.println("Logout: -when you are done:");
-        System.out.println("Enter Command:");
-        String clientResponse = scanner.nextLine().trim().toLowerCase();
+        while(!inGame){
+            System.out.println("Help:-with possible commands");
+            System.out.println("Create: <NAME> -a game");
+            System.out.println("List: -games");
+            System.out.println("Play: <ID> -game");
+            System.out.println("Observe: <ID> -game:");
+            System.out.println("Logout: -when you are done:");
+            System.out.println("Enter Command:");
+            String clientResponse = scanner.nextLine().trim().toLowerCase();
 
-        switch (clientResponse){
-            case("help"):
-                helpHandler();
-                break;
-            case("create"):
-                createGameHandler();
-                break;
-            case("list"):
-                listHandler();
-                break;
-            case("play"):
-                playHandler();
-                break;
-            case("observe"):
-                observeHandler();
-                break;
-            case("logout"):
-                break;
-            default:
-                System.out.println("Not a valid command. Try again. \n");
+            switch (clientResponse){
+                case("help"):
+                    helpHandler();
+                    break;
+                case("create"):
+                    createGameHandler();
+                    break;
+                case("list"):
+                    listHandler();
+                    break;
+                case("play"):
+                    playHandler();
+                    break;
+                case("observe"):
+                    observeHandler();
+                    break;
+                case("logout"):
+                    break;
+                default:
+                    System.out.println("Not a valid command. Try again. \n");
 
+            }
         }
+
     }
 
     private static void observeHandler() {
         System.out.println("Enter a game number to observe:");
         int gameNumber = Integer.parseInt(scanner.nextLine());
-
+        var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+        boolean isWhite = true;
+        DrawChessBoard.drawChessBoard(out, isWhite);
+        inGame = true;
     }
 
     private static void playHandler() {
@@ -124,7 +133,19 @@ public class Client {
         String clientResponse = scanner.nextLine();
 
         System.out.println("Which color do you want:");
-        String clientColor = scanner.nextLine();
+        String clientColor = scanner.nextLine().trim().toLowerCase();
+
+        var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+
+        boolean isWhite;
+        if(clientColor.equals("white")){
+            isWhite = true;
+        }
+        else{
+            isWhite = false;
+        }
+        DrawChessBoard.drawChessBoard(out, isWhite);
+        inGame = true;
 
 //        use ServerFacade to join the game
 

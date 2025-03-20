@@ -26,8 +26,10 @@ public class DrawChessBoard {
         drawChessBoard(out, isWhite);
     }
 
-    private static void drawChessBoard(PrintStream out, boolean isWhite) {
+    static void drawChessBoard(PrintStream out, boolean isWhite) {
 // set up the starter chess board will need to replace later with the actual game data and when switching from black to white
+        out.print(ERASE_SCREEN);
+
         ChessBoard board = getBoard();
 
         printHeading(out, isWhite);
