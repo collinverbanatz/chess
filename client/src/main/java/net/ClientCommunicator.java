@@ -1,6 +1,7 @@
 package net;
 
 import com.google.gson.Gson;
+import service.GameService;
 import service.UserService;
 
 import java.io.IOException;
@@ -75,5 +76,13 @@ public class ClientCommunicator {
 
     public UserService.RegisterResult register(String url, UserService.RegisterRequest request) throws IOException {
         return doPost(url, request, "/user", UserService.RegisterResult.class);
+    }
+
+    public UserService.RegisterResult login(String url, UserService.LoginRequest request) throws IOException {
+        return doPost(url,request, "/session", UserService.RegisterResult.class);
+    }
+
+    public GameService.CreateResult createGame(String url, GameService.CreateRequest createRequest) throws IOException {
+        return doPost(url, createRequest, "/game", GameService.CreateResult.class);
     }
 }

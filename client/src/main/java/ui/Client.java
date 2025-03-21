@@ -5,10 +5,10 @@ import net.ServerFacade;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Locale;
 import java.util.Scanner;
-import net.ServerFacade;
+
 import service.UserService;
+import service.GameService;
 
 public class Client {
     private static Scanner scanner = new Scanner(System.in);
@@ -70,9 +70,17 @@ public class Client {
         String password = scanner.nextLine();
 
         //        implement serverFacade here
+        String authToken;
+        try {
+            UserService.RegisterResult rr = serverFacade.login(userName, password);
+            authToken = rr.getAuthToken();
+        } catch (Exception e) {
+            System.err.println("invalid login");
+            return;
+        }
         System.out.println("Successful login. You are now logged in.");
         loggedIn = true;
-        postLogin();
+        postLogin(authToken);
     }
 
     private static void printRegister() {
@@ -84,18 +92,20 @@ public class Client {
         String email = scanner.nextLine();
 
 //        implement serverFacade here
+        String authToken;
         try {
             UserService.RegisterResult rr = serverFacade.register(userName, password, email);
+            authToken = rr.getAuthToken();
         } catch (IOException e) {
             System.err.println("that user name is already taken");
             return;
         }
         System.out.println("Successful Register. You are now logged in.");
          loggedIn = true;
-         postLogin();
+         postLogin(authToken);
     }
 
-    private static void postLogin() {
+    private static void postLogin(String authToken) {
         while(!inGame){
             System.out.println("Help:-with possible commands");
             System.out.println("Create: <NAME> -a game");
@@ -111,7 +121,7 @@ public class Client {
                     helpHandler();
                     break;
                 case("create"):
-                    createGameHandler();
+                    createGameHandler(authToken);
                     break;
                 case("list"):
                     listHandler();
@@ -168,11 +178,16 @@ public class Client {
 //        implement listing game by calling serverFacade
     }
 
-    private static void createGameHandler() {
+    private static void createGameHandler(String authToken) {
         System.out.println("Enter a game Name:");
         String clientResponse = scanner.nextLine();
 
 //    implement creating a game
+        try{
+            GameService.CreateResult createResult = serverFacade.createGame(authToken);
+        } catch (IOException e) {
+            System.err.println("could not create game");
+        }
     }
 
     private static void helpHandler() {
