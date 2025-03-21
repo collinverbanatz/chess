@@ -1,14 +1,20 @@
 package ui;
 
+import net.ServerFacade;
+
+import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import java.util.Scanner;
+import net.ServerFacade;
+import service.UserService;
 
 public class Client {
     private static Scanner scanner = new Scanner(System.in);
     private static boolean loggedIn = false;
     private static boolean inGame = false;
+    static ServerFacade serverFacade;
 
 
     public static void main(String[] args){
@@ -17,6 +23,7 @@ public class Client {
 
     public static void preLogin(){
         System.out.println("Welcome to 240 Chess. \n");
+        serverFacade = new ServerFacade();
         while (!loggedIn){
             System.out.println("Register: <USERNAME> <PASSWORD> <EMAIL>. -To create an account");
             System.out.println("Login: <USERNAME> <PASSWORD>. -To play chess.");
@@ -77,6 +84,12 @@ public class Client {
         String email = scanner.nextLine();
 
 //        implement serverFacade here
+        try {
+            UserService.RegisterResult rr = serverFacade.register(userName, password, email);
+        } catch (IOException e) {
+            System.err.println("that user name is already taken");
+            return;
+        }
         System.out.println("Successful Register. You are now logged in.");
          loggedIn = true;
          postLogin();
