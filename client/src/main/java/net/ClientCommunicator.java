@@ -79,8 +79,8 @@ public class ClientCommunicator {
 
 
 
-    public <T> T doGet(String urlString, String authToken, Class<T> responseClass) throws IOException {
-        URL url = new URL(urlString);
+    public <T> T doGet(String urlString, String authToken, Class<T> responseClass, String output) throws IOException {
+        URL url = new URL(urlString + output);
 
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
@@ -107,6 +107,7 @@ public class ClientCommunicator {
             //connection.getHeaderField("Content-Length");
 
             InputStream responseBody = connection.getInputStream();
+            return readBody(connection, responseClass);
             // Read and process response body from InputStream ...
         } else {
             // SERVER RETURNED AN HTTP ERROR
@@ -134,6 +135,6 @@ public class ClientCommunicator {
     }
 
     public GameService.ListGameResult listGame(String url, String authToken) throws IOException {
-        return doGet(url, authToken, GameService.ListGameResult.class);
+        return doGet(url, authToken, GameService.ListGameResult.class, "/game");
     }
 }

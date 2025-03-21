@@ -158,4 +158,11 @@ public class GameService {
         }
     }
 
+    @Override
+    public String toString() {
+        return "GameService{" +
+                "authdao=" + authdao +
+                ", gameDao=" + gameDao +
+                '}';
+    }
 }
