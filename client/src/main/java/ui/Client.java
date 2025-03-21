@@ -186,7 +186,7 @@ public class Client {
         try{
             GameService.CreateResult createResult = serverFacade.createGame(authToken);
         } catch (IOException e) {
-            System.err.println("could not create game");
+            System.err.println(e);
         }
     }
 
