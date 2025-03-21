@@ -17,6 +17,7 @@ public class Client {
     static ServerFacade serverFacade;
 
 
+
     public static void main(String[] args){
         preLogin();
     }
@@ -124,7 +125,7 @@ public class Client {
                     createGameHandler(authToken);
                     break;
                 case("list"):
-                    listHandler();
+                    listHandler(authToken);
                     break;
                 case("play"):
                     playHandler();
@@ -174,8 +175,15 @@ public class Client {
 
     }
 
-    private static void listHandler() {
+    private static void listHandler(String authToken) {
 //        implement listing game by calling serverFacade
+        try{
+            GameService.ListGameResult listGameResult = serverFacade.listGame(authToken);
+            System.out.println(listGameResult);
+        } catch (Exception e) {
+            System.err.println("couldn't list games");
+        }
+
     }
 
     private static void createGameHandler(String authToken) {
@@ -184,9 +192,9 @@ public class Client {
 
 //    implement creating a game
         try{
-            GameService.CreateResult createResult = serverFacade.createGame(authToken);
+            GameService.CreateResult createResult = serverFacade.createGame(authToken, clientResponse);
         } catch (IOException e) {
-            System.err.println(e);
+            System.err.println("couldn't create game");
         }
     }
 

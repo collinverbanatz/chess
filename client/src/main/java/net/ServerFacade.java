@@ -27,6 +27,10 @@ public class ServerFacade {
         this.clientCommunicator = new ClientCommunicator();
     }
 
+    public GameService.ListGameResult listGame(String authToken) throws IOException {
+        return clientCommunicator.listGame(url, authToken);
+    }
+
     public RegisterResult register(String userName, String password, String email) throws IOException {
         RegisterRequest request = new RegisterRequest(userName, password, email);
         return clientCommunicator.register(url, request);
@@ -37,8 +41,8 @@ public class ServerFacade {
         return clientCommunicator.login(url, request);
     }
 
-    public GameService.CreateResult createGame(String authToken) throws IOException {
-        GameService.CreateRequest createRequest = new GameService.CreateRequest(authToken);
-        return clientCommunicator.createGame(url, createRequest);
+    public GameService.CreateResult createGame(String authToken, String gameName) throws IOException {
+        GameService.CreateRequest createRequest = new GameService.CreateRequest(gameName);
+        return clientCommunicator.createGame(url, createRequest, authToken);
     }
 }

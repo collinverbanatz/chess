@@ -14,7 +14,7 @@ import java.net.URL;
 public class ClientCommunicator {
 
 
-    public <T> T doPost(String urlString, Object requestObject, String endpoint, Class<T> responseClass) throws IOException {
+    public <T> T doPost(String urlString, Object requestObject, String endpoint, Class<T> responseClass, String authToken) throws IOException {
         URL url = new URL(urlString + endpoint);
 
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -22,10 +22,14 @@ public class ClientCommunicator {
         connection.setReadTimeout(5000);
         connection.setRequestMethod("POST");
         connection.setDoOutput(true);
+        connection.addRequestProperty("Content-Type", "application/json");
+
+        if (authToken != null && !authToken.isEmpty()) {
+            connection.addRequestProperty("Authorization", authToken);
+        }
 
         // Set HTTP request headers, if necessary
-//        connection.setRequestProperty("Content-Type", "application/json");
-//        connection.addRequestProperty("Accept", "text/html");
+
         writeBody(requestObject, connection);
 
         connection.connect();
@@ -74,15 +78,62 @@ public class ClientCommunicator {
     }
 
 
+
+    public <T> T doGet(String urlString, String authToken, Class<T> responseClass) throws IOException {
+        URL url = new URL(urlString);
+
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+        connection.setReadTimeout(5000);
+        connection.setRequestMethod("GET");
+        connection.addRequestProperty("Content-Type", "application/json");
+
+        if (authToken != null && !authToken.isEmpty()) {
+            connection.addRequestProperty("Authorization", authToken);
+        }
+
+        // Set HTTP request headers, if necessary
+        // connection.addRequestProperty("Accept", "text/html");
+        // connection.addRequestProperty("Authorization", "fjaklc8sdfjklakl");
+
+        connection.connect();
+
+        if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+            // Get HTTP response headers, if necessary
+            // Map<String, List<String>> headers = connection.getHeaderFields();
+
+            // OR
+
+            //connection.getHeaderField("Content-Length");
+
+            InputStream responseBody = connection.getInputStream();
+            // Read and process response body from InputStream ...
+        } else {
+            // SERVER RETURNED AN HTTP ERROR
+
+            InputStream responseBody = connection.getErrorStream();
+            // Read and process error response body from InputStream ...
+        }
+        return readBody(connection, responseClass);
+    }
+
+
+
     public UserService.RegisterResult register(String url, UserService.RegisterRequest request) throws IOException {
-        return doPost(url, request, "/user", UserService.RegisterResult.class);
+        String authToken = null;
+        return doPost(url, request, "/user", UserService.RegisterResult.class, authToken);
     }
 
     public UserService.RegisterResult login(String url, UserService.LoginRequest request) throws IOException {
-        return doPost(url,request, "/session", UserService.RegisterResult.class);
+        String authToken = null;
+        return doPost(url,request, "/session", UserService.RegisterResult.class, authToken);
     }
 
-    public GameService.CreateResult createGame(String url, GameService.CreateRequest createRequest) throws IOException {
-        return doPost(url, createRequest, "/game", GameService.CreateResult.class);
+    public GameService.CreateResult createGame(String url, GameService.CreateRequest createRequest, String authToken) throws IOException {
+        return doPost(url, createRequest, "/game", GameService.CreateResult.class, authToken);
+    }
+
+    public GameService.ListGameResult listGame(String url, String authToken) throws IOException {
+        return doGet(url, authToken, GameService.ListGameResult.class);
     }
 }
