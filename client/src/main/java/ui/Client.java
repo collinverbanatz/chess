@@ -48,12 +48,23 @@ public class Client {
                 case("help"):
                     printHelp();
                     break;
+                case("clear"):
+                    clearHandler();
+                    break;
                 default:
                     System.out.println("Not a valid command. Try again. \n");
             }
 
 
 //            loggedIn = true;
+        }
+    }
+
+    private static void clearHandler() {
+        try{
+            serverFacade.clear();
+        }catch (Exception e) {
+            System.err.println("couldn't clear");
         }
     }
 

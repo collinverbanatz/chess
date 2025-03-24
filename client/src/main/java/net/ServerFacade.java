@@ -54,4 +54,9 @@ public class ServerFacade {
     public void logout(String authToken) throws IOException {
         clientCommunicator.logout(url,authToken);
     }
+
+    public void clear() throws IOException {
+        String authToken = "nothing";
+        clientCommunicator.clear(url, authToken);
+    }
 }

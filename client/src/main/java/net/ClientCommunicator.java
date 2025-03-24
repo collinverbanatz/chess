@@ -222,4 +222,8 @@ public class ClientCommunicator {
     public void logout(String url, String authToken) throws IOException {
         doDelete(url, "/session", authToken);
     }
+
+    public void clear(String url, String authoken) throws IOException {
+        doDelete(url, "/db", authoken);
+    }
 }
