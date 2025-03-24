@@ -27,6 +27,11 @@ public class ServerFacade {
         this.clientCommunicator = new ClientCommunicator();
     }
 
+    public void joinGame(String authToken, int clientResponse, String clientColor) throws IOException {
+        GameService.JoinGameRequest joinGameRequest = new GameService.JoinGameRequest(clientColor, clientResponse);
+        clientCommunicator.joinGame(url, joinGameRequest, authToken);
+    }
+
     public GameService.ListGameResult listGame(String authToken) throws IOException {
         return clientCommunicator.listGame(url, authToken);
     }

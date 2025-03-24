@@ -41,13 +41,21 @@ public class GameHandler {
         String authToken = req.headers("authorization");
         try {
             data = gameService.listGames(authToken);
+            System.out.println("Raw ListGameResult object: " + data);
+
+            // Convert to JSON
+            String jsonResponse = gson.toJson(data);
+
+            // Debugging: Print the JSON string
+            System.out.println("Serialized JSON response: " + jsonResponse);
+
+            response.status(200);
+            return jsonResponse;
         }
         catch (DataAccessException e){
             response.status(401);
             return("{ \"message\": \"Error: unauthorized\" }");
         }
-        response.status(200);
-        return gson.toJson(data);
     }
 
 

@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 public class ClientCommunicator {
 
@@ -118,6 +119,32 @@ public class ClientCommunicator {
         return readBody(connection, responseClass);
     }
 
+    public void doPut(String urlString, Object requestObject, String endpoint, String authToken) throws IOException {
+        URL url = new URL(urlString + endpoint);
+
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setReadTimeout(5000);
+        connection.setRequestMethod("PUT");
+        connection.setDoOutput(true);
+        connection.addRequestProperty("Content-Type", "application/json");
+
+        if (authToken != null && !authToken.isEmpty()) {
+            connection.addRequestProperty("Authorization", authToken);
+        }
+
+        writeBody(requestObject, connection);
+
+        connection.connect();
+
+        if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+            System.out.println("Successfully joined the game.");
+        } else {
+            InputStream responseBody = connection.getErrorStream();
+        }
+    }
+
+
+
 
 
     public UserService.RegisterResult register(String url, UserService.RegisterRequest request) throws IOException {
@@ -136,5 +163,9 @@ public class ClientCommunicator {
 
     public GameService.ListGameResult listGame(String url, String authToken) throws IOException {
         return doGet(url, authToken, GameService.ListGameResult.class, "/game");
+    }
+
+    public void joinGame(String url, GameService.JoinGameRequest joinGameRequest, String authToken) throws IOException {
+        doPut(url, joinGameRequest, "/game", authToken);
     }
 }

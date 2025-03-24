@@ -1,5 +1,7 @@
 package ui;
 
+import com.google.gson.Gson;
+import models.GameData;
 import net.ServerFacade;
 
 import java.io.IOException;
@@ -128,7 +130,7 @@ public class Client {
                     listHandler(authToken);
                     break;
                 case("play"):
-                    playHandler();
+                    playHandler(authToken);
                     break;
                 case("observe"):
                     observeHandler();
@@ -152,34 +154,88 @@ public class Client {
         inGame = true;
     }
 
-    private static void playHandler() {
-        System.out.println("Enter a game number:");
-        String clientResponse = scanner.nextLine();
+    private static void playHandler(String authToken) {
 
-        System.out.println("Which color do you want:");
-        String clientColor = scanner.nextLine().trim().toLowerCase();
 
-        var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+        boolean isWhite = false;
+        boolean isColor = true;
+        while(isColor) {
+            System.out.println("Enter a game number:");
+            String clientResponse = scanner.nextLine();
 
-        boolean isWhite;
-        if(clientColor.equals("white")){
-            isWhite = true;
+            System.out.println("Which color do you want:");
+            String clientColor = scanner.nextLine().trim().toLowerCase();
+            int gameID = getGameID(authToken, clientResponse);
+            System.out.println(gameID);
+            var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+            if (clientColor.equals("white")) {
+                isWhite = true;
+                try{
+                    serverFacade.joinGame(authToken, gameID, clientColor);
+
+                } catch (IOException e) {
+                    System.err.println("couldn't join game");
+                }
+                DrawChessBoard.drawChessBoard(out, isWhite);
+                isColor = false;
+            }
+            else if (clientColor.equals("black")) {
+                isWhite = false;
+                try{
+                    serverFacade.joinGame(authToken, gameID, clientColor);
+
+                } catch (IOException e) {
+                    System.err.println("couldn't join game");
+                }
+                DrawChessBoard.drawChessBoard(out, isWhite);
+                isColor = false;
+            } else {
+                System.out.println("not a color");
+            }
         }
-        else{
-            isWhite = false;
-        }
-        DrawChessBoard.drawChessBoard(out, isWhite);
         inGame = true;
+    }
 
-//        use ServerFacade to join the game
-
+    private static int getGameID(String authToken, String gameNumber) {
+        try {
+            GameService.ListGameResult listGameResults = serverFacade.listGame(authToken);
+            int gameCounter = 0;
+            int number = Integer.parseInt(gameNumber);
+            for (GameData game : listGameResults.getGames()) {
+                gameCounter++;
+                if(gameCounter == number){
+                    return game.getGameID();
+                }
+            }
+        }catch (Exception e) {
+            System.err.println("couldn't list games");
+        }
+        return 0;
     }
 
     private static void listHandler(String authToken) {
 //        implement listing game by calling serverFacade
         try{
             GameService.ListGameResult listGameResult = serverFacade.listGame(authToken);
-            System.out.println(listGameResult);
+            int count = 1;
+            for (GameData game : listGameResult.getGames()) {
+                System.out.print(count + " GameName: " + game.getGameName());
+                if(game.getWhiteUsername() != null){
+                    System.out.print(" White name: " + game.getWhiteUsername());
+                }
+                else{
+                    System.out.print(" White name: None");
+                }
+                if(game.getBlackUsername() != null){
+                    System.out.println(" Black name: " + game.getBlackUsername());
+                }
+                else{
+                    System.out.println(" Black name: None");
+                }
+
+                count++;
+            }
+//                System.out.println(new Gson().toJson(listGameResult));
         } catch (Exception e) {
             System.err.println("couldn't list games");
         }
