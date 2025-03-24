@@ -123,6 +123,7 @@ public class ClientCommunicator {
         URL url = new URL(urlString + endpoint);
 
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
         connection.setReadTimeout(5000);
         connection.setRequestMethod("PUT");
         connection.setDoOutput(true);
@@ -132,19 +133,68 @@ public class ClientCommunicator {
             connection.addRequestProperty("Authorization", authToken);
         }
 
+        // Set HTTP request headers, if necessary
+
         writeBody(requestObject, connection);
 
         connection.connect();
 
         if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-            System.out.println("Successfully joined the game.");
-        } else {
+            // Get HTTP response headers, if necessary
+            // Map<String, List<String>> headers = connection.getHeaderFields();
+
+            // OR
+
+            //connection.getHeaderField("Content-Length");
+
+            InputStream responseBody = connection.getInputStream();
+            // Read response body from InputStream ...
+        }
+        else {
+            // SERVER RETURNED AN HTTP ERROR
+
             InputStream responseBody = connection.getErrorStream();
+            // Read and process error response body from InputStream ...
         }
     }
 
 
+    private void doDelete(String urlString, String endpoint, String authToken) throws IOException {
+        URL url = new URL(urlString + endpoint);
 
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+        connection.setReadTimeout(5000);
+        connection.setRequestMethod("DELETE");
+        connection.setDoOutput(true);
+        connection.addRequestProperty("Content-Type", "application/json");
+
+        if (authToken != null && !authToken.isEmpty()) {
+            connection.addRequestProperty("Authorization", authToken);
+        }
+
+        // Set HTTP request headers, if necessary
+
+        connection.connect();
+
+        if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+            // Get HTTP response headers, if necessary
+            // Map<String, List<String>> headers = connection.getHeaderFields();
+
+            // OR
+
+            //connection.getHeaderField("Content-Length");
+
+            InputStream responseBody = connection.getInputStream();
+            // Read response body from InputStream ...
+        }
+        else {
+            // SERVER RETURNED AN HTTP ERROR
+
+            InputStream responseBody = connection.getErrorStream();
+            // Read and process error response body from InputStream ...
+        }
+    }
 
 
     public UserService.RegisterResult register(String url, UserService.RegisterRequest request) throws IOException {
@@ -167,5 +217,9 @@ public class ClientCommunicator {
 
     public void joinGame(String url, GameService.JoinGameRequest joinGameRequest, String authToken) throws IOException {
         doPut(url, joinGameRequest, "/game", authToken);
+    }
+
+    public void logout(String url, String authToken) throws IOException {
+        doDelete(url, "/session", authToken);
     }
 }

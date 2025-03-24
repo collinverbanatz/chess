@@ -50,4 +50,8 @@ public class ServerFacade {
         GameService.CreateRequest createRequest = new GameService.CreateRequest(gameName);
         return clientCommunicator.createGame(url, createRequest, authToken);
     }
+
+    public void logout(String authToken) throws IOException {
+        clientCommunicator.logout(url,authToken);
+    }
 }

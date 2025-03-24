@@ -136,6 +136,7 @@ public class Client {
                     observeHandler();
                     break;
                 case("logout"):
+                    logoutHandler(authToken);
                     break;
                 default:
                     System.out.println("Not a valid command. Try again. \n");
@@ -143,6 +144,17 @@ public class Client {
             }
         }
 
+    }
+
+    private static void logoutHandler(String authToken) {
+        try {
+            serverFacade.logout(authToken);
+            System.out.println("you have logged out");
+            loggedIn = false;
+            preLogin();
+        }catch (Exception e) {
+            System.err.println("couldn't logout");
+        }
     }
 
     private static void observeHandler() {
@@ -155,20 +167,20 @@ public class Client {
     }
 
     private static void playHandler(String authToken) {
-
-
         boolean isWhite = false;
         boolean isColor = true;
+
         while(isColor) {
             System.out.println("Enter a game number:");
             String clientResponse = scanner.nextLine();
 
             System.out.println("Which color do you want:");
-            String clientColor = scanner.nextLine().trim().toLowerCase();
+            String clientColor = scanner.nextLine().trim().toUpperCase();
             int gameID = getGameID(authToken, clientResponse);
-            System.out.println(gameID);
+
+//            System.out.println(gameID);
             var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
-            if (clientColor.equals("white")) {
+            if (clientColor.equals("WHITE")) {
                 isWhite = true;
                 try{
                     serverFacade.joinGame(authToken, gameID, clientColor);
@@ -179,7 +191,7 @@ public class Client {
                 DrawChessBoard.drawChessBoard(out, isWhite);
                 isColor = false;
             }
-            else if (clientColor.equals("black")) {
+            else if (clientColor.equals("BLACK")) {
                 isWhite = false;
                 try{
                     serverFacade.joinGame(authToken, gameID, clientColor);
