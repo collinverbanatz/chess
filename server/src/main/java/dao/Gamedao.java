@@ -2,12 +2,12 @@ package dao;
 
 import dataaccess.DataAccessException;
 import models.GameData;
-import service.GameService;
+import models.CreateResult;
 
 import java.util.ArrayList;
 
 public interface Gamedao {
-    GameService.CreateResult createGame(GameData gameData) throws DataAccessException;
+    CreateResult createGame(GameData gameData) throws DataAccessException;
 
     ArrayList<GameData> getListGames() throws DataAccessException;
 

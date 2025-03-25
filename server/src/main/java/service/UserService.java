@@ -3,8 +3,7 @@ package service;
 import dao.Authdao;
 import dao.Gamedao;
 import dao.Usrdao;
-import models.AuthData;
-import models.UserData;
+import models.*;
 import dataaccess.DataAccessException;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -25,23 +24,23 @@ public class UserService {
 
 
     public RegisterResult register(RegisterRequest registerRequest) throws DataAccessException {
-        UserData userData = userDao.getUser(registerRequest.username);
+        UserData userData = userDao.getUser(registerRequest.getUsername());
         if(userData != null){
             throw new DataAccessException("username all ready exists");
         }
-        userDao.putUser(new UserData(registerRequest.username, hashPassword(registerRequest.password), registerRequest.email));
-        AuthData authData = createAndSaveAuthToken(registerRequest.username);
-        return new RegisterResult(registerRequest.username, authData.authToken);
+        userDao.putUser(new UserData(registerRequest.getUsername(), hashPassword(registerRequest.getPassword()), registerRequest.getEmail()));
+        AuthData authData = createAndSaveAuthToken(registerRequest.getUsername());
+        return new RegisterResult(registerRequest.getUsername(), authData.authToken);
     }
 
 
     public RegisterResult login(LoginRequest loginRequest) throws DataAccessException {
-        UserData userData = userDao.getUser(loginRequest.username);
+        UserData userData = userDao.getUser(loginRequest.getUsername());
         if(userData == null){
             throw new DataAccessException("user name doesn't exist");
         }
         String correctPassword = userData.getPassword();
-        String password = loginRequest.password;
+        String password = loginRequest.getPassword();
         if(BCrypt.checkpw(password, correctPassword)){
             AuthData authData = createAndSaveAuthToken(userData.userName);
             return new RegisterResult(userData.userName, authData.authToken);
@@ -78,116 +77,6 @@ public class UserService {
         return authData;
     }
 
-    public static class LogoutRequest{
-        private String authToken;
-
-        public LogoutRequest(String authToken) {
-            this.authToken = authToken;
-        }
-
-        public String getAuthToken() {
-            return authToken;
-        }
-
-        public void setAuthToken(String authToken) {
-            this.authToken = authToken;
-        }
-    }
-
-
-
-
-
-
-    public static class RegisterResult{
-        private String username;
-        private String authToken;
-
-        public RegisterResult(String username, String authToken) {
-            this.username = username;
-            this.authToken = authToken;
-        }
-
-        public String getUsername() {
-            return username;
-        }
-
-        public void setUsername(String username) {
-            this.username = username;
-        }
-
-        public String getAuthToken() {
-            return authToken;
-        }
-
-        public void setAuthToken(String authToken) {
-            this.authToken = authToken;
-        }
-    }
-
-    public static class RegisterRequest{
-        private String username;
-        private String password;
-        private String email;
-
-        public RegisterRequest(String username, String password, String email) {
-            this.username = username;
-            this.password = password;
-            this.email = email;
-        }
-
-        public String getUsername() {
-            return username;
-        }
-
-        public void setUsername(String username) {
-            this.username = username;
-        }
-
-        public String getPassword() {
-            return password;
-        }
-
-        public void setPassword(String password) {
-            this.password = password;
-        }
-
-        public String getEmail() {
-            return email;
-        }
-
-        public void setEmail(String email) {
-            this.email = email;
-        }
-    }
-
-
-
-    public static class LoginRequest {
-        private String username;
-        private String password;
-
-        public LoginRequest(String username, String password) {
-            this.username = username;
-            this.password = password;
-        }
-
-        public String getPassword() {
-            return password;
-        }
-
-        public String getUsername() {
-            return username;
-        }
-
-        public void setUsername(String username) {
-            this.username = username;
-        }
-
-        public void setPassword(String password) {
-            this.password = password;
-        }
-    }
 
     public String hashPassword(String password){
         return BCrypt.hashpw(password, BCrypt.gensalt());

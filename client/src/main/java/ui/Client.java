@@ -8,8 +8,9 @@ import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
-import service.UserService;
-import service.GameService;
+import models.ListGameResult;
+import models.CreateResult;
+import models.RegisterResult;
 
 public class Client {
     private static Scanner scanner = new Scanner(System.in);
@@ -85,7 +86,7 @@ public class Client {
         //        implement serverFacade here
         String authToken;
         try {
-            UserService.RegisterResult rr = serverFacade.login(userName, password);
+            RegisterResult rr = serverFacade.login(userName, password);
             authToken = rr.getAuthToken();
         } catch (Exception e) {
             System.err.println("invalid login");
@@ -107,7 +108,7 @@ public class Client {
 //        implement serverFacade here
         String authToken;
         try {
-            UserService.RegisterResult rr = serverFacade.register(userName, password, email);
+            RegisterResult rr = serverFacade.register(userName, password, email);
             authToken = rr.getAuthToken();
         } catch (IOException e) {
             System.err.println("that user name is already taken");
@@ -220,7 +221,7 @@ public class Client {
 
     private static int getGameID(String authToken, String gameNumber) {
         try {
-            GameService.ListGameResult listGameResults = serverFacade.listGame(authToken);
+            ListGameResult listGameResults = serverFacade.listGame(authToken);
             int gameCounter = 0;
             int number = Integer.parseInt(gameNumber);
             for (GameData game : listGameResults.getGames()) {
@@ -238,7 +239,7 @@ public class Client {
     private static void listHandler(String authToken) {
 //        implement listing game by calling serverFacade
         try{
-            GameService.ListGameResult listGameResult = serverFacade.listGame(authToken);
+            ListGameResult listGameResult = serverFacade.listGame(authToken);
             int count = 1;
             for (GameData game : listGameResult.getGames()) {
                 System.out.print(count + " GameName: " + game.getGameName());
@@ -270,7 +271,7 @@ public class Client {
 
 //    implement creating a game
         try{
-            GameService.CreateResult createResult = serverFacade.createGame(authToken, clientResponse);
+            CreateResult createResult = serverFacade.createGame(authToken, clientResponse);
         } catch (IOException e) {
             System.err.println("couldn't create game");
         }

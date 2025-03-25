@@ -1,10 +1,13 @@
 package client;
 
 
-import service.GameService;
-import service.UserService.RegisterRequest;
-import service.UserService.RegisterResult;
-import service.UserService.LoginRequest;
+import models.CreateRequest;
+import models.CreateResult;
+import models.ListGameResult;
+import models.JoinGameRequest;
+import models.RegisterRequest;
+import models.RegisterResult;
+import models.LoginRequest;
 
 
 import java.io.IOException;
@@ -21,11 +24,11 @@ public class ServerFacade {
     }
 
     public void joinGame(String authToken, int gameID, String clientColor) throws IOException {
-        GameService.JoinGameRequest joinGameRequest = new GameService.JoinGameRequest(clientColor, gameID);
+        JoinGameRequest joinGameRequest = new JoinGameRequest(clientColor, gameID);
         clientCommunicator.joinGame(url, joinGameRequest, authToken);
     }
 
-    public GameService.ListGameResult listGame(String authToken) throws IOException {
+    public ListGameResult listGame(String authToken) throws IOException {
         return clientCommunicator.listGame(url, authToken);
     }
 
@@ -39,8 +42,8 @@ public class ServerFacade {
         return clientCommunicator.login(url, request);
     }
 
-    public GameService.CreateResult createGame(String authToken, String gameName) throws IOException {
-        GameService.CreateRequest createRequest = new GameService.CreateRequest(gameName);
+    public CreateResult createGame(String authToken, String gameName) throws IOException {
+        CreateRequest createRequest = new CreateRequest(gameName);
         return clientCommunicator.createGame(url, createRequest, authToken);
     }
 

@@ -1,8 +1,13 @@
 package client;
 
 import com.google.gson.Gson;
-import service.GameService;
-import service.UserService;
+import models.CreateRequest;
+import models.CreateResult;
+import models.ListGameResult;
+import models.JoinGameRequest;
+import models.LoginRequest;
+import models.RegisterRequest;
+import models.RegisterResult;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -200,25 +205,25 @@ public class ClientCommunicator {
     }
 
 
-    public UserService.RegisterResult register(String url, UserService.RegisterRequest request) throws IOException {
+    public RegisterResult register(String url, RegisterRequest request) throws IOException {
         String authToken = null;
-        return doPost(url, request, "/user", UserService.RegisterResult.class, authToken);
+        return doPost(url, request, "/user", RegisterResult.class, authToken);
     }
 
-    public UserService.RegisterResult login(String url, UserService.LoginRequest request) throws IOException {
+    public RegisterResult login(String url, LoginRequest request) throws IOException {
         String authToken = null;
-        return doPost(url,request, "/session", UserService.RegisterResult.class, authToken);
+        return doPost(url,request, "/session", RegisterResult.class, authToken);
     }
 
-    public GameService.CreateResult createGame(String url, GameService.CreateRequest createRequest, String authToken) throws IOException {
-        return doPost(url, createRequest, "/game", GameService.CreateResult.class, authToken);
+    public CreateResult createGame(String url, CreateRequest createRequest, String authToken) throws IOException {
+        return doPost(url, createRequest, "/game", CreateResult.class, authToken);
     }
 
-    public GameService.ListGameResult listGame(String url, String authToken) throws IOException {
-        return doGet(url, authToken, GameService.ListGameResult.class, "/game");
+    public ListGameResult listGame(String url, String authToken) throws IOException {
+        return doGet(url, authToken, ListGameResult.class, "/game");
     }
 
-    public void joinGame(String url, GameService.JoinGameRequest joinGameRequest, String authToken) throws IOException {
+    public void joinGame(String url, JoinGameRequest joinGameRequest, String authToken) throws IOException {
         doPut(url, joinGameRequest, "/game", authToken);
     }
 

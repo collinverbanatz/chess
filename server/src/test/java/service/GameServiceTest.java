@@ -3,15 +3,14 @@ package service;
 import dao.MemoryAuthdao;
 import dao.Memorygamedao;
 import dao.MemoryUserdao;
-import models.AuthData;
-import models.UserData;
+import models.*;
 import dataaccess.DataAccessException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class GameServiceTest {
-    UserService.RegisterRequest user= new UserService.RegisterRequest("collin", "12345", "collin@gmail.com");
+    RegisterRequest user= new RegisterRequest("collin", "12345", "collin@gmail.com");
 
     static UserService userService;
     static MemoryAuthdao authDAO;
@@ -39,14 +38,14 @@ public class GameServiceTest {
         gameDAO.clear();
 
 //        register, login
-        UserService.RegisterRequest user= new UserService.RegisterRequest("collin", "12345", "collin@gmail.com");
-        UserService.RegisterResult registerResult= userService.register(user);
+        RegisterRequest user= new RegisterRequest("collin", "12345", "collin@gmail.com");
+        RegisterResult registerResult= userService.register(user);
         authToken = registerResult.getAuthToken();
     }
 
     @Test
     void createGameSuccess() throws DataAccessException {
-        GameService.CreateRequest createRequest = new GameService.CreateRequest("gamename");
+        CreateRequest createRequest = new CreateRequest("gamename");
 
         Assertions.assertDoesNotThrow(() -> gameService.createGame(authToken, createRequest));
     }
@@ -54,7 +53,7 @@ public class GameServiceTest {
     @Test
     void createGameFailure(){
         DataAccessException e = Assertions.assertThrows(DataAccessException.class, () -> {
-            GameService.CreateRequest createRequest = new GameService.CreateRequest("gamename");
+            CreateRequest createRequest = new CreateRequest("gamename");
             gameService.createGame("badAuthToken", createRequest);
         });
         Assertions.assertEquals("Invalid authToken", e.getMessage());
@@ -63,20 +62,20 @@ public class GameServiceTest {
 
     @Test
     void joinGameSuccess() throws DataAccessException {
-        GameService.CreateRequest createRequest = new GameService.CreateRequest("gamename");
+        CreateRequest createRequest = new CreateRequest("gamename");
         gameService.createGame(authToken, createRequest);
 
-        GameService.JoinGameRequest joinGameRequest = new GameService.JoinGameRequest("WHITE", 1);
+        JoinGameRequest joinGameRequest = new JoinGameRequest("WHITE", 1);
         Assertions.assertDoesNotThrow(() -> gameService.joinGame(joinGameRequest ,authToken));
 
     }
 
     @Test
     void joinGameFailure() throws DataAccessException {
-        GameService.CreateRequest createRequest = new GameService.CreateRequest("gamename");
+        CreateRequest createRequest = new CreateRequest("gamename");
         gameService.createGame(authToken, createRequest);
 
-        GameService.JoinGameRequest joinGameRequest = new GameService.JoinGameRequest("BLUE", 1);
+        JoinGameRequest joinGameRequest = new JoinGameRequest("BLUE", 1);
 
         DataAccessException e = Assertions.assertThrows(DataAccessException.class, () -> {
             gameService.joinGame(joinGameRequest ,authToken);
@@ -86,7 +85,7 @@ public class GameServiceTest {
 
     @Test
     void listGameSuccess() throws DataAccessException {
-        GameService.CreateRequest createRequest = new GameService.CreateRequest("gamename");
+        CreateRequest createRequest = new CreateRequest("gamename");
         gameService.createGame(authToken, createRequest);
 
         Assertions.assertDoesNotThrow(() -> gameService.listGames(authToken));
@@ -94,7 +93,7 @@ public class GameServiceTest {
 
     @Test
     void listGameFailure() throws DataAccessException {
-        GameService.CreateRequest createRequest = new GameService.CreateRequest("gamename");
+        CreateRequest createRequest = new CreateRequest("gamename");
         gameService.createGame(authToken, createRequest);
 
         DataAccessException e = Assertions.assertThrows(DataAccessException.class, () -> {

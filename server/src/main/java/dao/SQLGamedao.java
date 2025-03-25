@@ -4,7 +4,7 @@ import chess.ChessGame;
 import com.google.gson.Gson;
 import dataaccess.DataAccessException;
 import models.GameData;
-import service.GameService;
+import models.CreateResult;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ public class SQLGamedao implements Gamedao {
     };
 
     @Override
-    public GameService.CreateResult createGame(GameData gameData) throws DataAccessException {
+    public CreateResult createGame(GameData gameData) throws DataAccessException {
         try {
             String statement = "INSERT INTO game (whiteUsername, blackUsername,gameName,chessGame) VALUES (?, ?, ?,?)";
             String gameDataString = gson.toJson(gameData.getGame());
@@ -40,7 +40,7 @@ public class SQLGamedao implements Gamedao {
             if(gameData.getGameName() == null){
                 throw new DataAccessException("couldn't create a new game");
             }
-            return new GameService.CreateResult(gameId);
+            return new CreateResult(gameId);
         }
         catch (DataAccessException e){
             throw new DataAccessException("couldn't create a new game", e);

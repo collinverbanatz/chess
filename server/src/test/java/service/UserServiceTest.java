@@ -1,13 +1,12 @@
 package service;
 
 import dao.*;
-import models.AuthData;
-import models.UserData;
+import models.*;
 import dataaccess.DataAccessException;
 import org.junit.jupiter.api.*;
 
 public class UserServiceTest {
-    UserService.RegisterRequest user= new UserService.RegisterRequest("collin", "12345", "collin@gmail.com");
+    RegisterRequest user= new RegisterRequest("collin", "12345", "collin@gmail.com");
 
     static UserService userService;
     static MemoryAuthdao authDAO;
@@ -35,8 +34,8 @@ public class UserServiceTest {
 
     @Test
     void registerSuccessTest() throws DataAccessException {
-        UserService.RegisterRequest user= new UserService.RegisterRequest("collin", "12345", "collin@gmail.com");
-        UserService.RegisterResult result = userService.register(user);
+        RegisterRequest user= new RegisterRequest("collin", "12345", "collin@gmail.com");
+        RegisterResult result = userService.register(user);
 
 
         Assertions.assertNotNull(userDOA.getUser(user.getUsername()));
@@ -44,10 +43,10 @@ public class UserServiceTest {
 
     @Test
     void registerFailTest() throws DataAccessException {
-        UserService.RegisterRequest user = new UserService.RegisterRequest("collin", "12345", "collin@gmail.com");
+        RegisterRequest user = new RegisterRequest("collin", "12345", "collin@gmail.com");
         userService.register(user);
 
-        UserService.RegisterRequest user2 = new UserService.RegisterRequest("collin", "12345", "collin@gmail.com");
+        RegisterRequest user2 = new RegisterRequest("collin", "12345", "collin@gmail.com");
         DataAccessException e = Assertions.assertThrows(DataAccessException.class, () -> {
             userService.register(user2);
         });
@@ -57,15 +56,15 @@ public class UserServiceTest {
     @Test
     void loginSuccessTest() throws DataAccessException {
         userService.register(user);
-        UserService.LoginRequest loginRequest = new UserService.LoginRequest("collin", "12345");
-        UserService.RegisterResult loginResult = userService.login(loginRequest);
+        LoginRequest loginRequest = new LoginRequest("collin", "12345");
+        RegisterResult loginResult = userService.login(loginRequest);
 
         Assertions.assertNotNull(loginResult.getAuthToken(), "Auth token should be returned on successful login.");
     }
 
     @Test
     void loginFailureTest(){
-        UserService.LoginRequest user1 = new UserService.LoginRequest("collin", "12345");
+        LoginRequest user1 = new LoginRequest("collin", "12345");
 
         DataAccessException e = Assertions.assertThrows(DataAccessException.class, () -> {
             userService.login(user1);
@@ -75,9 +74,9 @@ public class UserServiceTest {
 
     @Test
     void logoutSuccessTest() throws DataAccessException {
-        UserService.RegisterResult registerResult = userService.register(user);
-        UserService.LoginRequest loginRequest = new UserService.LoginRequest("collin", "12345");
-        UserService.RegisterResult loginResult = userService.login(loginRequest);
+        RegisterResult registerResult = userService.register(user);
+        LoginRequest loginRequest = new LoginRequest("collin", "12345");
+        RegisterResult loginResult = userService.login(loginRequest);
         userService.logout(loginResult.getAuthToken());
         boolean result = authDAO.authTokenExists(loginResult.getAuthToken());
 

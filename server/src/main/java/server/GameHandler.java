@@ -1,8 +1,12 @@
 package server;
 
+import models.CreateRequest;
+import models.CreateResult;
 import service.GameService;
 import com.google.gson.Gson;
 import dataaccess.DataAccessException;
+import models.ListGameResult;
+import models.JoinGameRequest;
 import spark.Request;
 import spark.Response;
 
@@ -17,8 +21,8 @@ public class GameHandler {
     }
 
     public Object createGame(Request req, Response response) throws DataAccessException {
-        GameService.CreateRequest gameData = gson.fromJson(req.body(), GameService.CreateRequest.class);
-        GameService.CreateResult data;
+        CreateRequest gameData = gson.fromJson(req.body(), CreateRequest.class);
+        CreateResult data;
 
         String authToken = req.headers("authorization");
 
@@ -36,7 +40,7 @@ public class GameHandler {
 
 
     public Object listGames(Request req, Response response) throws DataAccessException {
-        GameService.ListGameResult data;
+        ListGameResult data;
 
         String authToken = req.headers("authorization");
         try {
@@ -60,7 +64,7 @@ public class GameHandler {
 
 
     public Object joinGame(Request req, Response response) throws DataAccessException {
-        GameService.JoinGameRequest gameData = gson.fromJson(req.body(), GameService.JoinGameRequest.class);
+        JoinGameRequest gameData = gson.fromJson(req.body(), JoinGameRequest.class);
 
         String authToken = req.headers("authorization");
         if(authToken == null){

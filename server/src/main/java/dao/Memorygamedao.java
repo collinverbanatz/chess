@@ -1,7 +1,7 @@
 package dao;
 
 import models.GameData;
-import service.GameService;
+import models.CreateResult;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,12 +14,12 @@ public class Memorygamedao implements Gamedao {
 
 
     @Override
-    public GameService.CreateResult createGame(GameData gameData) {
+    public CreateResult createGame(GameData gameData) {
         gameID = gameID + 1;
         gameData.setGameID(gameID);
         allGameData.put(gameID, gameData);
 
-        return new GameService.CreateResult(gameData.gameID);
+        return new CreateResult(gameData.gameID);
     }
 
     @Override
