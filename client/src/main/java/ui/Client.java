@@ -1,6 +1,5 @@
 package ui;
 
-import com.google.gson.Gson;
 import models.GameData;
 import net.ServerFacade;
 
