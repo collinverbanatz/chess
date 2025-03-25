@@ -154,6 +154,8 @@ public class ClientCommunicator {
             // SERVER RETURNED AN HTTP ERROR
 
             InputStream responseBody = connection.getErrorStream();
+            throw new IOException("Failed to join game: " + connection.getResponseMessage());
+
             // Read and process error response body from InputStream ...
         }
     }
@@ -193,6 +195,8 @@ public class ClientCommunicator {
 
             InputStream responseBody = connection.getErrorStream();
             // Read and process error response body from InputStream ...
+            throw new IOException("Failed to delete" + connection.getResponseMessage());
+
         }
     }
 

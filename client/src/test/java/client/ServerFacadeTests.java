@@ -50,4 +50,84 @@ public class ServerFacadeTests {
         });
     }
 
+    @Test
+    void loginSuccessTest() throws IOException {
+        serverFacade.register("testUser", "password", "fakeemail");
+        var authData = serverFacade.login("testUser", "password");
+        Assertions.assertNotNull(authData);
+    }
+
+    @Test
+    void loginFailTest() throws IOException {
+        serverFacade.register("testUser", "password", "fakeemail");
+        Assertions.assertThrows(IOException.class, () -> {serverFacade.login("testUser", "notGood");
+        });
+    }
+
+    @Test
+    void createGameSuccessTest() throws IOException {
+        UserService.RegisterResult registerResult = serverFacade.register("testUser", "password", "fakeemail");
+        var authData = serverFacade.createGame(registerResult.getAuthToken(), "testGame");
+        Assertions.assertNotNull(authData);
+    }
+
+    @Test
+    void createGameFailTest() throws IOException {
+        UserService.RegisterResult registerResult = serverFacade.register("testUser", "password", "fakeemail");
+        Assertions.assertThrows(IOException.class, () -> {serverFacade.createGame("badAuthToken", "testGame");
+        });
+    }
+
+    @Test
+    void listGamesSuccessTest() throws IOException {
+        UserService.RegisterResult registerResult = serverFacade.register("testUser", "password", "fakeemail");
+        var authData = serverFacade.listGame(registerResult.getAuthToken());
+        Assertions.assertNotNull(authData);
+    }
+
+    @Test
+    void listGamesFailTest() throws IOException {
+        UserService.RegisterResult registerResult = serverFacade.register("testUser", "password", "fakeemail");
+        Assertions.assertThrows(IOException.class, () -> {serverFacade.listGame("badAuthToken");
+        });
+    }
+
+    @Test
+    void joinGameSuccessTest() throws IOException {
+        UserService.RegisterResult registerResult = serverFacade.register("testUser", "password", "fakeemail");
+        var gameRessult = serverFacade.createGame(registerResult.getAuthToken(), "testGame");
+        serverFacade.joinGame(registerResult.getAuthToken(), gameRessult.getGameID(), "WHITE");
+        Assertions.assertEquals(1, gameRessult.getGameID());
+    }
+
+    @Test
+    void joinGameFailTest() throws IOException {
+        UserService.RegisterResult registerResult = serverFacade.register("testUser", "password", "fakeemail");
+        var gameRessult = serverFacade.createGame(registerResult.getAuthToken(), "testGame");
+        Assertions.assertThrows(IOException.class, () -> {serverFacade.joinGame("", gameRessult.getGameID(), "blue");
+        });
+    }
+
+    @Test
+    void logoutSuccessTest() throws IOException {
+        UserService.RegisterResult registerResult = serverFacade.register("testUser", "password", "fakeemail");
+        serverFacade.logout(registerResult.getAuthToken());
+        Assertions.assertThrows(IOException.class, () -> {serverFacade.listGame(registerResult.getAuthToken());
+        });
+    }
+
+    @Test
+    void logoutFailTest() throws IOException {
+        UserService.RegisterResult registerResult = serverFacade.register("testUser", "password", "fakeemail");
+        Assertions.assertThrows(IOException.class, () -> {serverFacade.logout("");
+        });
+    }
+
+    @Test
+    void clear() throws IOException {
+        UserService.RegisterResult registerResult = serverFacade.register("testUser", "password", "fakeemail");
+        serverFacade.clear();
+        Assertions.assertThrows(IOException.class, () -> {serverFacade.listGame(registerResult.getAuthToken());
+        });
+    }
 }
