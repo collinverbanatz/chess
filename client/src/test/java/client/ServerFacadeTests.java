@@ -12,16 +12,12 @@ public class ServerFacadeTests {
     private static Server server;
     static ServerFacade serverFacade;
 
-    public ServerFacadeTests() throws IOException {
-    }
-
-
     @BeforeAll
     public static void init() {
         server = new Server();
         var port = server.run(0);
         System.out.println("Started test HTTP server on " + port);
-        serverFacade = new ServerFacade();
+        serverFacade = new ServerFacade(port);
     }
 
     @AfterAll

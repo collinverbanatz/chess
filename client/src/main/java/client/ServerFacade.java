@@ -17,10 +17,15 @@ public class ServerFacade {
 //    calls the 7 methods one per end point
 
     ClientCommunicator clientCommunicator;
-    String url = "http://localhost:8080";
+    String url = "http://localhost:";
 
     public ServerFacade() {
+        this(8080);
+    }
+
+    public ServerFacade(int port) {
         this.clientCommunicator = new ClientCommunicator();
+        this.url = url + port;
     }
 
     public void joinGame(String authToken, int gameID, String clientColor) throws IOException {
