@@ -1,7 +1,7 @@
 package ui;
 
 import models.GameData;
-import net.ServerFacade;
+import client.ServerFacade;
 
 import java.io.IOException;
 import java.io.PrintStream;
