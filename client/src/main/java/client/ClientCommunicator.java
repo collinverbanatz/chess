@@ -33,29 +33,8 @@ public class ClientCommunicator {
             connection.addRequestProperty("Authorization", authToken);
         }
 
-        // Set HTTP request headers, if necessary
-
         writeBody(requestObject, connection);
-
         connection.connect();
-
-        if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-            // Get HTTP response headers, if necessary
-            // Map<String, List<String>> headers = connection.getHeaderFields();
-
-            // OR
-
-            //connection.getHeaderField("Content-Length");
-
-            InputStream responseBody = connection.getInputStream();
-            // Read response body from InputStream ...
-        }
-        else {
-            // SERVER RETURNED AN HTTP ERROR
-
-            InputStream responseBody = connection.getErrorStream();
-            // Read and process error response body from InputStream ...
-        }
         return readBody(connection, responseClass);
     }
 
@@ -97,29 +76,7 @@ public class ClientCommunicator {
             connection.addRequestProperty("Authorization", authToken);
         }
 
-        // Set HTTP request headers, if necessary
-        // connection.addRequestProperty("Accept", "text/html");
-        // connection.addRequestProperty("Authorization", "fjaklc8sdfjklakl");
-
         connection.connect();
-
-        if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-            // Get HTTP response headers, if necessary
-            // Map<String, List<String>> headers = connection.getHeaderFields();
-
-            // OR
-
-            //connection.getHeaderField("Content-Length");
-
-            InputStream responseBody = connection.getInputStream();
-            return readBody(connection, responseClass);
-            // Read and process response body from InputStream ...
-        } else {
-            // SERVER RETURNED AN HTTP ERROR
-
-            InputStream responseBody = connection.getErrorStream();
-            // Read and process error response body from InputStream ...
-        }
         return readBody(connection, responseClass);
     }
 
@@ -136,31 +93,12 @@ public class ClientCommunicator {
         if (authToken != null && !authToken.isEmpty()) {
             connection.addRequestProperty("Authorization", authToken);
         }
-
-        // Set HTTP request headers, if necessary
-
         writeBody(requestObject, connection);
 
         connection.connect();
 
-        if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-            // Get HTTP response headers, if necessary
-            // Map<String, List<String>> headers = connection.getHeaderFields();
-
-            // OR
-
-            //connection.getHeaderField("Content-Length");
-
-            InputStream responseBody = connection.getInputStream();
-            // Read response body from InputStream ...
-        }
-        else {
-            // SERVER RETURNED AN HTTP ERROR
-
-            InputStream responseBody = connection.getErrorStream();
+        if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
             throw new IOException("Failed to join game: " + connection.getResponseMessage());
-
-            // Read and process error response body from InputStream ...
         }
     }
 
@@ -179,28 +117,10 @@ public class ClientCommunicator {
             connection.addRequestProperty("Authorization", authToken);
         }
 
-        // Set HTTP request headers, if necessary
-
         connection.connect();
 
-        if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-            // Get HTTP response headers, if necessary
-            // Map<String, List<String>> headers = connection.getHeaderFields();
-
-            // OR
-
-            //connection.getHeaderField("Content-Length");
-
-            InputStream responseBody = connection.getInputStream();
-            // Read response body from InputStream ...
-        }
-        else {
-            // SERVER RETURNED AN HTTP ERROR
-
-            InputStream responseBody = connection.getErrorStream();
-            // Read and process error response body from InputStream ...
+        if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
             throw new IOException("Failed to delete" + connection.getResponseMessage());
-
         }
     }
 
