@@ -19,36 +19,35 @@ public class Client {
     static ServerFacade serverFacade;
 
 
-
-    public static void main(String[] args){
+    public static void main(String[] args) {
         preLogin();
     }
 
-    public static void preLogin(){
+    public static void preLogin() {
         System.out.println("Welcome to 240 Chess. \n");
         serverFacade = new ServerFacade();
-        while (!loggedIn){
+        while (!loggedIn) {
             System.out.println("Register: <USERNAME> <PASSWORD> <EMAIL>. -To create an account");
             System.out.println("Login: <USERNAME> <PASSWORD>. -To play chess.");
             System.out.println("Quit: -Quit playing chess");
             System.out.println("Help: -Help with playing chess \n");
             System.out.println("Enter Command:");
             String clientResponse = scanner.nextLine().trim().toLowerCase();
-            switch (clientResponse){
-                case("register"):
+            switch (clientResponse) {
+                case ("register"):
                     printRegister();
                     break;
-                case("login"):
+                case ("login"):
                     printLogin();
                     break;
-                case("quit"):
+                case ("quit"):
                     System.out.println("goodbye");
                     System.exit(0);
                     break;
-                case("help"):
+                case ("help"):
                     printHelp();
                     break;
-                case("clear"):
+                case ("clear"):
                     clearHandler();
                     break;
                 default:
@@ -61,9 +60,9 @@ public class Client {
     }
 
     private static void clearHandler() {
-        try{
+        try {
             serverFacade.clear();
-        }catch (Exception e) {
+        } catch (Exception e) {
             System.err.println("couldn't clear");
         }
     }
@@ -115,12 +114,12 @@ public class Client {
             return;
         }
         System.out.println("Successful Register. You are now logged in.");
-         loggedIn = true;
-         postLogin(authToken);
+        loggedIn = true;
+        postLogin(authToken);
     }
 
     private static void postLogin(String authToken) {
-        while(!inGame){
+        while (!inGame) {
             System.out.println("Help:-with possible commands");
             System.out.println("Create: <NAME> -a game");
             System.out.println("List: -games");
@@ -130,23 +129,23 @@ public class Client {
             System.out.println("Enter Command:");
             String clientResponse = scanner.nextLine().trim().toLowerCase();
 
-            switch (clientResponse){
-                case("help"):
+            switch (clientResponse) {
+                case ("help"):
                     helpHandler();
                     break;
-                case("create"):
+                case ("create"):
                     createGameHandler(authToken);
                     break;
-                case("list"):
+                case ("list"):
                     listHandler(authToken);
                     break;
-                case("play"):
+                case ("play"):
                     playHandler(authToken);
                     break;
-                case("observe"):
+                case ("observe"):
                     observeHandler();
                     break;
-                case("logout"):
+                case ("logout"):
                     logoutHandler(authToken);
                     break;
                 default:
@@ -163,7 +162,7 @@ public class Client {
             System.out.println("you have logged out");
             loggedIn = false;
             preLogin();
-        }catch (Exception e) {
+        } catch (Exception e) {
             System.err.println("couldn't logout");
         }
     }
@@ -181,7 +180,7 @@ public class Client {
         boolean isWhite = false;
         boolean isColor = true;
 
-        while(isColor) {
+        while (isColor) {
             System.out.println("Enter a game number:");
             String clientResponse = scanner.nextLine();
 
@@ -193,30 +192,31 @@ public class Client {
             var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
             if (clientColor.equals("WHITE")) {
                 isWhite = true;
-                try{
+                try {
                     serverFacade.joinGame(authToken, gameID, clientColor);
+                    DrawChessBoard.drawChessBoard(out, isWhite);
+                    isColor = false;
+
 
                 } catch (IOException e) {
                     System.err.println("couldn't join game");
                 }
-                DrawChessBoard.drawChessBoard(out, isWhite);
-                isColor = false;
-            }
-            else if (clientColor.equals("BLACK")) {
+            } else if (clientColor.equals("BLACK")) {
                 isWhite = false;
-                try{
+                try {
                     serverFacade.joinGame(authToken, gameID, clientColor);
+                    DrawChessBoard.drawChessBoard(out, isWhite);
+                    isColor = false;
 
                 } catch (IOException e) {
                     System.err.println("couldn't join game");
                 }
-                DrawChessBoard.drawChessBoard(out, isWhite);
-                isColor = false;
             } else {
                 System.out.println("not a color");
             }
         }
         inGame = true;
+        gamePlay(authToken);
     }
 
     private static int getGameID(String authToken, String gameNumber) {
@@ -226,11 +226,11 @@ public class Client {
             int number = Integer.parseInt(gameNumber);
             for (GameData game : listGameResults.getGames()) {
                 gameCounter++;
-                if(gameCounter == number){
+                if (gameCounter == number) {
                     return game.getGameID();
                 }
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             System.err.println("couldn't list games");
         }
         return 0;
@@ -238,21 +238,19 @@ public class Client {
 
     private static void listHandler(String authToken) {
 //        implement listing game by calling serverFacade
-        try{
+        try {
             ListGameResult listGameResult = serverFacade.listGame(authToken);
             int count = 1;
             for (GameData game : listGameResult.getGames()) {
                 System.out.print(count + " GameName: " + game.getGameName());
-                if(game.getWhiteUsername() != null){
+                if (game.getWhiteUsername() != null) {
                     System.out.print(" White name: " + game.getWhiteUsername());
-                }
-                else{
+                } else {
                     System.out.print(" White name: None");
                 }
-                if(game.getBlackUsername() != null){
+                if (game.getBlackUsername() != null) {
                     System.out.println(" Black name: " + game.getBlackUsername());
-                }
-                else{
+                } else {
                     System.out.println(" Black name: None");
                 }
 
@@ -270,7 +268,7 @@ public class Client {
         String clientResponse = scanner.nextLine();
 
 //    implement creating a game
-        try{
+        try {
             CreateResult createResult = serverFacade.createGame(authToken, clientResponse);
         } catch (IOException e) {
             System.err.println("couldn't create game");
@@ -286,5 +284,53 @@ public class Client {
         System.out.println("-Observe: Watch an ongoing game");
     }
 
+    private static void gamePlay(String authToken) {
+        while (inGame) {
+            System.out.println("Help:-with possible commands");
+            System.out.println("Redraw: chess board");
+            System.out.println("Highlight: legal moves");
+            System.out.println("Leave: chess game");
+            System.out.println("Move: Makes move");
+            System.out.println("Resign: game:");
+            System.out.println("Enter Command:");
+            String clientResponse = scanner.nextLine().trim().toLowerCase();
 
+            switch (clientResponse) {
+                case ("help"):
+                    gamePlayPrint();
+                    break;
+                case ("redraw"):
+
+                    break;
+                case ("highlight"):
+
+                    break;
+                case ("leave"):
+                    leaveHandler(authToken);
+                    break;
+                case ("move"):
+
+                    break;
+                case ("resign"):
+
+                    break;
+                default:
+                    System.out.println("Not a valid command. Try again. \n");
+            }
+        }
+    }
+
+    private static void leaveHandler(String authToken) {
+        inGame = false;
+        postLogin(authToken);
+    }
+
+    private static void gamePlayPrint(){
+        System.out.println("\n Help menu");
+        System.out.println("-Redraw: Redraws the chess board");
+        System.out.println("-Highlight: Highlights legal moves you can make");
+        System.out.println("-Leave: Leaves the current game");
+        System.out.println("-Move: Input which piece you want to move and where");
+        System.out.println("-Resign: You forfeit the game \n");
+    }
 }

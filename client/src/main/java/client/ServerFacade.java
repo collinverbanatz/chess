@@ -16,7 +16,7 @@ import java.io.IOException;
 public class ServerFacade {
 //    calls the 7 methods one per end point
 
-    ClientCommunicator clientCommunicator;
+    HttpCommunicator clientCommunicator;
     String url = "http://localhost:";
 
     public ServerFacade() {
@@ -24,7 +24,7 @@ public class ServerFacade {
     }
 
     public ServerFacade(int port) {
-        this.clientCommunicator = new ClientCommunicator();
+        this.clientCommunicator = new HttpCommunicator();
         this.url = url + port;
     }
 
