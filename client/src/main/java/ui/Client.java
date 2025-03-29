@@ -1,5 +1,6 @@
 package ui;
 
+import dataaccess.DataAccessException;
 import models.GameData;
 import client.ServerFacade;
 
@@ -11,6 +12,7 @@ import java.util.Scanner;
 import models.ListGameResult;
 import models.CreateResult;
 import models.RegisterResult;
+import websocket.commands.UserGameCommand;
 
 public class Client {
     private static Scanner scanner = new Scanner(System.in);
@@ -196,7 +198,8 @@ public class Client {
                     serverFacade.joinGame(authToken, gameID, clientColor);
                     DrawChessBoard.drawChessBoard(out, isWhite);
                     isColor = false;
-
+                    inGame = true;
+                    gamePlay(authToken, gameID);
 
                 } catch (IOException e) {
                     System.err.println("couldn't join game");
@@ -207,6 +210,8 @@ public class Client {
                     serverFacade.joinGame(authToken, gameID, clientColor);
                     DrawChessBoard.drawChessBoard(out, isWhite);
                     isColor = false;
+                    inGame = true;
+                    gamePlay(authToken, gameID);
 
                 } catch (IOException e) {
                     System.err.println("couldn't join game");
@@ -215,8 +220,7 @@ public class Client {
                 System.out.println("not a color");
             }
         }
-        inGame = true;
-        gamePlay(authToken);
+
     }
 
     private static int getGameID(String authToken, String gameNumber) {
@@ -284,7 +288,7 @@ public class Client {
         System.out.println("-Observe: Watch an ongoing game");
     }
 
-    private static void gamePlay(String authToken) {
+    private static void gamePlay(String authToken, int gameID) {
         while (inGame) {
             System.out.println("Help:-with possible commands");
             System.out.println("Redraw: chess board");
@@ -306,7 +310,7 @@ public class Client {
 
                     break;
                 case ("leave"):
-                    leaveHandler(authToken);
+                    leaveHandler(authToken, gameID);
                     break;
                 case ("move"):
 
@@ -320,8 +324,13 @@ public class Client {
         }
     }
 
-    private static void leaveHandler(String authToken) {
+    private static void leaveHandler(String authToken, int gameID) {
         inGame = false;
+        try{
+            serverFacade.leave(UserGameCommand.CommandType.LEAVE, authToken,gameID);
+        } catch (DataAccessException e) {
+            System.err.println("couldn't leave game");
+        }
         postLogin(authToken);
     }
 

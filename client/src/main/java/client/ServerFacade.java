@@ -1,6 +1,7 @@
 package client;
 
 
+import dataaccess.DataAccessException;
 import models.CreateRequest;
 import models.CreateResult;
 import models.ListGameResult;
@@ -8,6 +9,7 @@ import models.JoinGameRequest;
 import models.RegisterRequest;
 import models.RegisterResult;
 import models.LoginRequest;
+import websocket.commands.UserGameCommand;
 
 
 import java.io.IOException;
@@ -59,5 +61,12 @@ public class ServerFacade {
     public void clear() throws IOException {
         String authToken = "nothing";
         clientCommunicator.clear(url, authToken);
+    }
+
+    public void leave(UserGameCommand.CommandType commandType, String authToken, int gameID) throws DataAccessException {
+        UserGameCommand newCommand = new UserGameCommand(UserGameCommand.CommandType.LEAVE, authToken, gameID);
+//        call WebsocketCommunicator to send messages to client
+
+        clientCommunicator.leave(authToken,gameID);
     }
 }
