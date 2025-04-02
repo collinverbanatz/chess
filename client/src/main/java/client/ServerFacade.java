@@ -1,6 +1,7 @@
 package client;
 
 
+import com.google.gson.Gson;
 import dataaccess.DataAccessException;
 import models.CreateRequest;
 import models.CreateResult;
@@ -9,6 +10,7 @@ import models.JoinGameRequest;
 import models.RegisterRequest;
 import models.RegisterResult;
 import models.LoginRequest;
+import websocket.commands.ConnectGameCommand;
 import websocket.commands.UserGameCommand;
 
 
@@ -20,6 +22,8 @@ public class ServerFacade {
 
     HttpCommunicator clientCommunicator;
     String url = "http://localhost:";
+    WebsocketCommunicator ws;
+    Gson gson = new Gson();
 
     public ServerFacade() {
         this(8080);
@@ -28,6 +32,11 @@ public class ServerFacade {
     public ServerFacade(int port) {
         this.clientCommunicator = new HttpCommunicator();
         this.url = url + port;
+        try {
+            this.ws = new WebsocketCommunicator();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void joinGame(String authToken, int gameID, String clientColor) throws IOException {
@@ -68,5 +77,11 @@ public class ServerFacade {
 //        call WebsocketCommunicator to send messages to client
 
         clientCommunicator.leave(authToken,gameID);
+    }
+
+    public void connect(String authToken, int gameID) throws IOException {
+        ConnectGameCommand connectGameCommand = new ConnectGameCommand(authToken, gameID);
+        String message = gson.toJson(connectGameCommand);
+        ws.send(message);
     }
 }

@@ -145,7 +145,7 @@ public class Client {
                     playHandler(authToken);
                     break;
                 case ("observe"):
-                    observeHandler();
+                    observeHandler(authToken);
                     break;
                 case ("logout"):
                     logoutHandler(authToken);
@@ -169,12 +169,17 @@ public class Client {
         }
     }
 
-    private static void observeHandler() {
+    private static void observeHandler(String authToken) {
         System.out.println("Enter a game number to observe:");
         int gameNumber = Integer.parseInt(scanner.nextLine());
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         boolean isWhite = true;
         DrawChessBoard.drawChessBoard(out, isWhite);
+        try {
+            serverFacade.connect(authToken, gameNumber);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         inGame = true;
     }
 
@@ -199,10 +204,13 @@ public class Client {
                     DrawChessBoard.drawChessBoard(out, isWhite);
                     isColor = false;
                     inGame = true;
+                    serverFacade.connect(authToken, gameID);
                     gamePlay(authToken, gameID);
 
                 } catch (IOException e) {
                     System.err.println("couldn't join game");
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
                 }
             } else if (clientColor.equals("BLACK")) {
                 isWhite = false;
@@ -211,10 +219,13 @@ public class Client {
                     DrawChessBoard.drawChessBoard(out, isWhite);
                     isColor = false;
                     inGame = true;
+                    serverFacade.connect(authToken, gameID);
                     gamePlay(authToken, gameID);
 
                 } catch (IOException e) {
                     System.err.println("couldn't join game");
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
                 }
             } else {
                 System.out.println("not a color");
@@ -288,7 +299,7 @@ public class Client {
         System.out.println("-Observe: Watch an ongoing game");
     }
 
-    private static void gamePlay(String authToken, int gameID) {
+    private static void gamePlay(String authToken, int gameID) throws Exception {
         while (inGame) {
             System.out.println("Help:-with possible commands");
             System.out.println("Redraw: chess board");
@@ -304,7 +315,6 @@ public class Client {
                     gamePlayPrint();
                     break;
                 case ("redraw"):
-
                     break;
                 case ("highlight"):
 

@@ -6,6 +6,8 @@ import org.eclipse.jetty.websocket.api.Session;
 import spark.*;
 import service.UserService;
 import service.GameService;
+import server.websockett.WebSocketHandler;
+
 
 import org.eclipse.jetty.websocket.api.annotations.*;
 import org.eclipse.jetty.websocket.api.*;
@@ -14,6 +16,7 @@ import spark.Spark;
 public class Server {
     private UserService userService;
     private GameService gameService;
+    private WebSocketHandler webSocketHandler;
 
 
     private void createServices() throws DataAccessException {
@@ -23,7 +26,7 @@ public class Server {
 
         userService =  new UserService(userDoa, authdao, gameDao);
         gameService = new GameService(authdao, gameDao);
-
+        webSocketHandler = new WebSocketHandler();
     }
 
 
@@ -40,6 +43,7 @@ public class Server {
             return 500;
         }
         registerRouts();
+
         //This line initializes the server and can be removed once you have a functioning endpoint 
         Spark.init();
 
@@ -48,6 +52,9 @@ public class Server {
     }
 
     private void registerRouts(){
+        Spark.webSocket("/ws", webSocketHandler);
+
+
         UserHandler userHandler = new UserHandler(userService);
         Spark.post("/session", userHandler::login);
         Spark.post("/user", userHandler::register);
@@ -59,21 +66,6 @@ public class Server {
         Spark.get("/game", gameHandler::listGames);
         Spark.put("/game", gameHandler::joinGame);
     }
-
-//    @WebSocket
-//    public class WSServer {
-//        public static void main(String[] args) {
-//            Spark.port(8080);
-//            Spark.webSocket("/ws", WSServer.class);
-//            Spark.get("/echo/:msg", (req, res) -> "HTTP response: " + req.params(":msg"));
-//        }
-//
-//        @OnWebSocketMessage
-//        public void onMessage(Session session, String message) throws Exception {
-//            System.out.printf("Received: %s", message);
-//            session.getRemote().sendString("WebSocket response: " + message);
-//        }
-//    }
 
     private Object clear(Request request, Response response) {
         userService.clear();
