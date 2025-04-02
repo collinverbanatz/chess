@@ -43,14 +43,25 @@ public class WebSocketHandler {
         UserGameCommand message =gson.fromJson(msg, UserGameCommand.class);
         switch (message.getCommandType()){
             case CONNECT -> connection(session, message);
+            case LEAVE -> leave(session, message);
+        }
+    }
+
+    private void leave(Session session, UserGameCommand message){
+        try {
+            AuthData authdata = authdao.getAuthDataByToken(message.getAuthToken());
+            connections.remove(authdata.username);
+            connections.broadcast(authdata.getUsername(), message.getGameID(), new NotificationMessage("\n" + authdata.getUsername() + " left the game."));
+        } catch (DataAccessException | IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
     private void connection(Session session, UserGameCommand message) {
         try {
             AuthData authdata = authdao.getAuthDataByToken(message.getAuthToken());
-            connections.add(authdata.username, session);
-            connections.broadcast(authdata.getUsername(), new NotificationMessage("\n" + authdata.getUsername() + " joined the game"));
+            connections.add(authdata.username, message.getGameID(), session);
+            connections.broadcast(authdata.getUsername(), message.getGameID(), new NotificationMessage("\n" + authdata.getUsername() + " joined the game"));
         } catch (DataAccessException | IOException e) {
             throw new RuntimeException(e);
         }

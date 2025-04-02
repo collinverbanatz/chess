@@ -11,6 +11,7 @@ import models.RegisterRequest;
 import models.RegisterResult;
 import models.LoginRequest;
 import websocket.commands.ConnectGameCommand;
+import websocket.commands.LeaveGameCommand;
 import websocket.commands.UserGameCommand;
 
 
@@ -72,11 +73,11 @@ public class ServerFacade {
         clientCommunicator.clear(url, authToken);
     }
 
-    public void leave(UserGameCommand.CommandType commandType, String authToken, int gameID) throws DataAccessException {
+    public void leave(UserGameCommand.CommandType commandType, String authToken, int gameID) throws DataAccessException, IOException {
         UserGameCommand newCommand = new UserGameCommand(UserGameCommand.CommandType.LEAVE, authToken, gameID);
 //        call WebsocketCommunicator to send messages to client
-
-        clientCommunicator.leave(authToken,gameID);
+        LeaveGameCommand leaveGameCommand = new LeaveGameCommand(authToken, gameID);
+        ws.send(gson.toJson(leaveGameCommand));
     }
 
     public void connect(String authToken, int gameID) throws IOException {

@@ -8,6 +8,7 @@ import websocket.messages.ServerMessage;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ConnectionManager {
@@ -15,8 +16,8 @@ public class ConnectionManager {
     Gson gson = new Gson();
 
 
-    public void add(String visitorName, Session session) {
-        var connection = new Connection(visitorName, session);
+    public void add(String visitorName, Integer gameId, Session session) {
+        var connection = new Connection(visitorName, gameId, session);
         connections.put(visitorName, connection);
     }
 
@@ -24,12 +25,12 @@ public class ConnectionManager {
         connections.remove(visitorName);
     }
 
-    public void broadcast(String excludeVisitorName, ServerMessage notification) throws IOException {
+    public void broadcast(String excludeVisitorName, Integer gameId, ServerMessage notification) throws IOException {
         System.out.println("Broadcasting message: " + gson.toJson(notification));
         var removeList = new ArrayList<Connection>();
         for (var c : connections.values()) {
             if (c.session.isOpen()) {
-                if (!c.visitorName.equals(excludeVisitorName)) {
+                if (!c.visitorName.equals(excludeVisitorName) && Objects.equals(c.gameId, gameId)) {
                     c.send(gson.toJson(notification));
                 }
             } else {

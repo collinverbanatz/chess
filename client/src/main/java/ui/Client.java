@@ -340,6 +340,8 @@ public class Client {
             serverFacade.leave(UserGameCommand.CommandType.LEAVE, authToken,gameID);
         } catch (DataAccessException e) {
             System.err.println("couldn't leave game");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
         postLogin(authToken);
     }

@@ -1,6 +1,7 @@
 package client;
 
 import com.google.gson.Gson;
+import websocket.commands.LeaveGameCommand;
 import websocket.messages.NotificationMessage;
 import websocket.messages.ServerMessage;
 
