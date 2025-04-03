@@ -7,6 +7,7 @@ import dao.Authdao;
 import dao.SQLAuthdao;
 import dataaccess.DataAccessException;
 import models.AuthData;
+import models.GameData;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
@@ -86,44 +87,4 @@ public class WebSocketHandler {
             throw new RuntimeException(e);
         }
     }
-
-//    @OnWebSocketMessage
-//    public void onMessage(Session session, String msg) {
-//        try {
-//            UserGameCommand command = Serializer.fromJson(message, UserGameCommand.class);
-//
-//            // Throws a custom UnauthorizedException. Yours may work differently.
-//            String username = getUsername(command.getAuthToken());
-//
-//            saveSession(command.getGameID(), session);
-//
-//            switch (command.getCommandType()) {
-//                case CONNECT -> connection(session, username, (ConnectCommand) command);
-//                case MAKE_MOVE -> makeMove(session, username, (MakeMoveCommand) command);
-//                case LEAVE -> leaveGame(session, username, (LeaveGameCommand) command);
-//                case RESIGN -> resign(session, username, (ResignCommand) command);
-//            }
-//        } catch (UnauthorizedException ex) {
-//            // Serializes and sends the error message
-//            sendMessage(session.getRemote(), new ErrorMessage("Error: unauthorized"));
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//            sendMessage(session.getRemote(), new ErrorMessage("Error: " + ex.getMessage()));
-//        }
-//    }
-//
-//
-//    private void connection(Session session, String username, ConnectCommand command) {
-//
-//    }
-//
-//    private void makeMove(Session session, String username, MakeMoveCommand command) {
-//    }
-//
-//    private void resign(Session session, String username, ResignCommand command) {
-//    }
-//
-//    private void leaveGame(Session session, String username, LeaveGameCommand command) {
-//
-//    }
 }

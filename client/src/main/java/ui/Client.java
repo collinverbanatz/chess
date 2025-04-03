@@ -1,5 +1,7 @@
 package ui;
 
+import chess.ChessBoard;
+import chess.ChessGame;
 import dataaccess.DataAccessException;
 import models.GameData;
 import client.ServerFacade;
@@ -18,6 +20,7 @@ public class Client {
     private static Scanner scanner = new Scanner(System.in);
     private static boolean loggedIn = false;
     private static boolean inGame = false;
+    private static boolean gameOver = false;
     static ServerFacade serverFacade;
 
 
@@ -174,7 +177,9 @@ public class Client {
         int gameNumber = Integer.parseInt(scanner.nextLine());
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         boolean isWhite = true;
-        DrawChessBoard.drawChessBoard(out, isWhite);
+        ChessBoard chessBoard = new ChessBoard();
+        chessBoard.resetBoard();
+        DrawChessBoard.drawChessBoard(out, isWhite, chessBoard);
         try {
             serverFacade.connect(authToken, gameNumber);
         } catch (IOException e) {
@@ -201,11 +206,13 @@ public class Client {
                 isWhite = true;
                 try {
                     serverFacade.joinGame(authToken, gameID, clientColor);
-                    DrawChessBoard.drawChessBoard(out, isWhite);
+                    ChessBoard chessBoard = new ChessBoard();
+                    chessBoard.resetBoard();
+                    DrawChessBoard.drawChessBoard(out, isWhite, chessBoard);
                     isColor = false;
                     inGame = true;
                     serverFacade.connect(authToken, gameID);
-                    gamePlay(authToken, gameID);
+                    gamePlay(authToken, gameID, isWhite);
 
                 } catch (IOException e) {
                     System.err.println("couldn't join game");
@@ -216,11 +223,13 @@ public class Client {
                 isWhite = false;
                 try {
                     serverFacade.joinGame(authToken, gameID, clientColor);
-                    DrawChessBoard.drawChessBoard(out, isWhite);
+                    ChessBoard chessBoard = new ChessBoard();
+                    chessBoard.resetBoard();
+                    DrawChessBoard.drawChessBoard(out, isWhite, chessBoard);
                     isColor = false;
                     inGame = true;
                     serverFacade.connect(authToken, gameID);
-                    gamePlay(authToken, gameID);
+                    gamePlay(authToken, gameID, isWhite);
 
                 } catch (IOException e) {
                     System.err.println("couldn't join game");
@@ -299,7 +308,7 @@ public class Client {
         System.out.println("-Observe: Watch an ongoing game");
     }
 
-    private static void gamePlay(String authToken, int gameID) throws Exception {
+    private static void gamePlay(String authToken, int gameID, boolean isWhite) throws Exception {
         while (inGame) {
             System.out.println("Help:-with possible commands");
             System.out.println("Redraw: chess board");
@@ -310,11 +319,16 @@ public class Client {
             System.out.println("Enter Command:");
             String clientResponse = scanner.nextLine().trim().toLowerCase();
 
+            if(gameOver){
+                resignedLoop();
+            }
+
             switch (clientResponse) {
                 case ("help"):
                     gamePlayPrint();
                     break;
                 case ("redraw"):
+                    redrawHandler(authToken,gameID, isWhite);
                     break;
                 case ("highlight"):
 
@@ -334,11 +348,51 @@ public class Client {
         }
     }
 
+    private static void redrawHandler(String authToken, int gameID, boolean isWhite) {
+//        GameData gameData = serverFacade.getBoard(authToken, gameID);
+//        ChessGame chessGame = gameData.getGame();
+
+//        ListGameResult listGameResult = null;
+        try {
+            ListGameResult listGameResult = serverFacade.listGame(authToken);
+            for (GameData game : listGameResult.getGames()) {
+                if(game.gameID == gameID){
+                    var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+                    System.out.println("need to print the current game now");
+                    ChessGame chessGame = game.getGame();
+                    if(chessGame == null){
+                        System.out.println("couldn't get board because null pointer");
+                    }
+                    else{DrawChessBoard.drawChessBoard(out, isWhite, chessGame.getBoard());}
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("couldn't get game");
+        }
+
+
+    }
+
     private static void resignHandler(String authToken, int gameID) {
         try {
             serverFacade.resign(UserGameCommand.CommandType.RESIGN, authToken, gameID);
+            resignedLoop();
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private static void resignedLoop() {
+        while(!gameOver){
+            System.out.println("Leave: chess game");
+            String clientResponse = scanner.nextLine().trim().toLowerCase();
+            if (clientResponse.equals("leave")){
+                inGame = false;
+                gameOver = true;
+            }
+            else{
+                System.out.println("Not a valid command. Try again.");
+            }
         }
     }
 

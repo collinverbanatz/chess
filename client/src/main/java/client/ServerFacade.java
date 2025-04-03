@@ -3,17 +3,9 @@ package client;
 
 import com.google.gson.Gson;
 import dataaccess.DataAccessException;
-import models.CreateRequest;
-import models.CreateResult;
-import models.ListGameResult;
-import models.JoinGameRequest;
-import models.RegisterRequest;
-import models.RegisterResult;
-import models.LoginRequest;
-import websocket.commands.ConnectGameCommand;
-import websocket.commands.LeaveGameCommand;
-import websocket.commands.ResignGameCommand;
-import websocket.commands.UserGameCommand;
+import models.*;
+import server.websockett.WebSocketHandler;
+import websocket.commands.*;
 import websocket.commands.ResignGameCommand;
 
 
@@ -28,6 +20,7 @@ public class ServerFacade {
     String url = "http://localhost:";
     WebsocketCommunicator ws;
     Gson gson = new Gson();
+    WebSocketHandler webSocketHandler;
 
     public ServerFacade() {
         this(8080);

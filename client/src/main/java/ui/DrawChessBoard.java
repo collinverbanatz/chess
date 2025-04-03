@@ -4,6 +4,7 @@ import chess.ChessBoard;
 import chess.ChessGame;
 import chess.ChessPiece;
 import chess.ChessPosition;
+import models.GameData;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
@@ -23,14 +24,15 @@ public class DrawChessBoard {
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         out.print(ERASE_SCREEN);
         boolean isWhite = false ;
-        drawChessBoard(out, isWhite);
+        ChessBoard board = getBoard();
+        drawChessBoard(out, isWhite, board);
     }
 
-    static void drawChessBoard(PrintStream out, boolean isWhite) {
+    static void drawChessBoard(PrintStream out, boolean isWhite, ChessBoard board) {
 // set up the starter chess board will need to replace later with the actual game data and when switching from black to white
         out.print(ERASE_SCREEN);
 
-        ChessBoard board = getBoard();
+//        ChessBoard board = getBoard();
 
         printHeading(out, isWhite);
 

@@ -1,5 +1,6 @@
 package service;
 
+import chess.ChessBoard;
 import dao.*;
 import models.*;
 import chess.ChessGame;
@@ -30,7 +31,8 @@ public class GameService {
         if (!authdao.authTokenExists(authToken)){
             throw new DataAccessException("Invalid authToken");
         }
-
+        ChessBoard chessBoard = new ChessBoard();
+        chessBoard.resetBoard();
         ChessGame chessGame = new ChessGame();
         return gameDao.createGame(new GameData(-1, null, null, game.getGameName(), chessGame));
     }
@@ -96,6 +98,11 @@ public class GameService {
 //                remove the observer
             }
         }
+    }
+
+    public GameData getBoard(String authToken, int gameID) throws DataAccessException {
+        GameData gameData = gameDao.getGameByID(gameID);
+        return gameData;
     }
 
     @Override

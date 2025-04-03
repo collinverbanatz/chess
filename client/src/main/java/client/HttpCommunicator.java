@@ -175,4 +175,10 @@ public class HttpCommunicator {
             }
         }
     }
+
+    public GameData getBoard(String authToken, int gameID) throws DataAccessException {
+        GameData gameData = gamedao.getGameByID(gameID);
+        return gameData;
+    }
+
 }
