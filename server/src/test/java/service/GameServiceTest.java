@@ -102,5 +102,15 @@ public class GameServiceTest {
         Assertions.assertEquals("Invalid authToken", e.getMessage());
     }
 
+    @Test
+    void leaveSuccess()throws DataAccessException{
+        CreateRequest createRequest = new CreateRequest("gamename");
+        gameService.createGame(authToken, createRequest);
+
+        JoinGameRequest joinGameRequest = new JoinGameRequest("WHITE", 1);
+        gameService.joinGame(joinGameRequest ,authToken);
+
+        gameService.leave(authToken, joinGameRequest.getGameID());
+    }
 
 }

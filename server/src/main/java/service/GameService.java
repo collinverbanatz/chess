@@ -12,6 +12,7 @@ public class GameService {
     Authdao authdao;
     Gamedao gameDao;
 
+
     public GameService(Authdao authdao, Gamedao gameDao) {
         this.authdao = authdao;
         this.gameDao = gameDao;

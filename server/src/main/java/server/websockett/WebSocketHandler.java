@@ -10,6 +10,7 @@ import models.AuthData;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import service.GameService;
 import spark.Spark;
 //import webSocketMessages.Action;
 //import webSocketMessages.Notification;
@@ -24,6 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @WebSocket
 public class WebSocketHandler {
     Gson gson = new Gson();
+    GameService gameService;
     Authdao authdao;
     {
         try {
@@ -33,12 +35,16 @@ public class WebSocketHandler {
         }
     }
 
+    public WebSocketHandler(GameService gameService) {
+        this.gameService = gameService;
+    }
+
     private final ConnectionManager connections = new ConnectionManager();
 
     @OnWebSocketMessage
     public void onMessage(Session session, String msg) throws IOException {
-        System.out.printf("Received: %s\n", msg);
-//        session.getRemote().sendString("WebSocket response: " + msg);
+//        System.out.printf("Received: %s\n", msg);
+        session.getRemote().sendString("WebSocket response: " + msg);
 
         UserGameCommand message =gson.fromJson(msg, UserGameCommand.class);
         switch (message.getCommandType()){
@@ -52,6 +58,9 @@ public class WebSocketHandler {
             AuthData authdata = authdao.getAuthDataByToken(message.getAuthToken());
             connections.remove(authdata.username);
             connections.broadcast(authdata.getUsername(), message.getGameID(), new NotificationMessage("\n" + authdata.getUsername() + " left the game."));
+            System.out.printf("about to leave game as with ID " + authdata.getUsername() + message.getGameID());
+            gameService.leave(message.getAuthToken(), message.getGameID());
+
         } catch (DataAccessException | IOException e) {
             throw new RuntimeException(e);
         }
