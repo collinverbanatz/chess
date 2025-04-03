@@ -50,6 +50,17 @@ public class WebSocketHandler {
         switch (message.getCommandType()){
             case CONNECT -> connection(session, message);
             case LEAVE -> leave(session, message);
+            case RESIGN -> resign(session, message);
+        }
+    }
+
+    private void resign(Session session, UserGameCommand message) {
+        try {
+            AuthData authdata = authdao.getAuthDataByToken(message.getAuthToken());
+            connections.broadcast(authdata.getUsername(), message.getGameID(), new NotificationMessage("\n" + authdata.getUsername() + " resigned"));
+
+        } catch (DataAccessException | IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -58,7 +69,7 @@ public class WebSocketHandler {
             AuthData authdata = authdao.getAuthDataByToken(message.getAuthToken());
             connections.remove(authdata.username);
             connections.broadcast(authdata.getUsername(), message.getGameID(), new NotificationMessage("\n" + authdata.getUsername() + " left the game."));
-            System.out.printf("about to leave game as with ID " + authdata.getUsername() + message.getGameID());
+//            System.out.printf("about to leave game as with ID " + authdata.getUsername() + message.getGameID());
             gameService.leave(message.getAuthToken(), message.getGameID());
 
         } catch (DataAccessException | IOException e) {

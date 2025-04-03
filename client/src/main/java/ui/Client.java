@@ -326,11 +326,19 @@ public class Client {
 
                     break;
                 case ("resign"):
-
+                    resignHandler(authToken,gameID);
                     break;
                 default:
                     System.out.println("Not a valid command. Try again. \n");
             }
+        }
+    }
+
+    private static void resignHandler(String authToken, int gameID) {
+        try {
+            serverFacade.resign(UserGameCommand.CommandType.RESIGN, authToken, gameID);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

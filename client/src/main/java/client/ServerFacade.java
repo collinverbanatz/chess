@@ -12,7 +12,10 @@ import models.RegisterResult;
 import models.LoginRequest;
 import websocket.commands.ConnectGameCommand;
 import websocket.commands.LeaveGameCommand;
+import websocket.commands.ResignGameCommand;
 import websocket.commands.UserGameCommand;
+import websocket.commands.ResignGameCommand;
+
 
 
 import java.io.IOException;
@@ -84,5 +87,10 @@ public class ServerFacade {
         ConnectGameCommand connectGameCommand = new ConnectGameCommand(authToken, gameID);
         String message = gson.toJson(connectGameCommand);
         ws.send(message);
+    }
+
+    public void resign(UserGameCommand.CommandType commandType, String authToken, int gameID) throws IOException {
+        ResignGameCommand resignGameCommand = new ResignGameCommand(authToken, gameID);
+        ws.send(gson.toJson(resignGameCommand));
     }
 }
