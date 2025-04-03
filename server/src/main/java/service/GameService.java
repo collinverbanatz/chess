@@ -77,6 +77,25 @@ public class GameService {
         gameDao.updateGameData(realGameData);
     }
 
+    public void leave(String authToken, int gameID) throws DataAccessException {
+        GameData game = gameDao.getGameByID(gameID);
+        AuthData user = authdao.getAuthDataByToken(authToken);
+
+        if (user != null && game != null){
+            String userName = user.getUsername();
+
+            if(Objects.equals(game.getWhiteUsername(), userName)){
+                GameData gameData = new GameData(gameID, null, game.getBlackUsername(), game.getGameName(), game.getGame());
+                gameDao.updateGameData(gameData);
+            } else if (Objects.equals(game.getBlackUsername(), userName)) {
+                GameData gameData = new GameData(gameID, game.getWhiteUsername(), null, game.getGameName(), game.getGame());
+                gameDao.updateGameData(gameData);
+            }else{
+                String nothing = "nothing";
+//                remove the observer
+            }
+        }
+    }
 
     @Override
     public String toString() {
