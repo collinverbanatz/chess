@@ -1,7 +1,11 @@
 package client;
 
+import chess.ChessBoard;
 import com.google.gson.Gson;
+import ui.Client;
+import ui.DrawChessBoard;
 import websocket.commands.LeaveGameCommand;
+import websocket.messages.LoadGameMessage;
 import websocket.messages.NotificationMessage;
 import websocket.messages.ServerMessage;
 
@@ -25,9 +29,19 @@ public class WebsocketCommunicator extends Endpoint {
                 ServerMessage serverMessage = gson.fromJson(message, ServerMessage.class);
                 switch (serverMessage.getServerMessageType()){
                     case NOTIFICATION -> handleNotification(gson.fromJson(message, NotificationMessage.class));
+                    case LOAD_GAME -> handleLoadGame(gson.fromJson(message, LoadGameMessage.class));
                 }
             }
         });
+    }
+
+    private void handleLoadGame(LoadGameMessage loadGameMessage) {
+        System.out.println(loadGameMessage.getChessBoard());
+        ChessBoard chessBoard = gson.fromJson(loadGameMessage.getChessBoard(), ChessBoard.class);
+        boolean isWhite = !loadGameMessage.isBlack();
+        Client.lastChessBoard = chessBoard;
+        Client.lastWasWhite = isWhite;
+        Client.printBoardAndHelp();
     }
 
     private void handleNotification(NotificationMessage msg) {

@@ -25,6 +25,15 @@ public class ConnectionManager {
         connections.remove(visitorName);
     }
 
+    public void sendMessage(String userName, ServerMessage message) throws IOException {
+        var c = connections.get(userName);
+        if(c.session.isOpen()){
+            c.send(gson.toJson(message));
+            return;
+        }
+        connections.remove(userName);
+    }
+
     public void broadcast(String excludeVisitorName, Integer gameId, ServerMessage notification) throws IOException {
         System.out.println("Broadcasting message: " + gson.toJson(notification));
         var removeList = new ArrayList<Connection>();

@@ -1,10 +1,13 @@
 package server.websockett;
 
+import chess.ChessGame;
 import com.google.gson.Gson;
 //import dataaccess.DataAccess;
 //import exception.ResponseException;
 import dao.Authdao;
+import dao.Gamedao;
 import dao.SQLAuthdao;
+import dao.SQLGamedao;
 import dataaccess.DataAccessException;
 import models.AuthData;
 import models.GameData;
@@ -16,6 +19,7 @@ import spark.Spark;
 //import webSocketMessages.Action;
 //import webSocketMessages.Notification;
 import websocket.commands.UserGameCommand;
+import websocket.messages.LoadGameMessage;
 import websocket.messages.NotificationMessage;
 
 import java.io.IOException;
@@ -27,9 +31,11 @@ import java.util.concurrent.ConcurrentHashMap;
 public class WebSocketHandler {
     Gson gson = new Gson();
     GameService gameService;
+    Gamedao gamedao;
     Authdao authdao;
     {
         try {
+            gamedao = new SQLGamedao();
             authdao = new SQLAuthdao();
         } catch (DataAccessException e) {
             throw new RuntimeException(e);
@@ -83,6 +89,10 @@ public class WebSocketHandler {
             AuthData authdata = authdao.getAuthDataByToken(message.getAuthToken());
             connections.add(authdata.username, message.getGameID(), session);
             connections.broadcast(authdata.getUsername(), message.getGameID(), new NotificationMessage("\n" + authdata.getUsername() + " joined the game"));
+            GameData gameData = gamedao.getGameByID(message.getGameID());
+            boolean isBlack = authdata.getUsername().equals(gameData.blackUsername);
+            LoadGameMessage loadGameMessage = new LoadGameMessage(gson.toJson(gameData.getGame().getBoard()), isBlack);
+            connections.sendMessage(authdata.getUsername(), loadGameMessage);
         } catch (DataAccessException | IOException e) {
             throw new RuntimeException(e);
         }
