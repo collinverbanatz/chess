@@ -15,5 +15,9 @@ public interface Gamedao {
 
     void updateGameData(GameData gameData) throws DataAccessException;
 
+    boolean isGameActive(int gameId) throws DataAccessException;
+
+    void markGameInactive(int gameId);
+
     void clear();
 }

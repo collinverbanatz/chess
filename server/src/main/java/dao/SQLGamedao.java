@@ -27,6 +27,11 @@ public class SQLGamedao implements Gamedao {
               `gameName` varchar(255) NOT NULL,
               `chessGame` TEXT NOT NULL,
               PRIMARY KEY (`gameID`)
+            )""",
+            """
+            CREATE TABLE IF NOT EXISTS activeGames (
+                `gameID` int,
+                PRIMARY KEY (`gameID`)
             )"""
     };
 
@@ -37,6 +42,7 @@ public class SQLGamedao implements Gamedao {
             String gameDataString = gson.toJson(gameData.getGame());
             var gameId = DatabaseManager.executeUpdate(statement, gameData.getWhiteUsername(),
                     gameData.blackUsername, gameData.getGameName(), gameDataString);
+            DatabaseManager.executeUpdate("INSERT INTO activeGames (gameID) VALUES (?)", gameId);
             if(gameData.getGameName() == null){
                 throw new DataAccessException("couldn't create a new game");
             }
@@ -111,10 +117,38 @@ public class SQLGamedao implements Gamedao {
         }
     }
 
+    public boolean isGameActive(int gameId) throws DataAccessException {
+        try (var conn = DatabaseManager.getConnection()) {
+            var statement = "SELECT * FROM activeGames WHERE gameID=?";
+            try (var preparedStatement = conn.prepareStatement(statement)) {
+                preparedStatement.setInt(1, gameId);
+                try (var queryResults = preparedStatement.executeQuery()){
+                    if(!queryResults.next()) {
+                        return false;
+                    }
+                    return true;
+                }
+            }
+        }
+        catch (DataAccessException | SQLException e) {
+            throw new DataAccessException("DataBase Query failed", e);
+        }
+    }
+
+    public void markGameInactive(int gameId) {
+        try {
+            String statement = "DELETE FROM activeGames WHERE gameID = ?";
+            DatabaseManager.executeUpdate(statement, gameId);
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @Override
     public void clear() {
         try {
             DatabaseManager.executeUpdate("TRUNCATE TABLE game");
+            DatabaseManager.executeUpdate("TRUNCATE TABLE activeGames");
         }
         catch (DataAccessException e){
             System.err.println("could not clear");

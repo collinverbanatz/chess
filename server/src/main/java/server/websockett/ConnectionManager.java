@@ -26,6 +26,7 @@ public class ConnectionManager {
     }
 
     public void sendMessage(String userName, ServerMessage message) throws IOException {
+        System.out.println("Sending message to " + userName + ": " + gson.toJson(message));
         var c = connections.get(userName);
         if(c.session.isOpen()){
             c.send(gson.toJson(message));

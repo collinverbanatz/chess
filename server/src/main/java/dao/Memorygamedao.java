@@ -1,5 +1,6 @@
 package dao;
 
+import dataaccess.DataAccessException;
 import models.GameData;
 import models.CreateResult;
 
@@ -35,6 +36,16 @@ public class Memorygamedao implements Gamedao {
     @Override
     public void updateGameData(GameData gameData) {
         allGameData.put(gameData.getGameID(), gameData);
+    }
+
+    @Override
+    public boolean isGameActive(int gameId) throws DataAccessException {
+        throw new RuntimeException("Not implemented");
+    }
+
+    @Override
+    public void markGameInactive(int gameId) {
+        throw new RuntimeException("Not implemented");
     }
 
     @Override

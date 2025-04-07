@@ -22,8 +22,9 @@ public class Client {
     private static boolean inGame = false;
     private static boolean gameOver = false;
     static ServerFacade serverFacade;
-    public static ChessBoard lastChessBoard;
+    public static ChessGame lastChessGame;
     public static boolean lastWasWhite;
+//    public static boolean lastWasActive;
 
 
     public static void main(String[] args) {
@@ -320,27 +321,20 @@ public class Client {
         System.out.println("-Observe: Watch an ongoing game");
     }
 
-    public static void printBoardAndHelp() {
+    public static void printBoard() {
             var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
-            DrawChessBoard.drawChessBoard(out, lastWasWhite, lastChessBoard);
-            System.out.println("Help:-with possible commands");
-            System.out.println("Redraw: chess board");
-            System.out.println("Highlight: legal moves");
-            System.out.println("Leave: chess game");
-            System.out.println("Move: Makes move");
-            System.out.println("Resign: game:");
-            System.out.println("Enter Command:");
+            DrawChessBoard.drawChessBoard(out, lastWasWhite, lastChessGame.getBoard());
     }
 
     private static void gamePlay(String authToken, int gameID, boolean isWhite) throws Exception {
+        System.out.println("Help:-with possible commands");
+        System.out.println("Redraw: chess board");
+        System.out.println("Highlight: legal moves");
+        System.out.println("Leave: chess game");
+        System.out.println("Move: Makes move");
+        System.out.println("Resign: game:");
         while (inGame) {
-//            System.out.println("Help:-with possible commands");
-//            System.out.println("Redraw: chess board");
-//            System.out.println("Highlight: legal moves");
-//            System.out.println("Leave: chess game");
-//            System.out.println("Move: Makes move");
-//            System.out.println("Resign: game:");
-//            System.out.println("Enter Command:");
+            System.out.println("Enter Command:");
             String clientResponse = scanner.nextLine().trim().toLowerCase();
 
             if(gameOver){
@@ -377,13 +371,12 @@ public class Client {
     }
 
     private static void redrawHandler(String authToken, int gameID, boolean isWhite) {
-        printBoardAndHelp();
+        printBoard();
     }
 
     private static void resignHandler(String authToken, int gameID) {
         try {
             serverFacade.resign(UserGameCommand.CommandType.RESIGN, authToken, gameID);
-            resignedLoop();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -19,6 +19,7 @@ import spark.Spark;
 //import webSocketMessages.Action;
 //import webSocketMessages.Notification;
 import websocket.commands.UserGameCommand;
+import websocket.messages.ErrorMessage;
 import websocket.messages.LoadGameMessage;
 import websocket.messages.NotificationMessage;
 
@@ -64,8 +65,18 @@ public class WebSocketHandler {
     private void resign(Session session, UserGameCommand message) {
         try {
             AuthData authdata = authdao.getAuthDataByToken(message.getAuthToken());
+            var isActive = gamedao.isGameActive(message.getGameID());
+            if (!isActive) {
+                connections.sendMessage(authdata.getUsername(), new ErrorMessage("game already over."));
+                return;
+            }
             connections.broadcast(authdata.getUsername(), message.getGameID(), new NotificationMessage("\n" + authdata.getUsername() + " resigned"));
-
+            gamedao.markGameInactive(message.getGameID());
+//            GameData gameData = gamedao.getGameByID(message.getGameID());
+//            boolean isBlack = authdata.getUsername().equals(gameData.blackUsername);
+//            boolean isGameActive = gamedao.isGameActive(gameData.getGameID());
+//            LoadGameMessage loadGameMessage = new LoadGameMessage(gameData.getGame(), isBlack, isGameActive);
+//            connections.broadcast("", message.getGameID(), loadGameMessage);
         } catch (DataAccessException | IOException e) {
             throw new RuntimeException(e);
         }
@@ -91,7 +102,8 @@ public class WebSocketHandler {
             connections.broadcast(authdata.getUsername(), message.getGameID(), new NotificationMessage("\n" + authdata.getUsername() + " joined the game"));
             GameData gameData = gamedao.getGameByID(message.getGameID());
             boolean isBlack = authdata.getUsername().equals(gameData.blackUsername);
-            LoadGameMessage loadGameMessage = new LoadGameMessage(gson.toJson(gameData.getGame().getBoard()), isBlack);
+//            boolean isGameActive = gamedao.isGameActive(gameData.getGameID());
+            LoadGameMessage loadGameMessage = new LoadGameMessage(gameData.getGame(), isBlack);
             connections.sendMessage(authdata.getUsername(), loadGameMessage);
         } catch (DataAccessException | IOException e) {
             throw new RuntimeException(e);

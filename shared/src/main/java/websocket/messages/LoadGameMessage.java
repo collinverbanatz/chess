@@ -1,26 +1,30 @@
 package websocket.messages;
 
+import chess.ChessGame;
+
 public class LoadGameMessage extends ServerMessage{
 
-    private String chessBoard;
+    private ChessGame chessGame;
     private boolean isBlack;
+//    private boolean isGameActive;
 
     public LoadGameMessage() {
-        this("", false);
+        this(null, false);
     }
 
-    public LoadGameMessage(String chessBoard, boolean isBlack) {
+    public LoadGameMessage(ChessGame chessGame, boolean isBlack) {
         super(ServerMessageType.LOAD_GAME);
-        this.chessBoard = chessBoard;
+        this.chessGame = chessGame;
         this.isBlack = isBlack;
+//        this.isGameActive =  isGameActive;
     }
 
-    public String getChessBoard() {
-        return chessBoard;
+    public ChessGame getChessGame() {
+        return chessGame;
     }
 
-    public void setChessBoard(String chessBoard) {
-        this.chessBoard = chessBoard;
+    public void setChessGame(ChessGame chessGame) {
+        this.chessGame = chessGame;
     }
 
     public boolean isBlack() {
@@ -30,4 +34,12 @@ public class LoadGameMessage extends ServerMessage{
     public void setBlack(boolean black) {
         isBlack = black;
     }
+
+//    public boolean isGameActive() {
+//        return isGameActive;
+//    }
+//
+//    public void setGameActive(boolean gameActive) {
+//        isGameActive = gameActive;
+//    }
 }
