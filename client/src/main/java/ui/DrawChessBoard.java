@@ -54,35 +54,10 @@ public class DrawChessBoard {
     }
 
     private static void printBlackBoard(PrintStream out, ChessBoard board, boolean isWhite, boolean isRedraw) {
-//        int number = 8;
-//        for (int row = 0; row < BOARD_SIZE; row++) {
-//            out.print(SET_BG_COLOR_WHITE);
-//            out.print(SET_TEXT_COLOR_BLACK);
-//            out.print(" " + (row + 1) + " ");
-//            for (int col = BOARD_SIZE - 1; col >= 0; col--) {
-//                if((row + col) % 2 != 0) {
-//                    printPieces(out, board, row, col, SET_BG_COLOR_LIGHT_GREY);
-//                }
-//                else{
-//                    printPieces(out, board, row, col, SET_BG_COLOR_DARK_GREY);
-//
-//                }
-//            }
-//            out.print(SET_BG_COLOR_WHITE);
-//            out.print(SET_TEXT_COLOR_BLACK);
-//            out.print(" " + (row + 1) + " ");
-//
-//            number = number - 1;
-//
-//            out.print(RESET_BG_COLOR + "\n");
-//        }
-
-
-
         int number = 8;
         ChessPosition redrawChessPosition;
         if (isRedraw) {
-            redrawChessPosition = getMoveFromPlayer();
+            redrawChessPosition = getMoveFromPlayer(isWhite);
             printHeading(out, isWhite);
             Collection<ChessMove> validMovesRedraw =  game.validMoves(redrawChessPosition);
 
@@ -160,7 +135,7 @@ public class DrawChessBoard {
         int number = 8;
         ChessPosition redrawChessPosition;
         if (isRedraw) {
-            redrawChessPosition = getMoveFromPlayer();
+            redrawChessPosition = getMoveFromPlayer(isWhite);
             printHeading(out, isWhite);
             Collection<ChessMove> validMovesRedraw =  game.validMoves(redrawChessPosition);
 
@@ -228,14 +203,14 @@ public class DrawChessBoard {
     }
 
 
-    private static ChessPosition getMoveFromPlayer() {
+    private static ChessPosition getMoveFromPlayer(boolean isWhite) {
         System.out.println("Enter piece position <a2>");
         String clientResponse = scanner.nextLine().trim().toLowerCase();
         if (clientResponse.length() == 2){
             char colChar = clientResponse.charAt(0);
             char rowChar = clientResponse.charAt(1);
 
-            int row = Character.getNumericValue(rowChar);
+            int row = 0;
             int col = 0;
             switch (colChar){
                 case 'a':
@@ -262,6 +237,14 @@ public class DrawChessBoard {
                 case 'h':
                     col = 8;
                     break;
+            }
+
+            if(isWhite){
+                row = Character.getNumericValue(rowChar);
+            }
+            else{
+                row = Character.getNumericValue(rowChar);
+                row = 9 - row;
             }
             return new ChessPosition(row, col);
         }
