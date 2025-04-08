@@ -2,6 +2,8 @@ package ui;
 
 import chess.ChessBoard;
 import chess.ChessGame;
+import chess.ChessMove;
+import chess.ChessPosition;
 import dataaccess.DataAccessException;
 import models.GameData;
 import client.ServerFacade;
@@ -25,6 +27,7 @@ public class Client {
     public static ChessGame lastChessGame;
     public static boolean lastWasWhite;
 //    public static boolean lastWasActive;
+    public static ChessPosition chessPositionRedraw = new ChessPosition(-1,-1);
 
 
     public static void main(String[] args) {
@@ -182,7 +185,7 @@ public class Client {
         boolean isWhite = true;
         ChessBoard chessBoard = new ChessBoard();
         chessBoard.resetBoard();
-        DrawChessBoard.drawChessBoard(out, isWhite, chessBoard);
+//        DrawChessBoard.drawChessBoard(out, isWhite, chessBoard, chessPositionRedraw);
         try {
             serverFacade.connect(authToken, gameNumber);
         } catch (IOException e) {
@@ -323,7 +326,10 @@ public class Client {
 
     public static void printBoard() {
             var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
-            DrawChessBoard.drawChessBoard(out, lastWasWhite, lastChessGame.getBoard());
+
+            boolean isRedraw = false;
+
+            DrawChessBoard.drawChessBoard(out, lastWasWhite, lastChessGame.getBoard(), isRedraw);
     }
 
     private static void gamePlay(String authToken, int gameID, boolean isWhite) throws Exception {
@@ -349,7 +355,7 @@ public class Client {
                     redrawHandler(authToken,gameID, isWhite);
                     break;
                 case ("highlight"):
-
+                    highlightHandler();
                     break;
                 case ("leave"):
                     leaveHandler(authToken, gameID);
@@ -366,9 +372,12 @@ public class Client {
         }
     }
 
-    public void drawBoard(ChessBoard chessBoard){
+    private static void highlightHandler() {
+        var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+        DrawChessBoard.drawChessBoard(out, lastWasWhite, lastChessGame.getBoard(), true);
 
     }
+
 
     private static void redrawHandler(String authToken, int gameID, boolean isWhite) {
         printBoard();

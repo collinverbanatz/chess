@@ -35,8 +35,6 @@ public class WebsocketCommunicator extends Endpoint {
         });
     }
 
-//    commit
-
     private void handleError(ErrorMessage errorMessage) {
         System.out.println(errorMessage.getMessage());
     }
