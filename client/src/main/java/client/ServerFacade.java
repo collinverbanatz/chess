@@ -86,4 +86,8 @@ public class ServerFacade {
         ResignGameCommand resignGameCommand = new ResignGameCommand(authToken, gameID);
         ws.send(gson.toJson(resignGameCommand));
     }
+
+    public void makeMoves(UserGameCommand.CommandType commandType, String authToken, int gameID, String start, String end) {
+
+    }
 }

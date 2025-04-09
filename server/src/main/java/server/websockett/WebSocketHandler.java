@@ -52,7 +52,7 @@ public class WebSocketHandler {
     @OnWebSocketMessage
     public void onMessage(Session session, String msg) throws IOException {
 //        System.out.printf("Received: %s\n", msg);
-        session.getRemote().sendString("WebSocket response: " + msg);
+//        session.getRemote().sendString(msg);
 
         UserGameCommand message =gson.fromJson(msg, UserGameCommand.class);
         switch (message.getCommandType()){

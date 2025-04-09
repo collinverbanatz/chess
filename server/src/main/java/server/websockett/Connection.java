@@ -1,5 +1,6 @@
 package server.websockett;
 
+import com.google.gson.Gson;
 import org.eclipse.jetty.websocket.api.Session;
 
 import java.io.IOException;

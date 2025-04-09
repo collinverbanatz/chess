@@ -4,7 +4,7 @@ import chess.ChessGame;
 
 public class LoadGameMessage extends ServerMessage{
 
-    private ChessGame chessGame;
+    private ChessGame game;
     private boolean isBlack;
 //    private boolean isGameActive;
 
@@ -12,19 +12,19 @@ public class LoadGameMessage extends ServerMessage{
         this(null, false);
     }
 
-    public LoadGameMessage(ChessGame chessGame, boolean isBlack) {
+    public LoadGameMessage(ChessGame game, boolean isBlack) {
         super(ServerMessageType.LOAD_GAME);
-        this.chessGame = chessGame;
+        this.game = game;
         this.isBlack = isBlack;
 //        this.isGameActive =  isGameActive;
     }
 
-    public ChessGame getChessGame() {
-        return chessGame;
+    public ChessGame getGame() {
+        return game;
     }
 
-    public void setChessGame(ChessGame chessGame) {
-        this.chessGame = chessGame;
+    public void setGame(ChessGame game) {
+        this.game = game;
     }
 
     public boolean isBlack() {

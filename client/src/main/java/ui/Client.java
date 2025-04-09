@@ -359,7 +359,7 @@ public class Client {
                     leaveHandler(authToken, gameID);
                     break;
                 case ("move"):
-
+                    makeMoveHandler(authToken, gameID, isWhite);
                     break;
                 case ("resign"):
                     resignHandler(authToken,gameID);
@@ -368,6 +368,15 @@ public class Client {
                     System.out.println("Not a valid command. Try again. \n");
             }
         }
+    }
+
+    private static void makeMoveHandler(String authToken, int gameID, boolean isWhite) {
+        System.out.println("Enter moves (enter piece position first then available position) <a2 a3>):");
+        String clientMoves = scanner.nextLine().trim().toLowerCase();
+        String[] moves = clientMoves.split("\\s+");
+        String start = moves[0];
+        String end = moves[1];
+        serverFacade.makeMoves(UserGameCommand.CommandType.MAKE_MOVE, authToken, gameID, start, end);
     }
 
     private static void highlightHandler() {
