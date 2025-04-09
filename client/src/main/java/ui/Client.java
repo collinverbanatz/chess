@@ -27,7 +27,7 @@ public class Client {
     public static ChessGame lastChessGame;
     public static boolean lastWasWhite;
 //    public static boolean lastWasActive;
-    public static ChessPosition chessPositionRedraw = new ChessPosition(-1,-1);
+//    public static ChessPosition chessPositionRedraw = new ChessPosition(-1,-1);
 
 
     public static void main(String[] args) {
@@ -180,17 +180,15 @@ public class Client {
 
     private static void observeHandler(String authToken) {
         System.out.println("Enter a game number to observe:");
-        int gameNumber = Integer.parseInt(scanner.nextLine());
-        var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
-        boolean isWhite = true;
-        ChessBoard chessBoard = new ChessBoard();
-        chessBoard.resetBoard();
-//        DrawChessBoard.drawChessBoard(out, isWhite, chessBoard, chessPositionRedraw);
+        String clientResponse = scanner.nextLine();
+        int gameID = getGameID(authToken, clientResponse);
+
         try {
-            serverFacade.connect(authToken, gameNumber);
+            serverFacade.connect(authToken, gameID);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        printBoard();
         inGame = true;
     }
 
