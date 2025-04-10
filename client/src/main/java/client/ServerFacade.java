@@ -2,9 +2,7 @@ package client;
 
 import chess.ChessMove;
 import com.google.gson.Gson;
-import dataaccess.DataAccessException;
 import models.*;
-import server.websockett.WebSocketHandler;
 import websocket.commands.*;
 import websocket.commands.ResignGameCommand;
 import java.io.IOException;
@@ -16,7 +14,6 @@ public class ServerFacade {
     String url = "http://localhost:";
     WebsocketCommunicator ws;
     Gson gson = new Gson();
-    WebSocketHandler webSocketHandler;
 
     public ServerFacade() {
         this(8080);
