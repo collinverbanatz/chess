@@ -159,7 +159,8 @@ public class WebSocketHandler {
         try {
             AuthData authdata = authdao.getAuthDataByToken(message.getAuthToken());
             connections.remove(authdata.username);
-            connections.broadcast(authdata.getUsername(), message.getGameID(), new NotificationMessage("\n" + authdata.getUsername() + " left the game."));
+            connections.broadcast(authdata.getUsername(), message.getGameID(),
+                    new NotificationMessage("\n" + authdata.getUsername() + " left the game."));
 //            System.out.printf("about to leave game as with ID " + authdata.getUsername() + message.getGameID());
             gameService.leave(message.getAuthToken(), message.getGameID());
 
@@ -181,7 +182,8 @@ public class WebSocketHandler {
                 connections.sendMessage(authdata.getUsername(), new ErrorMessage("No game with that ID"));
                 return;
             }
-            connections.broadcast(authdata.getUsername(), message.getGameID(), new NotificationMessage("\n" + authdata.getUsername() + " joined the game"));
+            connections.broadcast(authdata.getUsername(), message.getGameID(),
+                    new NotificationMessage("\n" + authdata.getUsername() + " joined the game"));
             boolean isBlack = authdata.getUsername().equals(gameData.blackUsername);
 //            boolean isGameActive = gamedao.isGameActive(gameData.getGameID());
             LoadGameMessage loadGameMessage = new LoadGameMessage(gameData.getGame(), isBlack);
