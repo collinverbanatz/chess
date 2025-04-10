@@ -70,26 +70,7 @@ public class DrawChessBoard {
                 printNumbers(out, number, isWhite);
 
                 for (int col = BOARD_SIZE - 1; col >= 0; col--) {
-                    ChessPosition currentChessPosisiton = new ChessPosition(row, col);
-                    boolean isValidMove = validPositions.contains(currentChessPosisiton);
-
-                    if((row + col) % 2 != 0){
-                        if(isValidMove){
-                            printPieces(out, board, row , col , SET_BG_COLOR_YELLOW);
-                        }
-                        else{
-                            printPieces(out, board, row , col , SET_BG_COLOR_LIGHT_GREY);
-                        }
-                    }
-
-                    else{
-                        if(isValidMove){
-                            printPieces(out, board, row , col , SET_BG_COLOR_GREEN);
-                        }
-                        else{
-                            printPieces(out, board, row , col , SET_BG_COLOR_DARK_GREY);
-                        }
-                    }
+                    checkToPrintmove(out, board, validPositions, row, col);
                 }
                 out.print(SET_TEXT_COLOR_BLACK);
                 printNumbers(out, number, isWhite);
@@ -135,6 +116,7 @@ public class DrawChessBoard {
         if (isHightlightMove) {
             redrawChessPosition = getMoveFromPlayer(isWhite);
             printHeading(out, isWhite);
+            int numb = 6;
             Collection<ChessMove> validMovesRedraw =  Client.lastChessGame.validMoves(redrawChessPosition);
 
             Set<ChessPosition> validPositions = new HashSet<>();
@@ -142,32 +124,14 @@ public class DrawChessBoard {
                 ChessPosition newEndPosistion = new ChessPosition(cp.getEndPosition().getRow() - 1, cp.getEndPosition().getColumn() - 1);
                 validPositions.add(newEndPosistion);
             }
+            int hello = 1;
 
             for (int row = BOARD_SIZE - 1; row >= 0; row--) {
                 out.print(SET_TEXT_COLOR_BLACK);
                 printNumbers(out, number, isWhite);
 
                 for (int col = 0; col < BOARD_SIZE; col++) {
-                    ChessPosition currentChessPosisiton = new ChessPosition(row, col);
-                    boolean isValidMove = validPositions.contains(currentChessPosisiton);
-
-                    if((row + col) % 2 != 0){
-                        if(isValidMove){
-                            printPieces(out, board, row , col , SET_BG_COLOR_YELLOW);
-                        }
-                        else{
-                            printPieces(out, board, row , col , SET_BG_COLOR_LIGHT_GREY);
-                        }
-                    }
-
-                    else{
-                        if(isValidMove){
-                            printPieces(out, board, row , col , SET_BG_COLOR_GREEN);
-                        }
-                        else{
-                            printPieces(out, board, row , col , SET_BG_COLOR_DARK_GREY);
-                        }
-                    }
+                    checkToPrintmove(out, board, validPositions, row, col);
                 }
                 out.print(SET_TEXT_COLOR_BLACK);
                 printNumbers(out, number, isWhite);
@@ -196,6 +160,29 @@ public class DrawChessBoard {
                 number = number - 1;
 
                 out.print(RESET_BG_COLOR + "\n");
+            }
+        }
+    }
+
+    private static void checkToPrintmove(PrintStream out, ChessBoard board, Set<ChessPosition> validPositions, int row, int col) {
+        ChessPosition currentChessPosisiton = new ChessPosition(row, col);
+        boolean isValidMove = validPositions.contains(currentChessPosisiton);
+
+        if((row + col) % 2 != 0){
+            if(isValidMove){
+                printPieces(out, board, row , col , SET_BG_COLOR_YELLOW);
+            }
+            else{
+                printPieces(out, board, row , col , SET_BG_COLOR_LIGHT_GREY);
+            }
+        }
+
+        else{
+            if(isValidMove){
+                printPieces(out, board, row , col , SET_BG_COLOR_GREEN);
+            }
+            else{
+                printPieces(out, board, row , col , SET_BG_COLOR_DARK_GREY);
             }
         }
     }

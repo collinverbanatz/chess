@@ -149,11 +149,7 @@ public class WebSocketHandler {
             }
             connections.broadcast(null, message.getGameID(), new NotificationMessage("\n" + authdata.getUsername() + " resigned"));
             gamedao.markGameInactive(message.getGameID());
-//            GameData gameData = gamedao.getGameByID(message.getGameID());
-//            boolean isBlack = authdata.getUsername().equals(gameData.blackUsername);
-//            boolean isGameActive = gamedao.isGameActive(gameData.getGameID());
-//            LoadGameMessage loadGameMessage = new LoadGameMessage(gameData.getGame(), isBlack, isGameActive);
-//            connections.broadcast("", message.getGameID(), loadGameMessage);
+
         } catch (DataAccessException | IOException e) {
             throw new RuntimeException(e);
         }

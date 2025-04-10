@@ -35,11 +35,4 @@ public class LoadGameMessage extends ServerMessage{
         isBlack = black;
     }
 
-//    public boolean isGameActive() {
-//        return isGameActive;
-//    }
-//
-//    public void setGameActive(boolean gameActive) {
-//        isGameActive = gameActive;
-//    }
 }

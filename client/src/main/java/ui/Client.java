@@ -25,8 +25,7 @@ public class Client {
     public static ChessGame lastChessGame;
     public static boolean lastWasWhite;
     private static boolean isObserver = false;
-//    public static boolean lastWasActive;
-//    public static ChessPosition chessPositionRedraw = new ChessPosition(-1,-1);
+
 
 
     public static void main(String[] args) {
@@ -225,37 +224,6 @@ public class Client {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-//        if (clientColor.equals("WHITE")) {
-//            isWhite = true;
-//            try {
-//                serverFacade.joinGame(authToken, gameID, clientColor);
-//                ChessBoard chessBoard = new ChessBoard();
-//                chessBoard.resetBoard();
-//                DrawChessBoard.drawChessBoard(out, isWhite, chessBoard);
-//                inGame = true;
-//                serverFacade.connect(authToken, gameID);
-//                gamePlay(authToken, gameID, isWhite);
-//            } catch (IOException e) {
-//                System.err.println("couldn't join game");
-//            } catch (Exception e) {
-//                throw new RuntimeException(e);
-//            }
-//        } else if (clientColor.equals("BLACK")) {
-//            isWhite = false;
-//            try {
-//                serverFacade.joinGame(authToken, gameID, clientColor);
-//                ChessBoard chessBoard = new ChessBoard();
-//                chessBoard.resetBoard();
-//                DrawChessBoard.drawChessBoard(out, isWhite, chessBoard);
-//                inGame = true;
-//                serverFacade.connect(authToken, gameID);
-//                gamePlay(authToken, gameID, isWhite);
-//            } catch (IOException e) {
-//                System.err.println("couldn't join game");
-//            } catch (Exception e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
     }
 
     private static int getGameID(String authToken, String gameNumber) {
