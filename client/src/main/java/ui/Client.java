@@ -209,13 +209,9 @@ public class Client {
             break;
         }
         int gameID = getGameID(authToken, clientResponse);
-//            System.out.println(gameID);
-//        var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         try {
             serverFacade.joinGame(authToken, gameID, clientColor);
-//            ChessBoard chessBoard = new ChessBoard();
-//            chessBoard.resetBoard();
-//            DrawChessBoard.drawChessBoard(out, isWhite, chessBoard);
+
             inGame = true;
             serverFacade.connect(authToken, gameID);
             gamePlay(authToken, gameID, clientColor.equals("WHITE"));
