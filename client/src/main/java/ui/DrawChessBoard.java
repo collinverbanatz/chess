@@ -94,6 +94,7 @@ public class DrawChessBoard {
 
                     }
                 }
+                int doesNothing = 4;
                 out.print(SET_TEXT_COLOR_BLACK);
                 printNumbers(out, number, isWhite);
                 number = number - 1;
