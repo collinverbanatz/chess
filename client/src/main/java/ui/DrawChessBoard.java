@@ -94,14 +94,17 @@ public class DrawChessBoard {
 
                     }
                 }
-                int doesNothing = 4;
-                out.print(SET_TEXT_COLOR_BLACK);
-                printNumbers(out, number, isWhite);
-                number = number - 1;
-
-                out.print(RESET_BG_COLOR + "\n");
+                printNumHandler(out, number, isWhite);
             }
+
         }
+    }
+
+    private static void printNumHandler(PrintStream out, int number, boolean isWhite) {
+        out.print(SET_TEXT_COLOR_BLACK);
+        printNumbers(out, number, isWhite);
+
+        out.print(RESET_BG_COLOR + "\n");
     }
 
     private static ChessBoard getBoard() {
@@ -156,11 +159,7 @@ public class DrawChessBoard {
 
                     }
                 }
-                out.print(SET_TEXT_COLOR_BLACK);
-                printNumbers(out, number, isWhite);
-                number = number - 1;
-
-                out.print(RESET_BG_COLOR + "\n");
+                printNumHandler(out, number, isWhite);
             }
         }
     }
