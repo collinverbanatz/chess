@@ -153,8 +153,8 @@ public class DrawChessBoard {
                 for (int col = 0; col < BOARD_SIZE; col++) {
                     if((row + col) % 2 != 0) {
                         printPieces(out, board, row , col , SET_BG_COLOR_LIGHT_GREY);
+                        int numbersHi = 4;
                     }
-                    int numbersHi = 4;
                     else{
                         printPieces(out, board, row , col , SET_BG_COLOR_DARK_GREY);
 
