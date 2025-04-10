@@ -26,6 +26,9 @@ public class ConnectionManager {
     }
 
     public void sendMessage(String userName, ServerMessage message) throws IOException {
+        if (userName == null || !connections.containsKey(userName)) {
+            return;
+        }
         System.out.println("Sending message to " + userName + ": " + gson.toJson(message));
         var c = connections.get(userName);
         if(c.session.isOpen()){

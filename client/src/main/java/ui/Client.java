@@ -1,9 +1,6 @@
 package ui;
 
-import chess.ChessBoard;
-import chess.ChessGame;
-import chess.ChessMove;
-import chess.ChessPosition;
+import chess.*;
 import dataaccess.DataAccessException;
 import models.GameData;
 import client.ServerFacade;
@@ -11,6 +8,7 @@ import client.ServerFacade;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Scanner;
 
 import models.ListGameResult;
@@ -26,6 +24,7 @@ public class Client {
     static ServerFacade serverFacade;
     public static ChessGame lastChessGame;
     public static boolean lastWasWhite;
+    private static boolean isObserver = false;
 //    public static boolean lastWasActive;
 //    public static ChessPosition chessPositionRedraw = new ChessPosition(-1,-1);
 
@@ -188,8 +187,10 @@ public class Client {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        printBoard();
         inGame = true;
+        isObserver = true;
+        gamePlay(authToken, gameID, true);
+        isObserver = false;
     }
 
     private static void playHandler(String authToken) {
@@ -330,13 +331,15 @@ public class Client {
             DrawChessBoard.drawChessBoard(out, lastWasWhite, lastChessGame.getBoard(), isRedraw);
     }
 
-    private static void gamePlay(String authToken, int gameID, boolean isWhite) throws Exception {
+    private static void gamePlay(String authToken, int gameID, boolean isWhite) {
         System.out.println("Help:-with possible commands");
         System.out.println("Redraw: chess board");
         System.out.println("Highlight: legal moves");
         System.out.println("Leave: chess game");
-        System.out.println("Move: Makes move");
-        System.out.println("Resign: game:");
+        if (!isObserver) {
+            System.out.println("Move: Makes move");
+            System.out.println("Resign: game:");
+        }
         while (inGame) {
             System.out.println("Enter Command:");
             String clientResponse = scanner.nextLine().trim().toLowerCase();
@@ -359,10 +362,14 @@ public class Client {
                     leaveHandler(authToken, gameID);
                     break;
                 case ("move"):
-                    makeMoveHandler(authToken, gameID, isWhite);
+                    if (!isObserver) {
+                        makeMoveHandler(authToken, gameID, isWhite);
+                    }
                     break;
                 case ("resign"):
-                    resignHandler(authToken,gameID);
+                    if (!isObserver) {
+                        resignHandler(authToken,gameID);
+                    }
                     break;
                 default:
                     System.out.println("Not a valid command. Try again. \n");
@@ -374,9 +381,56 @@ public class Client {
         System.out.println("Enter moves (enter piece position first then available position) <a2 a3>):");
         String clientMoves = scanner.nextLine().trim().toLowerCase();
         String[] moves = clientMoves.split("\\s+");
+        if (moves.length < 2) {
+            System.out.println("Invalid move");
+            return;
+        }
         String start = moves[0];
+        if (!ChessPosition.isValidPosition(start)) {
+            System.out.println("Invalid starting position");
+            return;
+        }
+        ChessPosition startPosition = ChessPosition.fromPosition(start);
         String end = moves[1];
-        serverFacade.makeMoves(UserGameCommand.CommandType.MAKE_MOVE, authToken, gameID, start, end);
+        if (!ChessPosition.isValidPosition(end)) {
+            System.out.println("Invalid end position");
+            return;
+        }
+        ChessPosition endPosition = ChessPosition.fromPosition(end);
+        ChessPiece movingPiece = lastChessGame.getBoard().getPiece(startPosition);
+        if (movingPiece == null) {
+            System.out.println("No piece at " + moves[0]);
+            return;
+        }
+        boolean isPromoting = false;
+        if (movingPiece.getPieceType() == ChessPiece.PieceType.PAWN) {
+            if (isWhite && endPosition.getRow() == 8) {
+                isPromoting = true;
+            } else if (!isWhite && endPosition.getRow() == 1) {
+                isPromoting = true;
+            }
+        }
+        ChessPiece.PieceType promotionType = null;
+        if (isPromoting) {
+            if (moves.length < 3) {
+                System.out.println("Enter promotion piece with move");
+                return;
+            }
+            String promotionPiece = moves[2];
+            List<String> validPromotions = List.of("queen", "bishop", "knight", "rook");
+            if (!validPromotions.contains(promotionPiece.toLowerCase())) {
+                System.out.println("Promotion pieces must be one of: " + validPromotions);
+                return;
+            }
+            promotionType = ChessPiece.PieceType.valueOf(promotionPiece.toUpperCase());
+        }
+        ChessMove move = new ChessMove(startPosition, endPosition, promotionType);
+
+        try {
+            serverFacade.makeMoves(UserGameCommand.CommandType.MAKE_MOVE, authToken, gameID, move);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static void highlightHandler() {
@@ -429,7 +483,9 @@ public class Client {
         System.out.println("-Redraw: Redraws the chess board");
         System.out.println("-Highlight: Highlights legal moves you can make");
         System.out.println("-Leave: Leaves the current game");
-        System.out.println("-Move: Input which piece you want to move and where");
-        System.out.println("-Resign: You forfeit the game \n");
+        if (!isObserver) {
+            System.out.println("-Move: Input which piece you want to move and where");
+            System.out.println("-Resign: You forfeit the game \n");
+        }
     }
 }

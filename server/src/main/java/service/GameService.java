@@ -31,8 +31,6 @@ public class GameService {
         if (!authdao.authTokenExists(authToken)){
             throw new DataAccessException("Invalid authToken");
         }
-        ChessBoard chessBoard = new ChessBoard();
-        chessBoard.resetBoard();
         ChessGame chessGame = new ChessGame();
         return gameDao.createGame(new GameData(-1, null, null, game.getGameName(), chessGame));
     }
@@ -65,12 +63,18 @@ public class GameService {
         }
 
         String wantedColor = gameData.getPlayerColor();
+        String userName = authData.username;
+        if (
+            (wantedColor.equals("BLACK") && Objects.equals(realGameData.blackUsername, userName))
+            || (wantedColor.equals("WHITE") && Objects.equals(realGameData.whiteUsername, userName))
+        ) {
+            return;
+        }
 
         if(wantedColor.equals("BLACK") && realGameData.blackUsername != null || wantedColor.equals("WHITE") && realGameData.whiteUsername != null){
             throw new DataAccessException("already taken");
         }
 
-        String userName = authData.username;
         if (wantedColor.equals("BLACK")) {
             realGameData.setBlackUsername(userName);
         }

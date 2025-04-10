@@ -40,7 +40,7 @@ public class WebsocketCommunicator extends Endpoint {
     }
 
     private void handleLoadGame(LoadGameMessage loadGameMessage) {
-        System.out.println(gson.toJson(loadGameMessage));
+//        System.out.println(gson.toJson(loadGameMessage));
         ChessGame chessGame = loadGameMessage.getGame();
         boolean isWhite = !loadGameMessage.isBlack();
         Client.lastChessGame = chessGame;

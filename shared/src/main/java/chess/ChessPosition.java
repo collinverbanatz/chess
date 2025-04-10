@@ -18,6 +18,28 @@ public class ChessPosition {
         this.col = col;
     }
 
+    public static ChessPosition fromPosition(String position){
+        if (!isValidPosition(position)) {
+            throw new RuntimeException("Got invalid position");
+        }
+        int row = position.charAt(1) - '1' + 1;
+        int col = position.charAt(0) - 'a' + 1;
+        return new ChessPosition(row, col);
+    }
+
+    public static boolean isValidPosition(String position) {
+        if (position.length() != 2) {
+            return false;
+        }
+        if (position.charAt(0) < 'a' || position.charAt(0) > 'h') {
+            return false;
+        }
+        if (position.charAt(1) < '1' || position.charAt(1) > '8') {
+            return false;
+        }
+        return true;
+    }
+
     /**
      * @return which row this position is in
      * 1 codes for the bottom row
@@ -28,7 +50,7 @@ public class ChessPosition {
 
     /**
      * @return which column this position is in
-     * 1 codes for the left row
+     * 1 codes for the left col
      */
     public int getColumn() {
         return col;

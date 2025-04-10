@@ -1,6 +1,7 @@
 package server.websockett;
 
 import chess.ChessGame;
+import chess.InvalidMoveException;
 import com.google.gson.Gson;
 //import dataaccess.DataAccess;
 //import exception.ResponseException;
@@ -18,12 +19,14 @@ import service.GameService;
 import spark.Spark;
 //import webSocketMessages.Action;
 //import webSocketMessages.Notification;
+import websocket.commands.MakeMoveGameCommand;
 import websocket.commands.UserGameCommand;
 import websocket.messages.ErrorMessage;
 import websocket.messages.LoadGameMessage;
 import websocket.messages.NotificationMessage;
 
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Timer;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -54,11 +57,75 @@ public class WebSocketHandler {
 //        System.out.printf("Received: %s\n", msg);
 //        session.getRemote().sendString(msg);
 
-        UserGameCommand message =gson.fromJson(msg, UserGameCommand.class);
+        UserGameCommand message = gson.fromJson(msg, UserGameCommand.class);
         switch (message.getCommandType()){
             case CONNECT -> connection(session, message);
             case LEAVE -> leave(session, message);
             case RESIGN -> resign(session, message);
+            case MAKE_MOVE -> makeMove(session, msg);
+        }
+    }
+
+    private void makeMove(Session session, String msg) {
+        MakeMoveGameCommand message  = gson.fromJson(msg, MakeMoveGameCommand.class);
+        try {
+            AuthData authData = authdao.getAuthDataByToken(message.getAuthToken());
+            var isActive = gamedao.isGameActive(message.getGameID());
+            if (!isActive) {
+                connections.sendMessage(authData.getUsername(), new ErrorMessage("game already over."));
+                return;
+            }
+            GameData data = gamedao.getGameByID(message.getGameID());
+            ChessGame chessGame = data.getGame();
+            String blackUserName = data.getBlackUsername();
+            String whiteUserName = data.getWhiteUsername();
+            if (
+                (chessGame.getTeamTurn() == ChessGame.TeamColor.WHITE && !Objects.equals(authData.getUsername(), data.getWhiteUsername()))
+                || (chessGame.getTeamTurn() == ChessGame.TeamColor.BLACK && !Objects.equals(authData.getUsername(), data.getBlackUsername()))
+            ) {
+                connections.sendMessage(authData.getUsername(), new ErrorMessage("not your turn"));
+                return;
+            }
+
+            try {
+                chessGame.makeMove(message.getMove());
+                gamedao.updateGameData(data);
+            } catch (InvalidMoveException e) {
+                connections.sendMessage(authData.getUsername(), new ErrorMessage(e.getMessage()));
+                return;
+            }
+            LoadGameMessage loadGameMessage = new LoadGameMessage(data.getGame(), false);
+            connections.broadcast(blackUserName, message.getGameID(), loadGameMessage);
+            connections.sendMessage(blackUserName, new LoadGameMessage(data.getGame(), true));
+
+            if(chessGame.isInCheckmate(ChessGame.TeamColor.BLACK)){
+                connections.broadcast("", message.getGameID(), new NotificationMessage(blackUserName + " is in checkmate"));
+                gamedao.markGameInactive(message.getGameID());
+                return;
+            }
+            if(chessGame.isInCheckmate(ChessGame.TeamColor.WHITE)){
+                connections.broadcast("", message.getGameID(), new NotificationMessage(whiteUserName + " is in checkmate"));
+                gamedao.markGameInactive(message.getGameID());
+                return;
+            }
+            if(chessGame.isInStalemate(ChessGame.TeamColor.BLACK)){
+                connections.broadcast("", message.getGameID(), new NotificationMessage("stalemate"));
+                gamedao.markGameInactive(message.getGameID());
+                return;
+            }
+            if(chessGame.isInCheck(ChessGame.TeamColor.BLACK)){
+                connections.broadcast("", message.getGameID(), new NotificationMessage(blackUserName + " is in check"));
+                return;
+            }
+            if(chessGame.isInCheck(ChessGame.TeamColor.WHITE)){
+                connections.broadcast("", message.getGameID(), new NotificationMessage(whiteUserName + " is in check"));
+            }
+
+
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

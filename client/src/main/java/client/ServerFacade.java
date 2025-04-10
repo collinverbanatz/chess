@@ -1,6 +1,7 @@
 package client;
 
 
+import chess.ChessMove;
 import com.google.gson.Gson;
 import dataaccess.DataAccessException;
 import models.*;
@@ -87,7 +88,8 @@ public class ServerFacade {
         ws.send(gson.toJson(resignGameCommand));
     }
 
-    public void makeMoves(UserGameCommand.CommandType commandType, String authToken, int gameID, String start, String end) {
-
+    public void makeMoves(UserGameCommand.CommandType commandType, String authToken, int gameID, ChessMove move) throws IOException {
+        MakeMoveGameCommand makeMoveGameCommand = new MakeMoveGameCommand(authToken,gameID, move);
+        ws.send(gson.toJson(makeMoveGameCommand));
     }
 }
