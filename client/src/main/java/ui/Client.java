@@ -362,14 +362,10 @@ public class Client {
                     leaveHandler(authToken, gameID);
                     break;
                 case ("move"):
-                    if (!isObserver) {
-                        makeMoveHandler(authToken, gameID, isWhite);
-                    }
+                    makeMoveHandler(authToken, gameID, isWhite);
                     break;
                 case ("resign"):
-                    if (!isObserver) {
-                        resignHandler(authToken,gameID);
-                    }
+                    resignHandler(authToken,gameID);
                     break;
                 default:
                     System.out.println("Not a valid command. Try again. \n");

@@ -2,7 +2,7 @@ package websocket.messages;
 
 public class ErrorMessage extends ServerMessage{
 
-    private String message;
+    private String errorMessage;
 
     public ErrorMessage() {
         this("");
@@ -10,14 +10,14 @@ public class ErrorMessage extends ServerMessage{
 
     public ErrorMessage(String message) {
         super(ServerMessageType.ERROR);
-        this.message = message;
+        this.errorMessage = message;
     }
 
-    public String getMessage() {
-        return message;
+    public String getErrorMessage() {
+        return errorMessage;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
     }
 }

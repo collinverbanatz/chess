@@ -36,7 +36,7 @@ public class WebsocketCommunicator extends Endpoint {
     }
 
     private void handleError(ErrorMessage errorMessage) {
-        System.out.println(errorMessage.getMessage());
+        System.out.println(errorMessage.getErrorMessage());
     }
 
     private void handleLoadGame(LoadGameMessage loadGameMessage) {

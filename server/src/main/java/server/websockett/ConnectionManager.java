@@ -25,6 +25,12 @@ public class ConnectionManager {
         connections.remove(visitorName);
     }
 
+    public void sendMessage(Session session, ServerMessage message) throws IOException {
+        if(session.isOpen()){
+            session.getRemote().sendString(gson.toJson(message));
+        }
+    }
+
     public void sendMessage(String userName, ServerMessage message) throws IOException {
         if (userName == null || !connections.containsKey(userName)) {
             return;
@@ -39,7 +45,7 @@ public class ConnectionManager {
     }
 
     public void broadcast(String excludeVisitorName, Integer gameId, ServerMessage notification) throws IOException {
-        System.out.println("Broadcasting message: " + gson.toJson(notification));
+        System.out.println("Broadcasting message: " + gson.toJson(notification) + " exclude " + excludeVisitorName);
         var removeList = new ArrayList<Connection>();
         for (var c : connections.values()) {
             if (c.session.isOpen()) {

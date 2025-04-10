@@ -70,6 +70,10 @@ public class WebSocketHandler {
         MakeMoveGameCommand message  = gson.fromJson(msg, MakeMoveGameCommand.class);
         try {
             AuthData authData = authdao.getAuthDataByToken(message.getAuthToken());
+            if (authData == null) {
+                connections.sendMessage(session, new ErrorMessage("Invalid auth"));
+                return;
+            }
             var isActive = gamedao.isGameActive(message.getGameID());
             if (!isActive) {
                 connections.sendMessage(authData.getUsername(), new ErrorMessage("game already over."));
@@ -94,6 +98,7 @@ public class WebSocketHandler {
                 connections.sendMessage(authData.getUsername(), new ErrorMessage(e.getMessage()));
                 return;
             }
+            connections.broadcast(authData.getUsername(), message.getGameID(), new NotificationMessage(authData.getUsername() + " moved"));
             LoadGameMessage loadGameMessage = new LoadGameMessage(data.getGame(), false);
             connections.broadcast(blackUserName, message.getGameID(), loadGameMessage);
             connections.sendMessage(blackUserName, new LoadGameMessage(data.getGame(), true));
@@ -137,7 +142,12 @@ public class WebSocketHandler {
                 connections.sendMessage(authdata.getUsername(), new ErrorMessage("game already over."));
                 return;
             }
-            connections.broadcast(authdata.getUsername(), message.getGameID(), new NotificationMessage("\n" + authdata.getUsername() + " resigned"));
+            GameData gameData = gamedao.getGameByID(message.getGameID());
+            if (!Objects.equals(authdata.getUsername(), gameData.whiteUsername) && !Objects.equals(authdata.getUsername(), gameData.blackUsername)) {
+                connections.sendMessage(authdata.getUsername(), new ErrorMessage("observers cannot resign"));
+                return;
+            }
+            connections.broadcast(null, message.getGameID(), new NotificationMessage("\n" + authdata.getUsername() + " resigned"));
             gamedao.markGameInactive(message.getGameID());
 //            GameData gameData = gamedao.getGameByID(message.getGameID());
 //            boolean isBlack = authdata.getUsername().equals(gameData.blackUsername);
@@ -165,9 +175,17 @@ public class WebSocketHandler {
     private void connection(Session session, UserGameCommand message) {
         try {
             AuthData authdata = authdao.getAuthDataByToken(message.getAuthToken());
+            if (authdata == null) {
+                connections.sendMessage(session, new ErrorMessage("Invalid auth"));
+                return;
+            }
             connections.add(authdata.username, message.getGameID(), session);
-            connections.broadcast(authdata.getUsername(), message.getGameID(), new NotificationMessage("\n" + authdata.getUsername() + " joined the game"));
             GameData gameData = gamedao.getGameByID(message.getGameID());
+            if (gameData == null) {
+                connections.sendMessage(authdata.getUsername(), new ErrorMessage("No game with that ID"));
+                return;
+            }
+            connections.broadcast(authdata.getUsername(), message.getGameID(), new NotificationMessage("\n" + authdata.getUsername() + " joined the game"));
             boolean isBlack = authdata.getUsername().equals(gameData.blackUsername);
 //            boolean isGameActive = gamedao.isGameActive(gameData.getGameID());
             LoadGameMessage loadGameMessage = new LoadGameMessage(gameData.getGame(), isBlack);
