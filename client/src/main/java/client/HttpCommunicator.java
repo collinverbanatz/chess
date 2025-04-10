@@ -1,10 +1,6 @@
 package client;
 
 import com.google.gson.Gson;
-import dao.Authdao;
-import dao.Gamedao;
-import dao.Usrdao;
-import dataaccess.DataAccessException;
 import models.*;
 
 import java.io.IOException;
@@ -13,12 +9,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Objects;
 
 public class HttpCommunicator {
-    Gamedao gamedao;
-    Usrdao usrdao;
-    Authdao authdao;
 
 
     public <T> T doPost(String urlString, Object requestObject, String endpoint, Class<T> responseClass, String authToken) throws IOException {
@@ -155,30 +147,6 @@ public class HttpCommunicator {
 
     public void clear(String url, String authoken) throws IOException {
         doDelete(url, "/db", authoken);
-    }
-
-    public void leave(String authToken, int gameID) throws DataAccessException {
-        GameData game = gamedao.getGameByID(gameID);
-        AuthData user = authdao.getAuthDataByToken(authToken);
-
-        if (user != null && game != null){
-            String userName = user.getUsername();
-
-            if(Objects.equals(game.getWhiteUsername(), userName)){
-                GameData gameData = new GameData(gameID, null, game.getBlackUsername(), game.getGameName(), game.getGame());
-                gamedao.updateGameData(gameData);
-            } else if (Objects.equals(game.getBlackUsername(), userName)) {
-                GameData gameData = new GameData(gameID, game.getWhiteUsername(), null, game.getGameName(), game.getGame());
-                gamedao.updateGameData(gameData);
-            }else{
-//                remove the observer
-            }
-        }
-    }
-
-    public GameData getBoard(String authToken, int gameID) throws DataAccessException {
-        GameData gameData = gamedao.getGameByID(gameID);
-        return gameData;
     }
 
 }

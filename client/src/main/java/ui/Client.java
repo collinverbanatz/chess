@@ -1,20 +1,20 @@
 package ui;
 
-import chess.*;
-import dataaccess.DataAccessException;
-import models.GameData;
+import chess.ChessGame;
+import chess.ChessMove;
+import chess.ChessPiece;
+import chess.ChessPosition;
 import client.ServerFacade;
+import models.CreateResult;
+import models.GameData;
+import models.ListGameResult;
+import models.RegisterResult;
 
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Scanner;
-
-import models.ListGameResult;
-import models.CreateResult;
-import models.RegisterResult;
-import websocket.commands.UserGameCommand;
 
 public class Client {
     private static Scanner scanner = new Scanner(System.in);
@@ -423,7 +423,7 @@ public class Client {
         ChessMove move = new ChessMove(startPosition, endPosition, promotionType);
 
         try {
-            serverFacade.makeMoves(UserGameCommand.CommandType.MAKE_MOVE, authToken, gameID, move);
+            serverFacade.makeMoves(authToken, gameID, move);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -442,7 +442,7 @@ public class Client {
 
     private static void resignHandler(String authToken, int gameID) {
         try {
-            serverFacade.resign(UserGameCommand.CommandType.RESIGN, authToken, gameID);
+            serverFacade.resign(authToken, gameID);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -465,9 +465,7 @@ public class Client {
     private static void leaveHandler(String authToken, int gameID) {
         inGame = false;
         try{
-            serverFacade.leave(UserGameCommand.CommandType.LEAVE, authToken,gameID);
-        } catch (DataAccessException e) {
-            System.err.println("couldn't leave game");
+            serverFacade.leave(authToken,gameID);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

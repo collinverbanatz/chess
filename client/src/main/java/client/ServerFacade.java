@@ -1,6 +1,5 @@
 package client;
 
-
 import chess.ChessMove;
 import com.google.gson.Gson;
 import dataaccess.DataAccessException;
@@ -8,11 +7,7 @@ import models.*;
 import server.websockett.WebSocketHandler;
 import websocket.commands.*;
 import websocket.commands.ResignGameCommand;
-
-
-
 import java.io.IOException;
-
 
 public class ServerFacade {
 //    calls the 7 methods one per end point
@@ -70,9 +65,7 @@ public class ServerFacade {
         clientCommunicator.clear(url, authToken);
     }
 
-    public void leave(UserGameCommand.CommandType commandType, String authToken, int gameID) throws DataAccessException, IOException {
-        UserGameCommand newCommand = new UserGameCommand(UserGameCommand.CommandType.LEAVE, authToken, gameID);
-//        call WebsocketCommunicator to send messages to client
+    public void leave(String authToken, int gameID) throws IOException {
         LeaveGameCommand leaveGameCommand = new LeaveGameCommand(authToken, gameID);
         ws.send(gson.toJson(leaveGameCommand));
     }
@@ -83,12 +76,12 @@ public class ServerFacade {
         ws.send(message);
     }
 
-    public void resign(UserGameCommand.CommandType commandType, String authToken, int gameID) throws IOException {
+    public void resign(String authToken, int gameID) throws IOException {
         ResignGameCommand resignGameCommand = new ResignGameCommand(authToken, gameID);
         ws.send(gson.toJson(resignGameCommand));
     }
 
-    public void makeMoves(UserGameCommand.CommandType commandType, String authToken, int gameID, ChessMove move) throws IOException {
+    public void makeMoves(String authToken, int gameID, ChessMove move) throws IOException {
         MakeMoveGameCommand makeMoveGameCommand = new MakeMoveGameCommand(authToken,gameID, move);
         ws.send(gson.toJson(makeMoveGameCommand));
     }
